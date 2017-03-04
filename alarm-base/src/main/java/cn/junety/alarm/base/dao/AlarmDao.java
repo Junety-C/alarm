@@ -12,8 +12,8 @@ import java.util.List;
 public interface AlarmDao {
 
     @Select("select id, code, name, module_id, group_id, route_key, config from tb_alarm where code=#{code}")
-    List<Alarm> get(@Param("code") int code);
+    List<Alarm> getList(@Param("code") int code);
 
     @Select("select id, code, name, module_id, group_id, route_key, config from tb_alarm where code=#{code} and route_key=#{route_key}")
-    List<Alarm> getWithRouteKey(@Param("code") int code, @Param("route_key") String routeKey);
+    List<Alarm> getListWithRouteKey(@Param("code") int code, @Param("route_key") String routeKey);
 }

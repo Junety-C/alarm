@@ -16,7 +16,7 @@ public class AlarmLog {
     private String ip;
     private AlarmStatus status;
     private String deliveryStatus;
-    private String createTime;
+    private long createTime;
 
     public long getId() {
         return id;
@@ -114,11 +114,11 @@ public class AlarmLog {
         this.deliveryStatus = deliveryStatus;
     }
 
-    public String getCreateTime() {
+    public long getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(String createTime) {
+    public void setCreateTime(long createTime) {
         this.createTime = createTime;
     }
 }
