@@ -1,0 +1,8 @@
+.idea/
+*.iml
+logs/
+alarm-api/target/
+alarm-base/target/
+alarm-sender/target/
+alarm-server/target/
+alarm-web/target/
