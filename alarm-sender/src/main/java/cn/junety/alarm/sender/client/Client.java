@@ -1,4 +1,4 @@
-package cn.junety.alarm.sender.common;
+package cn.junety.alarm.sender.client;
 
 import cn.junety.alarm.base.entity.QueueMessage;
 import cn.junety.alarm.base.redis.JedisFactory;
@@ -8,31 +8,30 @@ import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 
 /**
- * Created by caijt on 2017/3/4.
+ * Created by caijt on 2017/3/5.
  */
-public class Consumer implements Runnable {
+public abstract class Client {
 
-    private static final Logger logger = LoggerFactory.getLogger(Consumer.class);
+    private static final Logger logger = LoggerFactory.getLogger(Client.class);
 
     private static final int MAX_RETRY_TIMES = 3;
 
-    private ConsumerHandler consumerHandler;
     private String queueName;
 
-    public Consumer(ConsumerHandler consumerHandler, String queueName) {
-        this.consumerHandler = consumerHandler;
+    protected abstract boolean send(QueueMessage queueMessage);
+
+    public Client(String queueName) {
         this.queueName = queueName;
     }
 
-    @Override
-    public void run() {
+    public void start() {
         Jedis client = null;
-        logger.info("start {} queue consumer", consumerHandler.getClass().getSimpleName());
+        logger.info("start {} queue consumer", queueName);
         while (true) {
             try {
                 client = JedisFactory.getJedisInstance(queueName);
                 QueueMessage queueMessage = JSON.parseObject(client.blpop(0, queueName).get(1), QueueMessage.class);
-                if (!consumerHandler.handle(queueMessage)) {
+                if (!send(queueMessage)) {
                     // 消费失败，重入队列
                     resend(queueMessage);
                 }
@@ -50,7 +49,7 @@ public class Consumer implements Runnable {
         boolean success = false;
         for(int i = 1; i <= MAX_RETRY_TIMES && !success; i++) {
             logger.info("send alarm fail, retry times:{}, logId:{}", i, queueMessage.getLogId());
-            success = consumerHandler.handle(queueMessage);
+            success = send(queueMessage);
         }
         logger.info("send alarm always fail, content:{}", JSON.toJSONString(queueMessage));
     }

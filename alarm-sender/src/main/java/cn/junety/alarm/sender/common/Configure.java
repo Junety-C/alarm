@@ -10,22 +10,11 @@ import cn.junety.alarm.base.util.properties.PropertiesLoader;
 @Config("alarm_center.properties")
 public class Configure {
     public static final String WECHAT_ACCESS_TOKEN_KEY = "wechat.access.token";
-    public static final int MAX_RESEND_TIMES = 5;
 
-    public static final String EMAIL_REDIS_QUEUE = "email.queue";
+    public static final String MAIL_REDIS_QUEUE = "mail.queue";
     public static final String SMS_REDIS_QUEUE = "sms.queue";
     public static final String WECHAT_REDIS_QUEUE = "wechat.queue";
     public static final String DELIVERY_WRITER_QUEUE = "delivery.writer.queue";
-
-    public static final String WECHAT_TRANSMIT_QUEUE = "wechat.transmit.queue";
-    public static final String WECHAT_REDIS_ZSET = "wechat.zset";
-    public static final String WECHAT_REDIS_COLLECTION_QUEUE = "wechat.collection.queue";
-    public static final String SMS_TRANSMIT_QUEUE = "sms.transmit.queue";
-    public static final String SMS_REDIS_ZSET = "sms.zset";
-    public static final String SMS_REDIS_COLLECTION_QUEUE = "sms.collection.queue";
-    public static final String EMAIL_TRANSMIT_QUEUE = "email.transmit.queue";
-    public static final String EMAIL_REDIS_ZSET = "email.zset";
-    public static final String EMAIL_REDIS_COLLECTION_QUEUE = "email.collection.queue";
 
     @Key("mail.sender")
     public static String MAIL_SENDER;
@@ -51,10 +40,6 @@ public class Configure {
     public static String WECHAT_CORP_SECRET;
     @Key("wechat.agent.id")
     public static Integer WECHAT_AGENT_ID;
-    @Key("backup.receiver.wechat")
-    public static String BACKUP_RECEIVER_WECHAT;
-    @Key("backup.receiver.phone")
-    public static String BACKUP_RECEIVER_PHONE;
     @Key("wechat.agent.blocker.id")
     public static Integer WECHAT_AGENT_BLOCKER_ID;
     @Key("wechat.agent.critial.id")

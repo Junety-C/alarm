@@ -1,8 +1,8 @@
 package cn.junety.alarm.sender;
 
+import cn.junety.alarm.sender.client.Client;
+import cn.junety.alarm.sender.client.ClientFactory;
 import cn.junety.alarm.sender.common.Configure;
-import cn.junety.alarm.sender.common.Consumer;
-import cn.junety.alarm.sender.mail.MailConsumerHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,11 +19,10 @@ public class Bootstrap {
         }
         String channel = args[0];
         String name = args[1];
-        System.setProperty("log.home", name);
 
         switch (channel) {
             case "mail":
-                new Thread(new Consumer(new MailConsumerHandler(), Configure.SMS_REDIS_QUEUE)).start();
+                ClientFactory.buildMailClient(name).start();
                 break;
             case "sms":
                 break;
