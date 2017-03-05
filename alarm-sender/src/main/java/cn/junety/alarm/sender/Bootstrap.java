@@ -29,6 +29,7 @@ public class Bootstrap {
             case "wechat":
                 break;
             case "delivery":
+                ClientFactory.buildDeliveryStatusClient(name).start();
                 break;
             default:
                 throw new IllegalArgumentException("invalid channel");

@@ -3,7 +3,6 @@ package cn.junety.alarm.sender.client.impl;
 import cn.junety.alarm.base.entity.QueueMessage;
 import cn.junety.alarm.sender.client.Client;
 import cn.junety.alarm.sender.common.Configure;
-import cn.junety.alarm.sender.common.DeliveryStatusHelper;
 import com.alibaba.fastjson.JSON;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.HtmlEmail;
@@ -29,7 +28,7 @@ public class MailClient extends Client {
     protected boolean send(QueueMessage queueMessage) {
         try {
             if(send(queueMessage.getTitle(), queueMessage.getContent(), queueMessage.getReceivers())) {
-                DeliveryStatusHelper.mark(queueMessage.getLogId(), CHANNEL);
+                this.markDeliveryStatus(queueMessage.getLogId(), CHANNEL);
                 return true;
             }
             return false;

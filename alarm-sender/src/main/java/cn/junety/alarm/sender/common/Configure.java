@@ -11,10 +11,10 @@ import cn.junety.alarm.base.util.properties.PropertiesLoader;
 public class Configure {
     public static final String WECHAT_ACCESS_TOKEN_KEY = "wechat.access.token";
 
-    public static final String MAIL_REDIS_QUEUE = "mail.queue";
-    public static final String SMS_REDIS_QUEUE = "sms.queue";
-    public static final String WECHAT_REDIS_QUEUE = "wechat.queue";
-    public static final String DELIVERY_WRITER_QUEUE = "delivery.writer.queue";
+    public static final String MAIL_QUEUE = "mail.queue";
+    public static final String SMS_QUEUE = "sms.queue";
+    public static final String WECHAT_QUEUE = "wechat.queue";
+    public static final String DELIVERY_QUEUE = "delivery.queue";
 
     @Key("mail.sender")
     public static String MAIL_SENDER;
@@ -26,10 +26,6 @@ public class Configure {
     public static Integer MAIL_SENDER_SMTP_PORT;
     @Key("mail.sender.name")
     public static String MAIL_SENDER_NAME;
-    @Key("mail.send_cloud.appkey")
-    public static String MAIL_SEND_CLOUD_APPKEY;
-    @Key("mail.send_cloud.secret")
-    public static String MAIL_SEND_CLOUD_SECRET;
     @Key("sms.api")
     public static String SMS_API;
     @Key("sms.backup.api")
