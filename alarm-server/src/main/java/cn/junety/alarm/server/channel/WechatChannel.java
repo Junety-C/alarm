@@ -2,7 +2,7 @@ package cn.junety.alarm.server.channel;
 
 import cn.junety.alarm.server.common.Configuration;
 import cn.junety.alarm.server.vo.AlarmMessage;
-import cn.junety.alarm.server.vo.QueueMessage;
+import cn.junety.alarm.base.entity.QueueMessage;
 import com.alibaba.fastjson.JSON;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +28,8 @@ public class WechatChannel extends Channel {
             content = content.substring(0, 480) + "(完整内容见告警日志)";
         }
 
-        QueueMessage queueMessage = new QueueMessage(null, content, alarmMessage.getWechatList(), alarmMessage);
+        QueueMessage queueMessage = new QueueMessage(null, content, alarmMessage.getWechatList(),
+                alarmMessage.getLogId(), alarmMessage.getLevel());
         this.save(JSON.toJSONString(queueMessage));
     }
 

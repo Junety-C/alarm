@@ -1,6 +1,5 @@
-package cn.junety.alarm.server.vo;
+package cn.junety.alarm.base.entity;
 
-import cn.junety.alarm.base.entity.Level;
 
 import java.util.List;
 
@@ -16,11 +15,11 @@ public class QueueMessage {
 
     public QueueMessage() {}
 
-    public QueueMessage(String title, String content, List<String> receivers, AlarmMessage alarmMessage) {
-        this.logId = alarmMessage.getLogId();
+    public QueueMessage(String title, String content, List<String> receivers, long logId, Level level) {
+        this.logId = logId;
         this.title = title;
         this.content = content;
-        this.level = alarmMessage.getLevel();
+        this.level = level;
         this.receivers = receivers;
     }
 

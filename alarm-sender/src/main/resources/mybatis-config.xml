@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<!-- http://www.mybatis.org/core/zh/configuration.html -->
+<configuration>
+    <settings>
+        <!-- 开启下划线自动转驼峰式命名法 create_time -> createTime -->
+        <setting name="mapUnderscoreToCamelCase" value="true" />
+        <!-- 对于未知的SQL查询，允许返回不同的结果集以达到通用的效果 -->
+        <setting name="multipleResultSetsEnabled" value="true" />
+        <!-- 允许使用列标签代替列名 -->
+        <setting name="useColumnLabel" value="true" />
+        <!-- 数据库超过300秒仍未响应则超时 -->
+        <setting name="defaultStatementTimeout" value="300" />
+    </settings>
+</configuration>

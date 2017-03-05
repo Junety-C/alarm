@@ -2,7 +2,7 @@ package cn.junety.alarm.server.channel;
 
 import cn.junety.alarm.server.common.Configuration;
 import cn.junety.alarm.server.vo.AlarmMessage;
-import cn.junety.alarm.server.vo.QueueMessage;
+import cn.junety.alarm.base.entity.QueueMessage;
 import com.alibaba.fastjson.JSON;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +27,8 @@ public class MailChannel extends Channel {
                 + "告警时间:" + alarmMessage.getCreatetimeFormat() + NEW_LINE
                 + "告警内容:" + alarmMessage.getContent();
 
-        QueueMessage queueMessage = new QueueMessage(title, content, alarmMessage.getMailList(), alarmMessage);
+        QueueMessage queueMessage = new QueueMessage(title, content, alarmMessage.getMailList(),
+                alarmMessage.getLogId(), alarmMessage.getLevel());
         this.save(JSON.toJSONString(queueMessage));
     }
 

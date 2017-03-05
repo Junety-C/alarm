@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration  scan="true" scanPeriod="30 seconds">
+
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} {%thread} %-5level %logger{50} - [%file:%line] %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="debug-out" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/debug/debug.log</file>
+        <!-- 日志输出格式 -->
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} {%thread} %-5level %logger{50} - [%file:%line] %msg%n</pattern>
+        </encoder>
+
+        <!-- 过滤掉所有低于debug级别的日志 -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 文件名 -->
+            <FileNamePattern>logs/debug/debug.%d{yyyy-MM-dd}.log</FileNamePattern>
+            <!-- 超过30天的日志自动清除 -->
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="info-out" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/info/info.log</file>
+        <!-- 日志输出格式 -->
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} {%thread} %-5level %logger{50} - [%file:%line] %msg%n</pattern>
+        </encoder>
+
+        <!-- 过滤掉所有低于info级别的日志 -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 文件名 -->
+            <FileNamePattern>logs/info/info.%d{yyyy-MM-dd}.log</FileNamePattern>
+            <!-- 超过30天的日志自动清除 -->
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="error-out" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/error/error.log</file>
+        <!-- 日志输出格式 -->
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} {%thread} %-5level %logger{50} - [%file:%line] %msg%n</pattern>
+        </encoder>
+
+        <!-- 过滤掉所有低于error级别的日志 -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 文件名 -->
+            <FileNamePattern>logs/error/error.%d{yyyy-MM-dd}.log</FileNamePattern>
+            <!-- 超过30天的日志自动清除 -->
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <root level="DEBUG">
+        <appender-ref ref="console"/>
+        <appender-ref ref="debug-out"/>
+        <appender-ref ref="info-out"/>
+        <appender-ref ref="error-out"/>
+    </root>
+
+    <!-- 过滤日志输出 -->
+    <logger name="org.springframework" level="WARN"/>
+    <logger name="org.hibernate" level="WARN"/>
+    <logger name="org.apache" level="WARN"/>
+    <logger name="org.mybatis" level="WARN"/>
+    <logger name="cn.jpush.commons" level="WARN"/>
+    <logger name="cn.jpush.ad.portal.dao" level="WARN"/>
+
+</configuration>
