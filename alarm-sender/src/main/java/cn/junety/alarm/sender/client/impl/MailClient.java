@@ -18,17 +18,16 @@ public class MailClient extends Client {
 
     private static final Logger logger = LoggerFactory.getLogger(MailClient.class);
 
-    private static final String CHANNEL = "mail";
-
-    public MailClient(String queueName) {
-        super(queueName);
+    public MailClient(String name, String queueName) {
+        super(name, queueName, "mail");
     }
 
     @Override
-    protected boolean send(QueueMessage queueMessage) {
+    protected boolean send(String message) {
         try {
+            QueueMessage queueMessage = JSON.parseObject(message, QueueMessage.class);
             if(send(queueMessage.getTitle(), queueMessage.getContent(), queueMessage.getReceivers())) {
-                this.markDeliveryStatus(queueMessage.getLogId(), CHANNEL);
+                this.markDeliveryStatus(queueMessage.getLogId(), channel);
                 return true;
             }
             return false;
