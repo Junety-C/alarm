@@ -60,7 +60,7 @@ public class AlarmService {
             // 遍历告警列表
             for (Alarm alarm : alarms) {
                 // 获取该告警接收人
-                List<Receiver> receivers = receiverDao.get(alarm.getGroupId());
+                List<Receiver> receivers = receiverDao.getByGroupId(alarm.getGroupId());
                 // 接收人去重,防止一条告警信息多次发送给同一个接收人
                 receivers = removeDuplicatedReceiver(receivers, sent);
                 if(receivers.size() != 0) {
@@ -85,9 +85,9 @@ public class AlarmService {
         String routeKey = alarmForm.getRouteKey() == null ? "" : alarmForm.getRouteKey().trim();
         List<Alarm> alarms;
         if(routeKey.length() == 0) {
-            alarms = alarmDao.getList(code);
+            alarms = alarmDao.getByCode(code);
         } else {
-            alarms = alarmDao.getListWithRouteKey(code, routeKey);
+            alarms = alarmDao.getByCodeWithRouteKey(code, routeKey);
         }
         if(alarms.size() == 0) {
             throw new AlarmNotFoundException();
@@ -142,8 +142,8 @@ public class AlarmService {
     }
 
     private AlarmMessage buildAlarmMessage(Alarm alarm, AlarmForm alarmForm, List<Receiver> receivers, long reportId) {
-        Module module = moduleDao.get(alarm.getModuleId());
-        Project project = projectDao.get(module.getProjectId());
+        Module module = moduleDao.getById(alarm.getModuleId());
+        Project project = projectDao.getById(module.getProjectId());
 
         AlarmMessage alarmMessage = new AlarmMessage();
         alarmMessage.addAlarm(alarm)
