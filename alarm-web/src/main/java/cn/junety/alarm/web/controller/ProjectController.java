@@ -1,10 +1,9 @@
 package cn.junety.alarm.web.controller;
 
-import cn.junety.alarm.web.common.HttpHelper;
+import cn.junety.alarm.web.common.ResponseHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,56 +15,55 @@ import javax.servlet.http.HttpServletRequest;
  * Created by caijt on 2017/3/24.
  */
 @RestController
-@RequestMapping
-public class ProjectController extends BaseController {
+public class ProjectController {
 
     private static final Logger logger = LoggerFactory.getLogger(ProjectController.class);
 
-    @RequestMapping(value = "/projects", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getProjects(HttpServletRequest request) {
+    @RequestMapping(value = "/projects", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String getProjects(HttpServletRequest request) {
         logger.info("GET /projects, body:{}");
-        return HttpHelper.buildResponse(500, 5000, "bad service");
+        return ResponseHelper.buildResponse(2000, "GET /projects");
     }
 
-    @RequestMapping(value = "/projects", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> addProject(HttpServletRequest request) {
+    @RequestMapping(value = "/projects", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String addProject(HttpServletRequest request) {
         logger.info("POST /projects, body:{}");
-        return HttpHelper.buildResponse(500, 5000, "bad service");
+        return ResponseHelper.buildResponse(2000, "POST /projects");
     }
 
-    @RequestMapping(value = "/projects/{pid}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> updateProject(HttpServletRequest request, @PathVariable Integer pid) {
+    @RequestMapping(value = "/projects/{pid}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String updateProject(HttpServletRequest request, @PathVariable Integer pid) {
         logger.info("PUT /projects/{}, body:{}", pid);
-        return HttpHelper.buildResponse(500, 5000, "bad service");
+        return ResponseHelper.buildResponse(2000, "PUT /projects/"+pid);
     }
 
-    @RequestMapping(value = "/projects/{pid}", method = RequestMethod.DELETE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> deleteProject(HttpServletRequest request, @PathVariable Integer pid) {
+    @RequestMapping(value = "/projects/{pid}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String deleteProject(HttpServletRequest request, @PathVariable Integer pid) {
         logger.info("DELETE /projects/{}, body:{}", pid);
-        return HttpHelper.buildResponse(500, 5000, "bad service");
+        return ResponseHelper.buildResponse(2000, "DELETE /projects/"+pid);
     }
 
-    @RequestMapping(value = "/projects/{pid}/modules", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getModules(HttpServletRequest request, @PathVariable Integer pid) {
+    @RequestMapping(value = "/projects/{pid}/modules", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String getModules(HttpServletRequest request, @PathVariable Integer pid) {
         logger.info("GET /projects/{}/modules, body:{}", pid);
-        return HttpHelper.buildResponse(500, 5000, "bad service");
+        return ResponseHelper.buildResponse(2000, "GET /projects/"+pid+"/modules");
     }
 
-    @RequestMapping(value = "/projects/{pid}/modules", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> addModule(HttpServletRequest request, @PathVariable Integer pid) {
+    @RequestMapping(value = "/projects/{pid}/modules", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String addModule(HttpServletRequest request, @PathVariable Integer pid) {
         logger.info("POST /projects/{}/modules, body:{}", pid);
-        return HttpHelper.buildResponse(500, 5000, "bad service");
+        return ResponseHelper.buildResponse(2000, "POST /projects/"+pid+"/modules");
     }
 
-    @RequestMapping(value = "/projects/{pid}/modules/{mid}", method = RequestMethod.DELETE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> updateModule(HttpServletRequest request, @PathVariable Integer pid, @PathVariable Integer mid) {
-        logger.info("DELETE /projects/{}/modules/{}, body:{}", pid, mid);
-        return HttpHelper.buildResponse(500, 5000, "bad service");
+    @RequestMapping(value = "/projects/{pid}/modules/{mid}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String updateModule(HttpServletRequest request, @PathVariable Integer pid, @PathVariable Integer mid) {
+        logger.info("PUT /projects/{}/modules/{}, body:{}", pid, mid);
+        return ResponseHelper.buildResponse(2000, "PUT /projects/"+pid+"/modules/"+mid);
     }
 
-    @RequestMapping(value = "/projects/{pid}/modules/{mid}", method = RequestMethod.DELETE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> deleteModule(HttpServletRequest request, @PathVariable Integer pid, @PathVariable Integer mid) {
+    @RequestMapping(value = "/projects/{pid}/modules/{mid}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String deleteModule(HttpServletRequest request, @PathVariable Integer pid, @PathVariable Integer mid) {
         logger.info("DELETE /projects/{}/modules/{}, body:{}", pid, mid);
-        return HttpHelper.buildResponse(500, 5000, "bad service");
+        return ResponseHelper.buildResponse(2000, "DELETE /projects/"+pid+"/modules/"+mid);
     }
 }

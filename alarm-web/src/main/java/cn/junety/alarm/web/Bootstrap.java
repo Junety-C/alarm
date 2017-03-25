@@ -16,9 +16,9 @@ public class Bootstrap {
     public static void main(String[] args) {
         try {
             SpringApplication.run(Bootstrap.class);
-            logger.info("start alarm server success");
+            logger.info("start alarm web success");
         } catch (Exception e) {
-            logger.error("start alarm server error, caused by", e);
+            logger.error("start alarm web error, caused by", e);
         }
     }
 }

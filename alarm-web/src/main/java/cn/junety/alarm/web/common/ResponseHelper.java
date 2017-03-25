@@ -15,21 +15,19 @@ import java.util.Map;
 /**
  * Created by caijt on 2017/1/28.
  */
-public class HttpHelper {
+public class ResponseHelper {
 
-    private static Logger logger = LoggerFactory.getLogger(HttpHelper.class);
+    private static Logger logger = LoggerFactory.getLogger(ResponseHelper.class);
 
     private static final String[] PROXY_REMOTE_IP_ADDRESS = { "X-Forwarded-For", "X-Real-IP" };
 
-    public static ResponseEntity<?> buildResponse(int httpCode, int code, String content) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.parseMediaType("application/json; charset=UTF-8"));
+    public static String buildResponse(int code, String content) {
         Map<String, Object> params = new HashMap<>();
         params.put("code", code);
         params.put("content", content);
         String body = JSON.toJSONString(params);
-        logger.info("Response: {\"httpCode\":\"{}\", \"body\":\"{}\"}", httpCode, body);
-        return new ResponseEntity<>(body, headers, HttpStatus.valueOf(httpCode));
+        logger.info("Response: {}", body);
+        return JSON.toJSONString(params);
     }
 
     public static String getRemoteIp(HttpServletRequest request ) {

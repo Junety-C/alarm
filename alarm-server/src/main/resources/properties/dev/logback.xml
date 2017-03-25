@@ -79,7 +79,5 @@
     <logger name="org.hibernate" level="WARN"/>
     <logger name="org.apache" level="WARN"/>
     <logger name="org.mybatis" level="WARN"/>
-    <logger name="cn.jpush.commons" level="WARN"/>
-    <logger name="cn.jpush.ad.portal.dao" level="WARN"/>
 
 </configuration>
