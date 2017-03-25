@@ -1,7 +1,6 @@
 package cn.junety.alarm.base.dao;
 
 import cn.junety.alarm.base.entity.Module;
-import cn.junety.alarm.base.entity.Receiver;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
