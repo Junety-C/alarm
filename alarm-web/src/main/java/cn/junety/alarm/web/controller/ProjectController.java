@@ -1,8 +1,10 @@
 package cn.junety.alarm.web.controller;
 
 import cn.junety.alarm.web.common.ResponseHelper;
+import cn.junety.alarm.web.service.ProjectService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by caijt on 2017/3/24.
@@ -18,6 +22,9 @@ import javax.servlet.http.HttpServletRequest;
 public class ProjectController {
 
     private static final Logger logger = LoggerFactory.getLogger(ProjectController.class);
+
+    @Autowired
+    private ProjectService projectService;
 
     @RequestMapping(value = "/projects", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public String getProjects(HttpServletRequest request) {
@@ -45,8 +52,10 @@ public class ProjectController {
 
     @RequestMapping(value = "/projects/{pid}/modules", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public String getModules(HttpServletRequest request, @PathVariable Integer pid) {
-        logger.info("GET /projects/{}/modules, body:{}", pid);
-        return ResponseHelper.buildResponse(2000, "GET /projects/"+pid+"/modules");
+        logger.info("GET /projects/{}/modules", pid);
+        Map<String, Object> results = new HashMap<>();
+        results.put("modules", projectService.getModuleByPid(pid));
+        return ResponseHelper.buildResponse(2000, results);
     }
 
     @RequestMapping(value = "/projects/{pid}/modules", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)

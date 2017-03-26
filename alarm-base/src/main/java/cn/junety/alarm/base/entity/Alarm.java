@@ -7,6 +7,7 @@ public class Alarm {
     private int id;
     private int code;
     private String name;
+    private int projectId;
     private int moduleId;
     private int groupId;
     private String routeKey;
@@ -34,6 +35,14 @@ public class Alarm {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
     }
 
     public int getModuleId() {
@@ -70,9 +79,11 @@ public class Alarm {
 
     @Override
     public String toString() {
-        return "{id=" + id +
+        return "{" +
+                "id=" + id +
                 ", code=" + code +
                 ", name='" + name + '\'' +
+                ", projectId=" + projectId +
                 ", moduleId=" + moduleId +
                 ", groupId=" + groupId +
                 ", routeKey='" + routeKey + '\'' +

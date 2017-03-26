@@ -1,25 +1,53 @@
 package cn.junety.alarm.web.controller;
 
+import cn.junety.alarm.base.entity.Alarm;
 import cn.junety.alarm.web.common.ResponseHelper;
+import cn.junety.alarm.web.service.AlarmService;
+import cn.junety.alarm.web.vo.AlarmForm;
+import cn.junety.alarm.web.vo.AlarmVO;
+import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by caijt on 2017/3/24.
  */
 @RestController
-public class AlarmController {
+public class AlarmController extends BaseController {
 
     private static final Logger logger = LoggerFactory.getLogger(AlarmController.class);
 
+    @Autowired
+    private AlarmService alarmService;
+
     @RequestMapping(value = "/alarms", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public String getAlarms(HttpServletRequest request) {
-        logger.info("GET /alarms, body:{}");
-        return ResponseHelper.buildResponse(2000, "GET /alarms");
+        AlarmForm alarmForm = new AlarmForm(request);
+        logger.info("GET /alarms, body:{}", JSON.toJSONString(alarmForm));
+        List<AlarmVO> alarmList = alarmService.getAlarmInfo(alarmForm);
+        Map<String, Object> results = new HashMap<>();
+        results.put("alarms", alarmList);
+        results.put("count", alarmService.getAlarmInfoCount(alarmForm));
+        return ResponseHelper.buildResponse(2000, results);
+    }
+
+    @RequestMapping(value = "/alarms/info", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String getCreateInfo() {
+        logger.info("GET /alarms/info");
+        Map<String, Object> results = new HashMap<>();
+        results.put("codes", alarmService.getCodes());
+        results.put("projects", alarmService.getProjects());
+        results.put("modules", alarmService.getModules());
+        results.put("groups", alarmService.getGroups());
+        return ResponseHelper.buildResponse(2000, results);
     }
 
     @RequestMapping(value = "/alarms/{aid}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -29,9 +57,10 @@ public class AlarmController {
     }
 
     @RequestMapping(value = "/alarms", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String addAlarm(HttpServletRequest request) {
-        logger.info("POST /alarms, body:{}");
-        return ResponseHelper.buildResponse(2000, "POST /alarms");
+    public String addAlarm(@RequestBody Alarm alarm) {
+        logger.info("POST /alarms, body:{}", alarm);
+        alarmService.addAlarm(alarm);
+        return ResponseHelper.buildResponse(2000, "success");
     }
 
     @RequestMapping(value = "/alarms/{aid}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -45,4 +74,6 @@ public class AlarmController {
         logger.info("DELETE /alarms/{}, body:{}", aid);
         return ResponseHelper.buildResponse(2000, "DELETE /alarms/"+aid);
     }
+
+
 }

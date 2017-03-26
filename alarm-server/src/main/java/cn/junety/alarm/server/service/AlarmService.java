@@ -83,9 +83,9 @@ public class AlarmService {
         String routeKey = alarmForm.getRouteKey() == null ? "" : alarmForm.getRouteKey().trim();
         List<Alarm> alarms;
         if(routeKey.length() == 0) {
-            alarms = alarmDao.getByCode(code);
+            alarms = alarmDao.getAllByCode(code);
         } else {
-            alarms = alarmDao.getByCodeWithRouteKey(code, routeKey);
+            alarms = alarmDao.getAllByCodeWithRouteKey(code, routeKey);
         }
         if(alarms.size() == 0) {
             throw new AlarmNotFoundException();

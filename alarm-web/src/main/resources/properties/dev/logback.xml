@@ -8,7 +8,7 @@
     </appender>
 
     <appender name="debug-out" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>logs/debug/debug.log</file>
+        <file>logs/web/debug/debug.log</file>
         <!-- 日志输出格式 -->
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>%d{yyyy-MM-dd HH:mm:ss} {%thread} %-5level %logger{50} - [%file:%line] %msg%n</pattern>
@@ -21,14 +21,14 @@
 
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- 文件名 -->
-            <FileNamePattern>logs/debug/debug.%d{yyyy-MM-dd}.log</FileNamePattern>
+            <FileNamePattern>logs/web/debug/debug.%d{yyyy-MM-dd}.log</FileNamePattern>
             <!-- 超过30天的日志自动清除 -->
             <MaxHistory>30</MaxHistory>
         </rollingPolicy>
     </appender>
 
     <appender name="info-out" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>logs/info/info.log</file>
+        <file>logs/web/info/info.log</file>
         <!-- 日志输出格式 -->
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>%d{yyyy-MM-dd HH:mm:ss} {%thread} %-5level %logger{50} - [%file:%line] %msg%n</pattern>
@@ -41,14 +41,14 @@
 
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- 文件名 -->
-            <FileNamePattern>logs/info/info.%d{yyyy-MM-dd}.log</FileNamePattern>
+            <FileNamePattern>logs/web/info/info.%d{yyyy-MM-dd}.log</FileNamePattern>
             <!-- 超过30天的日志自动清除 -->
             <MaxHistory>30</MaxHistory>
         </rollingPolicy>
     </appender>
 
     <appender name="error-out" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>logs/error/error.log</file>
+        <file>logs/web/error/error.log</file>
         <!-- 日志输出格式 -->
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>%d{yyyy-MM-dd HH:mm:ss} {%thread} %-5level %logger{50} - [%file:%line] %msg%n</pattern>
@@ -61,7 +61,7 @@
 
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- 文件名 -->
-            <FileNamePattern>logs/error/error.%d{yyyy-MM-dd}.log</FileNamePattern>
+            <FileNamePattern>logs/web/error/error.%d{yyyy-MM-dd}.log</FileNamePattern>
             <!-- 超过30天的日志自动清除 -->
             <MaxHistory>30</MaxHistory>
         </rollingPolicy>
@@ -79,5 +79,6 @@
     <logger name="org.hibernate" level="WARN"/>
     <logger name="org.apache" level="WARN"/>
     <logger name="org.mybatis" level="WARN"/>
+    <logger name="cn.junety.alarm.base.dao" level="WARN"/>
 
 </configuration>

@@ -12,6 +12,9 @@ public interface ProjectDao {
     @Select("select id, name from tb_project where id=#{id}")
     Project getById(@Param("id") int id);
 
+    @Select("select id, name from tb_project")
+    List<Project> getAll();
+
     @Select("select id, name from tb_project limit #{begin}, #{length}")
     List<Project> get(@Param("begin") int begin, @Param("length") int length);
 

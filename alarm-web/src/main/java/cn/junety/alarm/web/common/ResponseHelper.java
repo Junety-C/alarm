@@ -17,7 +17,7 @@ public class ResponseHelper {
 
     private static final String[] PROXY_REMOTE_IP_ADDRESS = { "X-Forwarded-For", "X-Real-IP" };
 
-    public static String buildResponse(int code, String content) {
+    public static String buildResponse(int code, Object content) {
         Map<String, Object> params = new HashMap<>();
         params.put("code", code);
         params.put("content", content);
@@ -26,7 +26,7 @@ public class ResponseHelper {
         return JSON.toJSONString(params);
     }
 
-    public static String getRemoteIp(HttpServletRequest request ) {
+    public static String getRemoteIp(HttpServletRequest request) {
         for (String key : PROXY_REMOTE_IP_ADDRESS) {
             String ip = request.getHeader(key);
             if (ip != null && ip.trim().length() > 0) {
