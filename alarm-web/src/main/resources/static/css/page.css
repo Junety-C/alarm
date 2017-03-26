@@ -63,3 +63,39 @@
 	background: #fafafa;
 	border-radius: 0 0 5px 5px;
 }
+
+.modal-create .title {
+	margin: 0;
+	padding: 15px;
+	text-align: center;
+	color: white;
+	font-size: 26px;
+	font-weight: bold;
+	background: #3498DB;
+	border-radius: 5px 5px 0 0;
+}
+
+.modal-create .body {
+	margin: 0;
+	padding: 30px;
+	background: #fafafa;
+	border-radius: 0 0 5px 5px;
+}
+
+.modal-delete .title {
+	margin: 0;
+	padding: 15px;
+	text-align: center;
+	color: white;
+	font-size: 26px;
+	font-weight: bold;
+	background: #C9302C;
+	border-radius: 5px 5px 0 0;
+}
+
+.modal-delete .body {
+	margin: 0;
+	padding: 30px;
+	background: #fafafa;
+	border-radius: 0 0 5px 5px;
+}

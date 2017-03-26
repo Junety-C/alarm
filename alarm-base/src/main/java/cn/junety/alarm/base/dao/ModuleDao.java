@@ -12,7 +12,7 @@ public interface ModuleDao {
     @Select("select id, project_id, name from tb_module where id=#{id}")
     Module getById(@Param("id") int id);
 
-    @Select("select id, project_id, name from tb_module where project_id=#{pid}")
+    @Select("select id, project_id, name from tb_module where project_id=#{pid} order by id desc")
     List<Module> getByPid(@Param("pid") int pid);
 
     @Insert("insert into tb_module(project_id, name) values(#{projectId}, #{name})")

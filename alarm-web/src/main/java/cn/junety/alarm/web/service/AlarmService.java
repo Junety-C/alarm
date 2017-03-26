@@ -74,7 +74,7 @@ public class AlarmService {
         return alarmDao.getCount();
     }
 
-    public int addAlarm(Alarm alarm) {
+    public int createAlarm(Alarm alarm) {
         // 自动生成code
         if(alarm.getCode() == 0) {
             alarm.setCode(alarmDao.getMaxCode() + 1);
@@ -94,8 +94,8 @@ public class AlarmService {
         return groupDao.getAll();
     }
 
-    public List<Module> getModules() {
+    public List<Module> getModules(int pid) {
         // get default module
-        return moduleDao.getByPid(1);
+        return moduleDao.getByPid(pid);
     }
 }

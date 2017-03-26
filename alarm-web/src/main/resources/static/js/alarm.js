@@ -41,13 +41,13 @@ $(function() {
         });
 
         var alarm_data = {
-            "code": code,
-            "name": name,
-            "projectId": project_id,
-            "moduleId": module_id,
-            "groupId": group_id,
-            "routeKey": route_key,
-            "config": JSON.stringify(config)
+            code: code,
+            name: name,
+            projectId: project_id,
+            moduleId: module_id,
+            groupId: group_id,
+            routeKey: route_key,
+            config: JSON.stringify(config)
         };
         addAlarm(alarm_data);
     });

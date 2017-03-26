@@ -12,11 +12,20 @@ public interface ProjectDao {
     @Select("select id, name from tb_project where id=#{id}")
     Project getById(@Param("id") int id);
 
-    @Select("select id, name from tb_project")
+    @Select("select id, name from tb_project order by id desc")
     List<Project> getAll();
 
-    @Select("select id, name from tb_project limit #{begin}, #{length}")
+    @Select("select id, name from tb_project order by id desc limit #{begin}, #{length}")
     List<Project> get(@Param("begin") int begin, @Param("length") int length);
+
+    @Select("select count(id) from tb_project")
+    int getCount();
+
+    @Select("select id, name from tb_project where name like #{name} order by id desc limit #{begin}, #{length}")
+    List<Project> getByName(@Param("name") String name, @Param("begin") int begin, @Param("length") int length);
+
+    @Select("select count(id) where name like #{name}")
+    int getCountByName(@Param("name") String name);
 
     @Insert("insert into tb_project(name) values(#{name})")
     int save(Project project);

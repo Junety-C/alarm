@@ -19,40 +19,32 @@ public class AlarmForm {
         this.page = Integer.valueOf(request.getParameter("page"));
         this.length = Integer.valueOf(request.getParameter("length"));
         if(!Strings.isNullOrEmpty(request.getParameter("code"))) {
-            code = Integer.valueOf(request.getParameter("code").trim());
+            this.code = Integer.valueOf(request.getParameter("code").trim());
         } else if(!Strings.isNullOrEmpty(request.getParameter("name"))) {
-            alarmName = request.getParameter("name").trim();
+            this.alarmName = request.getParameter("name").trim();
         } else if(!Strings.isNullOrEmpty(request.getParameter("group"))) {
-            groupName = request.getParameter("group").trim();
+            this.groupName = request.getParameter("group").trim();
         } else if(!Strings.isNullOrEmpty(request.getParameter("project"))) {
-            projectName = request.getParameter("project").trim();
+            this.projectName = request.getParameter("project").trim();
         }
     }
 
-    public int getPage() {
+    public Integer getPage() {
         if (page == null || page < 1) {
             return 1;
         }
         return page;
     }
 
-    public void setPage(int page) {
+    public void setPage(Integer page) {
         this.page = page;
     }
 
-    public int getLength() {
+    public Integer getLength() {
         if (length == null) {
             return 10;
         }
         return length;
-    }
-
-    public void setLength(int length) {
-        this.length = length;
-    }
-
-    public void setPage(Integer page) {
-        this.page = page;
     }
 
     public void setLength(Integer length) {
