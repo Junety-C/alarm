@@ -61,28 +61,27 @@ function getAlarms(search) {
         url: "http://localhost:8088/alarms?page="+current_page+"&length="+page_length+"&"+search,
         type: "GET",
         success: function(data){
-            var html = "";
-            var alarms = data["content"]["alarms"];
-            for(var i = 0; i < alarms.length; i++) {
-                var alarm  = alarms[i];
-                html += "<tr>"
-                    + "<td>"+alarm["alarm"]["code"]+"</td>"
-                    + "<td>"+alarm["alarm"]["name"]+"</td>"
-                    + "<td>"+alarm["group"]["name"]+"</td>"
-                    + "<td>"+alarm["project"]["name"]+"</td>"
-                    + "<td>"+alarm["module"]["name"]+"</td>"
-                    + "<td>"+alarm["config"]+"</td>"
-                    + "<td></td>"
-                    + "</tr>";
+            if(data["code"] == 2000) {
+                var html = "";
+                var alarms = data["content"]["alarms"];
+                for(var i = 0; i < alarms.length; i++) {
+                    var alarm  = alarms[i];
+                    html += "<tr>"
+                        + "<td>"+alarm["alarm"]["code"]+"</td>"
+                        + "<td>"+alarm["alarm"]["name"]+"</td>"
+                        + "<td>"+alarm["group"]["name"]+"</td>"
+                        + "<td>"+alarm["project"]["name"]+"</td>"
+                        + "<td>"+alarm["module"]["name"]+"</td>"
+                        + "<td>"+alarm["config"]+"</td>"
+                        + "<td></td>"
+                        + "</tr>";
+                }
+                $(".alarms-body").html(html);
+                var page_count = parseInt((data["content"]["count"] + page_length - 1)/page_length);
+                $(".page-footer").html(setPageButton(page_count, current_page));
+                setPageBtnClick();
+                setTableTotalSize(data["content"]["count"]);
             }
-            $(".alarms-body").html(html);
-            var page_count = parseInt((data["content"]["count"] + page_length - 1)/page_length);
-            $(".page-footer").html(setPageButton(page_count, current_page));
-            setPageBtnClick();
-            setTableTotalSize(data["content"]["count"]);
-        },
-        error: function(XMLHttpRequest, textStatus, errorThrown){
-            console.log(XMLHttpRequest)
         }
     });
 }
@@ -92,48 +91,47 @@ function getCreateInfo() {
         url: "http://localhost:8088/alarms/info",
         type: "GET",
         success: function(data){
-            // code list
-            var codes = data["content"]["codes"];
-            var codeList = [{id:0, text: '自动生成'}];
-            for(var i = 0; i < codes.length; i++) {
-                codeList.push({id:i+1, text: codes[i]});
-            }
-            $("#alarm-code").select2({
-                data: codeList
-            });
+            if(data["code"] == 2000) {
+                // code list
+                var codes = data["content"]["codes"];
+                var codeList = [{id: 0, text: '自动生成'}];
+                for (var i = 0; i < codes.length; i++) {
+                    codeList.push({id: i + 1, text: codes[i]});
+                }
+                $("#alarm-code").select2({
+                    data: codeList
+                });
 
-            // project list
-            var projects = data["content"]["projects"];
-            var projectList = [];
-            for(var i = 0; i < projects.length; i++) {
-                projectList.push({id:projects[i]["id"], text: projects[i]["name"]});
-            }
-            $("#alarm-project").select2({
-                data: projectList
-            });
+                // project list
+                var projects = data["content"]["projects"];
+                var projectList = [];
+                for (var i = 0; i < projects.length; i++) {
+                    projectList.push({id: projects[i]["id"], text: projects[i]["name"]});
+                }
+                $("#alarm-project").select2({
+                    data: projectList
+                });
 
-            // module list
-            var modules = data["content"]["modules"];
-            var moduleList = [];
-            for(var i = 0; i < modules.length; i++) {
-                moduleList.push({id:modules[i]["id"], text: modules[i]["name"]});
-            }
-            $("#alarm-module").select2({
-                data: moduleList
-            });
+                // module list
+                var modules = data["content"]["modules"];
+                var moduleList = [];
+                for (var i = 0; i < modules.length; i++) {
+                    moduleList.push({id: modules[i]["id"], text: modules[i]["name"]});
+                }
+                $("#alarm-module").select2({
+                    data: moduleList
+                });
 
-            // group list
-            var groups = data["content"]["groups"];
-            var groupList = [];
-            for(var i = 0; i < groups.length; i++) {
-                groupList.push({id:groups[i]["id"], text: groups[i]["name"]});
+                // group list
+                var groups = data["content"]["groups"];
+                var groupList = [];
+                for (var i = 0; i < groups.length; i++) {
+                    groupList.push({id: groups[i]["id"], text: groups[i]["name"]});
+                }
+                $("#alarm-group").select2({
+                    data: groupList
+                });
             }
-            $("#alarm-group").select2({
-                data: groupList
-            });
-        },
-        error: function(XMLHttpRequest, textStatus, errorThrown){
-            console.log(XMLHttpRequest)
         }
     });
 }
@@ -155,18 +153,17 @@ function getModuleByProjectId(pid) {
         url: "http://localhost:8088/projects/"+pid+"/modules",
         type: "GET",
         success: function(data){
-            // module list
-            var modules = data["content"]["modules"];
-            var moduleList = [];
-            for(var i = 0; i < modules.length; i++) {
-                moduleList.push({id:modules[i]["id"], text: modules[i]["name"]});
+            if(data["code"] == 2000) {
+                // module list
+                var modules = data["content"]["modules"];
+                var moduleList = [];
+                for (var i = 0; i < modules.length; i++) {
+                    moduleList.push({id: modules[i]["id"], text: modules[i]["name"]});
+                }
+                $("#alarm-module").html("").select2({
+                    data: moduleList
+                });
             }
-            $("#alarm-module").html("").select2({
-                data: moduleList
-            });
-        },
-        error: function(XMLHttpRequest, textStatus, errorThrown){
-            console.log(XMLHttpRequest)
         }
     });
 }
