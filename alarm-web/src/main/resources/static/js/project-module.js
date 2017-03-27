@@ -1,4 +1,4 @@
-var search_select="code";
+var search_select="";
 var search_input="";
 
 $(function() {

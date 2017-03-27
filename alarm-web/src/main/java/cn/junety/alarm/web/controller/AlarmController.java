@@ -33,9 +33,9 @@ public class AlarmController extends BaseController {
     public String getAlarms(HttpServletRequest request) {
         AlarmForm alarmForm = new AlarmForm(request);
         logger.info("GET /alarms, body:{}", JSON.toJSONString(alarmForm));
-        List<AlarmVO> alarmList = alarmService.getAlarmInfo(alarmForm);
+        List<AlarmVO> alarms = alarmService.getAlarmInfo(alarmForm);
         Map<String, Object> results = new HashMap<>();
-        results.put("alarms", alarmList);
+        results.put("alarms", alarms);
         results.put("count", alarmService.getAlarmInfoCount(alarmForm));
         return ResponseHelper.buildResponse(2000, results);
     }

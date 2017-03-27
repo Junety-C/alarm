@@ -4,18 +4,18 @@ package cn.junety.alarm.base.entity;
  * Created by caijt on 2017/1/28.
  */
 public class Receiver {
-    private int id;
+    private Integer id;
     private String name;
     private String phone;
     private String mail;
     private String wechat;
     private String qq;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
