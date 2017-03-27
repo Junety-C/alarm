@@ -14,11 +14,11 @@ public class ResponseHelper {
 
     private static Logger logger = LoggerFactory.getLogger(ResponseHelper.class);
 
-    public static String buildResponse(int code, String reqId, Object content) {
+    public static String buildResponse(int code, Object content) {
         Map<String, Object> params = new HashMap<>();
         params.put("code", code);
         params.put("content", content);
-        logger.info("reqId:{}, response code:{}", reqId, code);
+        logger.info("response code:{}", code);
         return JSON.toJSONString(params);
     }
 

@@ -33,9 +33,8 @@ public class GroupController {
 
     @RequestMapping(value = "/groups", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public String getGroups(HttpServletRequest request) {
-        String reqId = request.getSession().getId();
         GroupForm groupForm = new GroupForm(request);
-        logger.info("reqId:{}, GET /groups, body:{}", reqId, JSON.toJSONString(groupForm));
+        logger.info("GET /groups, body:{}", JSON.toJSONString(groupForm));
         List<Group> groups = groupService.getGroups(groupForm);
         List<Receiver> allReceiver = groupService.getReceivers();
         List<Receiver> receivers = groupService.getReceiverByGroupId(groups.get(0).getId());
@@ -44,50 +43,45 @@ public class GroupController {
         results.put("all_receiver", allReceiver);
         results.put("receivers", receivers);
         results.put("count", groupService.getGroupCount(groupForm));
-        return ResponseHelper.buildResponse(2000, reqId, results);
+        return ResponseHelper.buildResponse(2000, results);
     }
 
     @RequestMapping(value = "/groups/{name}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String addGroup(HttpServletRequest request, @PathVariable String name) {
-        String reqId = request.getSession().getId();
-        logger.info("reqId:{}, POST /groups/{}", reqId, name);
+    public String addGroup(@PathVariable String name) {
+        logger.info("POST /groups/{}", name);
         Group group = new Group();
         group.setName(name);
         groupService.createGroup(group);
-        return ResponseHelper.buildResponse(2000, reqId, "success");
+        return ResponseHelper.buildResponse(2000, "success");
     }
 
     @RequestMapping(value = "/groups/{gid}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String deleteGroup(HttpServletRequest request, @PathVariable Integer gid) {
-        String reqId = request.getSession().getId();
-        logger.info("reqId:{}, DELETE /groups/{}", reqId, gid);
+    public String deleteGroup(@PathVariable Integer gid) {
+        logger.info("DELETE /groups/{}", gid);
         groupService.deleteGroup(gid);
-        return ResponseHelper.buildResponse(2000, reqId, "success");
+        return ResponseHelper.buildResponse(2000, "success");
     }
 
     @RequestMapping(value = "/groups/{gid}/receivers", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String getReceiversFromGroup(HttpServletRequest request, @PathVariable Integer gid) {
-        String reqId = request.getSession().getId();
-        logger.info("reqId:{}, GET /groups/{}/receivers", reqId, gid);
+    public String getReceiversFromGroup(@PathVariable Integer gid) {
+        logger.info("GET /groups/{}/receivers", gid);
         List<Receiver> receivers = groupService.getReceiverByGroupId(gid);
         Map<String, Object> results = new HashMap<>();
         results.put("receivers", receivers);
-        return ResponseHelper.buildResponse(2000, reqId, results);
+        return ResponseHelper.buildResponse(2000, results);
     }
 
     @RequestMapping(value = "/groups/{gid}/receivers/{rid}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String addReceiverFromGroup(HttpServletRequest request, @PathVariable Integer gid, @PathVariable Integer rid) {
-        String reqId = request.getSession().getId();
-        logger.info("reqId:{}, POST /groups/{}/receivers/{}", reqId, gid, rid);
+    public String addReceiverFromGroup(@PathVariable Integer gid, @PathVariable Integer rid) {
+        logger.info("POST /groups/{}/receivers/{}", gid, rid);
         groupService.addReceiverFromGroup(gid, rid);
-        return ResponseHelper.buildResponse(2000, reqId, "success");
+        return ResponseHelper.buildResponse(2000, "success");
     }
 
     @RequestMapping(value = "/groups/{gid}/receivers/{rid}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String deleteReceiverFromGroup(HttpServletRequest request, @PathVariable Integer gid, @PathVariable Integer rid) {
-        String reqId = request.getSession().getId();
-        logger.info("reqId:{}, DELETE /groups/{}/receivers/{}", reqId, gid, rid);
+    public String deleteReceiverFromGroup(@PathVariable Integer gid, @PathVariable Integer rid) {
+        logger.info("DELETE /groups/{}/receivers/{}", gid, rid);
         groupService.deleteReceiverFromGroup(gid, rid);
-        return ResponseHelper.buildResponse(2000, reqId, "success");
+        return ResponseHelper.buildResponse(2000, "success");
     }
 }

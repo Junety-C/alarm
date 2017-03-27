@@ -31,13 +31,12 @@ public class AlarmLogController {
 
     @RequestMapping(value = "/logs", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public String getLogs(HttpServletRequest request) {
-        String reqId = request.getSession().getId();
         AlarmLogForm alarmLogForm = new AlarmLogForm(request);
-        logger.info("reqId:{}, GET /logs, body:{}", reqId, JSON.toJSONString(alarmLogForm));
+        logger.info("GET /logs, body:{}", JSON.toJSONString(alarmLogForm));
         List<AlarmLog> logs = alarmLogService.getLogs(alarmLogForm);
         Map<String, Object> results = new HashMap<>();
         results.put("logs", logs);
         results.put("count", alarmLogService.getLogCount(alarmLogForm));
-        return ResponseHelper.buildResponse(2000, reqId, results);
+        return ResponseHelper.buildResponse(2000, results);
     }
 }

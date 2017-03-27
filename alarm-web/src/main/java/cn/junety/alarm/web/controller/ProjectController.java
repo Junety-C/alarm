@@ -29,25 +29,23 @@ public class ProjectController {
 
     @RequestMapping(value = "/projects", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public String getProjects(HttpServletRequest request) {
-        String reqId = request.getSession().getId();
         ProjectForm projectForm = new ProjectForm(request);
-        logger.info("reqId:{}, GET /projects, body:{}", reqId, JSON.toJSONString(projectForm));
+        logger.info("GET /projects, body:{}", JSON.toJSONString(projectForm));
         List<Project> projects = projectService.getProjects(projectForm);
         Map<String, Object> results = new HashMap<>();
         results.put("projects", projects);
         results.put("modules", projectService.getModuleByPid(projects.get(0).getId()));
         results.put("count", projectService.getProjectCount(projectForm));
-        return ResponseHelper.buildResponse(2000, reqId, results);
+        return ResponseHelper.buildResponse(2000, results);
     }
 
     @RequestMapping(value = "/projects/{name}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String addProject(HttpServletRequest request, @PathVariable String name) {
-        String reqId = request.getSession().getId();
-        logger.info("reqId:{}, POST /projects/{}, body:{}", reqId, name);
+    public String addProject(@PathVariable String name) {
+        logger.info("POST /projects/{}, body:{}", name);
         Project project = new Project();
         project.setName(name);
         projectService.createProject(project);
-        return ResponseHelper.buildResponse(2000, reqId, "success");
+        return ResponseHelper.buildResponse(2000, "success");
     }
 
     //@RequestMapping(value = "/projects/{pid}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -57,28 +55,25 @@ public class ProjectController {
     //}
 
     @RequestMapping(value = "/projects/{pid}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String deleteProject(HttpServletRequest request, @PathVariable Integer pid) {
-        String reqId = request.getSession().getId();
-        logger.info("reqId:{}, DELETE /projects/{}", reqId, pid);
+    public String deleteProject(@PathVariable Integer pid) {
+        logger.info("DELETE /projects/{}", pid);
         projectService.deleteProject(pid);
-        return ResponseHelper.buildResponse(2000, reqId, "success");
+        return ResponseHelper.buildResponse(2000, "success");
     }
 
     @RequestMapping(value = "/projects/{pid}/modules", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String getModules(HttpServletRequest request, @PathVariable Integer pid) {
-        String reqId = request.getSession().getId();
-        logger.info("reqId:{}, GET /projects/{}/modules", reqId, pid);
+    public String getModules(@PathVariable Integer pid) {
+        logger.info("GET /projects/{}/modules", pid);
         Map<String, Object> results = new HashMap<>();
         results.put("modules", projectService.getModuleByPid(pid));
-        return ResponseHelper.buildResponse(2000, reqId, results);
+        return ResponseHelper.buildResponse(2000, results);
     }
 
     @RequestMapping(value = "/projects/{pid}/modules/{name}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String addModule(HttpServletRequest request, @PathVariable Integer pid, @PathVariable String name) {
-        String reqId = request.getSession().getId();
-        logger.info("reqId:{}, POST /projects/{}/modules/{}", reqId, pid, name);
+    public String addModule(@PathVariable Integer pid, @PathVariable String name) {
+        logger.info("POST /projects/{}/modules/{}", pid, name);
         projectService.createModule(pid, name);
-        return ResponseHelper.buildResponse(2000, reqId, "success");
+        return ResponseHelper.buildResponse(2000, "success");
     }
 
     //@RequestMapping(value = "/modules/{mid}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -88,10 +83,9 @@ public class ProjectController {
     //}
 
     @RequestMapping(value = "/modules/{mid}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String deleteModule(HttpServletRequest request, @PathVariable Integer mid) {
-        String reqId = request.getSession().getId();
-        logger.info("reqId:{}, DELETE /modules/{}", reqId, mid);
+    public String deleteModule(@PathVariable Integer mid) {
+        logger.info("DELETE /modules/{}", mid);
         projectService.deleteModule(mid);
-        return ResponseHelper.buildResponse(2000, reqId, "success");
+        return ResponseHelper.buildResponse(2000, "success");
     }
 }

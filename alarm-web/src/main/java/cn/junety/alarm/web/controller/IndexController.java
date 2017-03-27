@@ -18,9 +18,8 @@ public class IndexController {
     private static final Logger logger = LoggerFactory.getLogger(IndexController.class);
 
     @RequestMapping(value = "/index", method = RequestMethod.GET)
-    public String getAlarms(HttpServletRequest request) {
-        String reqId = request.getSession().getId();
-        logger.info("reqId:{}, GET /index, body:{}", reqId, request.getSession().getId());
+    public String getAlarms() {
+        logger.info("GET /index");
         return "home";
     }
 }

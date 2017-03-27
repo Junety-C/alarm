@@ -19,15 +19,13 @@ public class BaseController {
 
     @ExceptionHandler(HttpMessageConversionException.class)
     public String invalidParameterHandler(HttpServletRequest request, Exception e) {
-        String reqId = request.getSession().getId();
-        logger.error("reqId:{}, {}", reqId, e);
-        return ResponseHelper.buildResponse(4000, reqId, "invalid params");
+        logger.error("{}", e);
+        return ResponseHelper.buildResponse(4000, "invalid params");
     }
 
     @ExceptionHandler(Exception.class)
     public String badService(HttpServletRequest request, Exception e) {
-        String reqId = request.getSession().getId();
-        logger.error("reqId:{}, {}", reqId, e);
-        return ResponseHelper.buildResponse(5000, reqId, "bad service");
+        logger.error("{}", e);
+        return ResponseHelper.buildResponse(5000, "bad service");
     }
 }
