@@ -21,8 +21,7 @@ public class ResponseHelper {
         Map<String, Object> params = new HashMap<>();
         params.put("code", code);
         params.put("content", content);
-        String body = JSON.toJSONString(params);
-        logger.info("Response: {}", body);
+        logger.info("response code:{}", code);
         return JSON.toJSONString(params);
     }
 

@@ -33,11 +33,7 @@ $(function() {
         var route_key = $("#alarm-route-key").val();
         var config = {};
         $("input[name=config]").each(function() {
-            if ($(this).attr("checked")) {
-                config[$(this).val()] = true;
-            } else {
-                config[$(this).val()] = false;
-            }
+            config[$(this).val()] = $(this).prop("checked");
         });
 
         var alarm_data = {
@@ -50,6 +46,42 @@ $(function() {
             config: JSON.stringify(config)
         };
         addAlarm(alarm_data);
+    });
+
+    $("#alarm-del").click(function() {
+        var alarm_id = $(this).attr("_val");
+        deleteAlarm(alarm_id);
+    });
+
+    // receiver add modal
+    $("#alarm-update").click(function () {
+        var alarm_id = $(this).attr("_val");
+        var code = $("#alarm-code-update").val();
+        var name = $("#alarm-name-update").val();
+        if (name == null || name.trim().length == 0) {
+            alert("请输入告警名称");
+            return;
+        }
+        var project_id = $("#alarm-project-update").val();
+        var module_id = $("#alarm-module-update").val();
+        var group_id = $("#alarm-group-update").val();
+        var route_key = $("#alarm-route-key-update").val();
+        var config = {};
+        $("input[name=config-update]").each(function() {
+            config[$(this).val()] = $(this).prop("checked");
+        });
+
+        var alarm_data = {
+            id: alarm_id,
+            code: code,
+            name: name,
+            projectId: project_id,
+            moduleId: module_id,
+            groupId: group_id,
+            routeKey: route_key,
+            config: JSON.stringify(config)
+        };
+        updateAlarm(alarm_data);
     });
 
     // init data table
@@ -69,18 +101,134 @@ function getAlarms(search) {
                     html += "<tr>"
                         + "<td>"+alarm["alarm"]["code"]+"</td>"
                         + "<td>"+alarm["alarm"]["name"]+"</td>"
-                        + "<td>"+alarm["group"]["name"]+"</td>"
                         + "<td>"+alarm["project"]["name"]+"</td>"
                         + "<td>"+alarm["module"]["name"]+"</td>"
+                        + "<td>"+alarm["group"]["name"]+"</td>"
+                        + "<td>"+alarm["alarm"]["routeKey"]+"</td>"
                         + "<td>"+alarm["config"]+"</td>"
-                        + "<td></td>"
-                        + "</tr>";
+                        + "<td><button class='btn btn-info alarm-update' _val='"+alarm["alarm"]["id"]+"' "
+                        + "data-toggle='modal' data-target='#modal-alarm-update' "
+                        + "style='padding:0;margin:0;width:40px;height:26px;'>编辑</button>"
+                        + "&nbsp;&nbsp; <button class='btn btn-danger alarm-del' _val='"+alarm["alarm"]["id"]+"' "
+                        + "data-toggle='modal' data-target='#modal-alarm-del' "
+                        + "style='padding:0;margin:0;width:40px;height:26px;'>删除</button></td></tr>"
                 }
                 $(".alarms-body").html(html);
+                setAlarmClickEvent();
                 var page_count = parseInt((data["content"]["count"] + page_length - 1)/page_length);
                 $(".page-footer").html(setPageButton(page_count, current_page));
                 setPageBtnClick();
                 setTableTotalSize(data["content"]["count"]);
+            }
+        }
+    });
+}
+
+function setAlarmClickEvent() {
+    $(".alarm-del").click(function() {
+        $("#alarm-del").attr("_val", $(this).attr("_val"));
+    });
+
+    $(".alarm-update").click(function() {
+        var alarm_id = $(this).attr("_val");
+        $("#alarm-update").attr("_val", alarm_id);
+        getAlarmById(alarm_id);
+    });
+}
+
+function deleteAlarm(aid) {
+    $.ajax({
+        url: "http://localhost:8088/alarms/"+aid,
+        type: "DELETE",
+        data: JSON.stringify({}),
+        dataType: "json",
+        contentType: "application/json;charset=utf-8",
+        success: function(data){
+            if(data["code"] != 2000) {
+                alert("删除失败");
+            }
+            location.replace(location.href);
+        }
+    });
+}
+
+function updateAlarm(alarm_data) {
+    $.ajax({
+        url: "http://localhost:8088/alarms",
+        type: "PUT",
+        data: JSON.stringify(alarm_data),
+        dataType: "json",
+        contentType: "application/json;charset=utf-8",
+        success: function(data){
+            if (data["code"] != 2000) {
+                alert("创建失败");
+            }
+            location.replace(location.href);
+        }
+    });
+}
+
+function getAlarmById(aid) {
+    $.ajax({
+        url: "http://localhost:8088/alarms/"+aid,
+        type: "GET",
+        success: function(data){
+            if(data["code"] == 2000) {
+                $("#alarm-project-update").unbind("change");
+                var alarm = data["content"]["alarm"];
+
+                // code list
+                var codes = data["content"]["codes"];
+                var codeList = [{id: 0, text: '自动生成'}];
+                for (var i = 0; i < codes.length; i++) {
+                    codeList.push({id: codes[i], text: codes[i]});
+                }
+                $("#alarm-code-update").html("").select2({
+                    data: codeList
+                }).val(alarm["code"]).trigger("change");
+
+                // project list
+                var projects = data["content"]["projects"];
+                var projectList = [];
+                for (var i = 0; i < projects.length; i++) {
+                    projectList.push({id: projects[i]["id"], text: projects[i]["name"]});
+                }
+                $("#alarm-project-update").html("").select2({
+                    data: projectList
+                }).val(alarm["projectId"]).trigger("change");
+
+                // module list
+                var modules = data["content"]["modules"];
+                var moduleList = [];
+                for (var i = 0; i < modules.length; i++) {
+                    moduleList.push({id: modules[i]["id"], text: modules[i]["name"]});
+                }
+                $("#alarm-module-update").html("").select2({
+                    data: moduleList
+                }).val(alarm["moduleId"]).trigger("change");
+
+                // group list
+                var groups = data["content"]["groups"];
+                var groupList = [];
+                for (var i = 0; i < groups.length; i++) {
+                    groupList.push({id: groups[i]["id"], text: groups[i]["name"]});
+                }
+                $("#alarm-group-update").html("").select2({
+                    data: groupList
+                }).val(alarm["groupId"]).trigger("change");
+
+                $("#alarm-name-update").val(alarm["name"]);
+                $("#alarm-route-key-update").val(alarm["routeKey"]);
+                var config = JSON.parse(alarm["config"]);
+                $("#mail").prop("checked", config["mail"]);
+                $("#wechat").prop("checked", config["wechat"]);
+                $("#sms").prop("checked", config["sms"]);
+                $("#qq").prop("checked", config["qq"]);
+
+                // get module list when project change
+                $("#alarm-project-update").change(function() {
+                    getModuleByProjectIdUpdate($(this).val());
+                });
             }
         }
     });
@@ -96,7 +244,7 @@ function getCreateInfo() {
                 var codes = data["content"]["codes"];
                 var codeList = [{id: 0, text: '自动生成'}];
                 for (var i = 0; i < codes.length; i++) {
-                    codeList.push({id: i + 1, text: codes[i]});
+                    codeList.push({id: codes[i], text: codes[i]});
                 }
                 $("#alarm-code").select2({
                     data: codeList
@@ -168,6 +316,26 @@ function getModuleByProjectId(pid) {
     });
 }
 
+function getModuleByProjectIdUpdate(pid) {
+    $.ajax({
+        url: "http://localhost:8088/projects/"+pid+"/modules",
+        type: "GET",
+        success: function(data){
+            if(data["code"] == 2000) {
+                // module list
+                var modules = data["content"]["modules"];
+                var moduleList = [];
+                for (var i = 0; i < modules.length; i++) {
+                    moduleList.push({id: modules[i]["id"], text: modules[i]["name"]});
+                }
+                $("#alarm-module-update").html("").select2({
+                    data: moduleList
+                });
+            }
+        }
+    });
+}
+
 function addAlarm(alarm_data) {
     $.ajax({
         url: "http://localhost:8088/alarms",
@@ -180,9 +348,6 @@ function addAlarm(alarm_data) {
                 alert("创建失败");
             }
             location.replace(location.href);
-        },
-        error: function(XMLHttpRequest, textStatus, errorThrown){
-            console.log(XMLHttpRequest)
         }
     });
 }

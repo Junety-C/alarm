@@ -140,9 +140,6 @@ function addProject(name) {
                 alert("创建失败");
             }
             location.replace(location.href);
-        },
-        error: function(XMLHttpRequest, textStatus, errorThrown){
-            console.log(XMLHttpRequest)
         }
     });
 }
@@ -175,9 +172,6 @@ function addModule(pid, name) {
                 alert("创建失败");
             }
             location.replace(location.href);
-        },
-        error: function(XMLHttpRequest, textStatus, errorThrown){
-            console.log(XMLHttpRequest)
         }
     });
 }

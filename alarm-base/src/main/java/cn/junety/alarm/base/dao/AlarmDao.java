@@ -98,4 +98,8 @@ public interface AlarmDao {
 
     @Select("select max(code) from tb_alarm")
     int getMaxCode();
+
+    @Select("select id, code, name, project_id, module_id, group_id, route_key, config " +
+            "from tb_alarm where id=#{id}")
+    Alarm getById(@Param("id") int id);
 }

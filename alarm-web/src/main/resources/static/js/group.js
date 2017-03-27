@@ -80,7 +80,6 @@ function getGroups(search) {
                         + "_val='"+receiver["id"]+"' style='float:right;margin:0;padding:0;width:26px;'>X</button>"
                         + "</div></td></tr>";
                 }
-                console.log(receivers);
                 $(".receivers-body").html(html);
                 $(".receiver-del").click(function() {
                     $("#receiver-del").attr("_val", $(this).attr("_val"));
@@ -148,9 +147,6 @@ function addGroup(name) {
                 alert("创建失败");
             }
             location.replace(location.href);
-        },
-        error: function(XMLHttpRequest, textStatus, errorThrown){
-            console.log(XMLHttpRequest)
         }
     });
 }
@@ -183,9 +179,6 @@ function addReceiverToGroup(gid, rid) {
                 alert("创建失败");
             }
             location.replace(location.href);
-        },
-        error: function(XMLHttpRequest, textStatus, errorThrown){
-            console.log(XMLHttpRequest)
         }
     });
 }

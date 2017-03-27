@@ -74,6 +74,10 @@ public class AlarmService {
         return alarmDao.getCount();
     }
 
+    public Alarm getAlarmById(Integer aid) {
+        return alarmDao.getById(aid);
+    }
+
     public int createAlarm(Alarm alarm) {
         // 自动生成code
         if(alarm.getCode() == 0) {
@@ -95,7 +99,17 @@ public class AlarmService {
     }
 
     public List<Module> getModules(int pid) {
-        // get default module
         return moduleDao.getByPid(pid);
+    }
+
+    public int deleteAlarmById(Integer aid) {
+        return alarmDao.deleteById(aid);
+    }
+
+    public int updateAlarm(Alarm alarm) {
+        if (alarm.getCode() <= 0) {
+            alarm.setCode(alarmDao.getMaxCode() + 1);
+        }
+        return alarmDao.updateById(alarm);
     }
 }

@@ -53,11 +53,19 @@ public class AlarmController extends BaseController {
     }
 
     // 获取指定id的告警
-    //@RequestMapping(value = "/alarms/{aid}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    //public String getAlarmById(HttpServletRequest request, @PathVariable Integer aid) {
-    //    logger.info("GET /alarms/{}, body:{}", aid);
-    //    return ResponseHelper.buildResponse(2000, "GET /alarms/"+aid);
-    //}
+    @RequestMapping(value = "/alarms/{aid}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String getAlarmById(HttpServletRequest request, @PathVariable Integer aid) {
+        logger.info("GET /alarms/{}, body:{}", aid);
+        Map<String, Object> results = new HashMap<>();
+        results.put("codes", alarmService.getCodes());
+        List<Project> projects = alarmService.getProjects();
+        Alarm alarm = alarmService.getAlarmById(aid);
+        results.put("projects", projects);
+        results.put("modules", alarmService.getModules(alarm.getProjectId()));
+        results.put("groups", alarmService.getGroups());
+        results.put("alarm", alarm);
+        return ResponseHelper.buildResponse(2000, results);
+    }
 
     @RequestMapping(value = "/alarms", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public String addAlarm(@RequestBody Alarm alarm) {
@@ -66,17 +74,17 @@ public class AlarmController extends BaseController {
         return ResponseHelper.buildResponse(2000, "success");
     }
 
-    // 更新指定id告警
-    //@RequestMapping(value = "/alarms/{aid}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    //public String updateAlarm(HttpServletRequest request, @PathVariable Integer aid) {
-    //    logger.info("PUT /alarms/{}, body:{}", aid);
-    //    return ResponseHelper.buildResponse(2000, "PUT /alarms/"+aid);
-    //}
+    @RequestMapping(value = "/alarms", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String updateAlarm(@RequestBody Alarm alarm) {
+        logger.info("PUT /alarms, body:{}", JSON.toJSONString(alarm));
+        alarmService.updateAlarm(alarm);
+        return ResponseHelper.buildResponse(2000, "success");
+    }
 
-    // 删除指定id告警
-    //@RequestMapping(value = "/alarms/{aid}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    //public String deleteAlarm(HttpServletRequest request, @PathVariable Integer aid) {
-    //    logger.info("DELETE /alarms/{}, body:{}", aid);
-    //    return ResponseHelper.buildResponse(2000, "DELETE /alarms/"+aid);
-    //}
+    @RequestMapping(value = "/alarms/{aid}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String deleteAlarm(HttpServletRequest request, @PathVariable Integer aid) {
+        logger.info("DELETE /alarms/{}", aid);
+        alarmService.deleteAlarmById(aid);
+        return ResponseHelper.buildResponse(2000, "success");
+    }
 }
