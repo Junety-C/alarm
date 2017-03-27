@@ -10,11 +10,12 @@ public class AlarmLog {
     private String alarmName;
     private String projectName;
     private String ModuleName;
+    private String groupName;
     private Level level;
     private String receivers;
     private String content;
     private String ip;
-    private AlarmStatus status;
+    private String status;
     private String deliveryStatus;
     private long createTime;
 
@@ -98,11 +99,11 @@ public class AlarmLog {
         this.ip = ip;
     }
 
-    public AlarmStatus getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(AlarmStatus status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
@@ -120,5 +121,13 @@ public class AlarmLog {
 
     public void setCreateTime(long createTime) {
         this.createTime = createTime;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 }

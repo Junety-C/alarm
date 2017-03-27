@@ -36,6 +36,8 @@ public class AlarmService {
     private ProjectDao projectDao;
     @Autowired
     private ModuleDao moduleDao;
+    @Autowired
+    private GroupDao groupDao;
 
 
     @Autowired
@@ -62,8 +64,9 @@ public class AlarmService {
                 // 接收人去重,防止一条告警信息多次发送给同一个接收人
                 receivers = removeDuplicatedReceiver(receivers, sent);
                 if(receivers.size() != 0) {
+                    Group group = groupDao.getById(alarm.getGroupId());
                     AlarmMessage alarmMessage = buildAlarmMessage(alarm, alarmForm, receivers, reportId);
-                    saveAlarmLog(alarmMessage);
+                    saveAlarmLog(alarmMessage, group);
                     triggerAlarm(alarmMessage);
                 }
             }
@@ -119,7 +122,7 @@ public class AlarmService {
         }
     }
 
-    private void saveAlarmLog(AlarmMessage alarmMessage) {
+    private void saveAlarmLog(AlarmMessage alarmMessage, Group group) {
         AlarmLog alarmLog = new AlarmLog();
         alarmLog.setReportId(alarmMessage.getReportId());
         alarmLog.setCode(alarmMessage.getCode());
@@ -127,10 +130,11 @@ public class AlarmService {
         alarmLog.setProjectName(alarmMessage.getProjectName());
         alarmLog.setModuleName(alarmMessage.getModuleName());
         alarmLog.setLevel(alarmMessage.getLevel());
+        alarmLog.setGroupName(group.getName());
         alarmLog.setReceivers(getReceiversName(alarmMessage.getReceivers()));
         alarmLog.setContent(alarmMessage.getContent(512));
         alarmLog.setIp(alarmMessage.getIp());
-        alarmLog.setStatus(AlarmStatus.CREATE);
+        alarmLog.setStatus(AlarmStatus.CREATE.getTag());
         alarmLog.setDeliveryStatus("");
         alarmLog.setCreateTime(alarmMessage.getCreateTime());
 

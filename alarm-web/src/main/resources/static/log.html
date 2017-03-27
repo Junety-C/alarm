@@ -13,6 +13,7 @@
 	<script src="js/bootstrap.min.js" type="text/javascript"></script>
 	<script src="js/select2.min.js" type="text/javascript"></script>
 	<script src="js/page.js" type="text/javascript"></script>
+	<script src="js/logs.js" type="text/javascript"></script>
 </head>
 <body style="background:#F2F4F8;">
 	<!-- 告警配置 -->
@@ -28,23 +29,23 @@
 			<div class="option">
 				<form class="form-inline fright" role="form">
 					<div class="form-group">
-						<select class="form-control" style="width:80px;">
-							<option>代号</option>
-							<option>告警名称</option>
-							<option>业务</option>
-							<option>接收组</option>
+						<select id="search-select" class="form-control" style="width:80px;">
+							<option _val="code">代号</option>
+							<option _val="alarm_name">告警名称</option>
+							<option _val="project">项目名称</option>
 						</select>
 					</div>
 					<div class="form-group">
-						<input type="text" class="form-control" placeholder="Search">
+						<input id="search-input" type="text" class="form-control" placeholder="Search">
 					</div>
-					<button type="submit" class="btn btn-default"  data-toggle="tooltip" data-placement="top" title="查询"><span class="glyphicon glyphicon-search"></span></button>
+					<button id="search-submit" type="button" class="btn btn-default"  data-toggle="tooltip" data-placement="top" title="查询"><span class="glyphicon glyphicon-search"></span></button>
 				</form>
 			</div>
 
 			<table class="table table-bordered table-hover">
 			    <caption class="caption-border">
 					<span>告警日志</span>
+					<span class="fright table-total-size"></span>
 				</caption>
 			    <thead>
 					<tr>
@@ -52,7 +53,7 @@
 						<th>代号</th>
 					    <th>告警名称</th>
 						<th>时间</th>
-						<th>业务</th>
+						<th>项目</th>
 					    <th>接收组</th>
 					    <th>接收人</th>
 						<th>状态</th>
@@ -60,79 +61,7 @@
 						<th>内容</th>
 					</tr>
 			    </thead>
-				<tbody style="background:white;">
-					<tr>
-					    <td>10000</td>
-					    <td>1</td>
-					    <td>告警维护</td>
-						<td>2016-10-03 19:07:06</td>
-						<td>告警系统</td>
-						<td>告警维护组</td>
-						<td>蔡俊涛,蔡俊涛</td>
-						<td>创建</td>
-						<td>邮件,短信,微信</td>
-						<td>告警编号为[128]的接收人为空,告警编号为[128]的接收人为空sssssssssssssssssasasasasasa</td>
-					</tr>
-					<tr>
-					    <td>10000</td>
-					    <td>1</td>
-					    <td>告警维护</td>
-						<td>2016-10-03 19:07:06</td>
-						<td>告警系统</td>
-						<td>告警维护组</td>
-						<td>蔡俊涛,蔡俊涛</td>
-						<td>创建</td>
-						<td>邮件,短信,微信</td>
-						<td>告警编号为[128]的接收人为空</td>
-					</tr>
-					<tr>
-					    <td>10000</td>
-					    <td>1</td>
-					    <td>告警维护</td>
-						<td>2016-10-03 19:07:06</td>
-						<td>告警系统</td>
-						<td>告警维护组</td>
-						<td>蔡俊涛</td>
-						<td>创建</td>
-						<td>邮件,短信,微信</td>
-						<td>告警编号为[128]的接收人为空</td>
-					</tr>
-					<tr>
-					    <td>10000</td>
-					    <td>1</td>
-					    <td>告警维护</td>
-						<td>2016-10-03 19:07:06</td>
-						<td>告警系统</td>
-						<td>告警维护组</td>
-						<td>蔡俊涛</td>
-						<td>创建</td>
-						<td>邮件,短信,微信</td>
-						<td>告警编号为[128]的接收人为空</td>
-					</tr>
-					<tr>
-					    <td>10000</td>
-					    <td>1</td>
-					    <td>告警维护</td>
-						<td>2016-10-03 19:07:06</td>
-						<td>告警系统</td>
-						<td>告警维护组</td>
-						<td>蔡俊涛</td>
-						<td>创建</td>
-						<td>邮件,短信,微信</td>
-						<td>告警编号为[128]的接收人为空</td>
-					</tr>
-					<tr>
-					    <td>10000</td>
-					    <td>1</td>
-					    <td>告警维护</td>
-						<td>2016-10-03 19:07:06</td>
-						<td>告警系统</td>
-						<td>告警维护组</td>
-						<td>蔡俊涛</td>
-						<td>创建</td>
-						<td>邮件,短信,微信</td>
-						<td>告警编号为[128]的接收人为空</td>
-					</tr>
+				<tbody class="logs-body" style="background:white;">
 				</tbody>
 			</table>
 			
