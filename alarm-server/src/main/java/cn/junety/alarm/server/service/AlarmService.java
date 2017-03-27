@@ -10,6 +10,8 @@ import cn.junety.alarm.server.common.IdGenerator;
 import cn.junety.alarm.server.vo.AlarmForm;
 import cn.junety.alarm.server.vo.AlarmMessage;
 import cn.junety.alarm.server.vo.JsonConfig;
+import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,17 +85,37 @@ public class AlarmService {
 
     private List<Alarm> getAlarms(AlarmForm alarmForm) {
         Integer code = alarmForm.getCode();
+        List<Alarm> alarms = alarmDao.getAllByCode(code);
+
         String routeKey = alarmForm.getRouteKey() == null ? "" : alarmForm.getRouteKey().trim();
-        List<Alarm> alarms;
-        if(routeKey.length() == 0) {
-            alarms = alarmDao.getAllByCode(code);
-        } else {
-            alarms = alarmDao.getAllByCodeWithRouteKey(code, routeKey);
+        if(Strings.isNullOrEmpty(alarmForm.getRouteKey())) {
+            return alarms;
+        }
+
+        List<Alarm> legalAlarm = new ArrayList<>();
+        for(Alarm alarm : alarms) {
+            if(isMatch(routeKey, alarm.getRouteKey())) {
+                legalAlarm.add(alarm);
+            }
         }
         if(alarms.size() == 0) {
             throw new AlarmNotFoundException();
         }
-        return alarms;
+        return legalAlarm;
+    }
+
+    private boolean isMatch(String userRouteKey, String alarmRouteKey) {
+        List<String> userPart = Splitter.on(".").splitToList(userRouteKey);
+        List<String> alarmPart = Splitter.on(".").splitToList(alarmRouteKey);
+
+        if(userPart.size() != alarmPart.size()) return false;
+
+        for(int i = 0; i < userPart.size(); i++) {
+            if (!userPart.get(i).equals(alarmPart.get(i)) && !"*".equals(alarmPart.get(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private List<Receiver> removeDuplicatedReceiver(List<Receiver> receivers, Set<Integer> sent) {
@@ -108,16 +130,16 @@ public class AlarmService {
 
     private void triggerAlarm(AlarmMessage alarmMessage) {
         JsonConfig config = new JsonConfig(alarmMessage.getConfig());
-        if(config.getConfig("is_send_sms", false)) {
+        if(config.getConfig("sms", false)) {
             smsChannel.send(alarmMessage);
         }
-        if(config.getConfig("is_send_mail", false)) {
+        if(config.getConfig("mail", false)) {
             mailChannel.send(alarmMessage);
         }
-        if(config.getConfig("is_send_wechat", false)) {
+        if(config.getConfig("wechat", false)) {
             wechatChannel.send(alarmMessage);
         }
-        if(config.getConfig("is_send_qq", false)) {
+        if(config.getConfig("qq", false)) {
             qqChannel.send(alarmMessage);
         }
     }

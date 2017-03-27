@@ -2,6 +2,7 @@ package cn.junety.alarm.server.vo;
 
 import cn.junety.alarm.base.entity.*;
 import cn.junety.alarm.base.util.DateUtil;
+import com.google.common.base.Strings;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -142,7 +143,9 @@ public class AlarmMessage {
     public List<String> getWechatList() {
         List<String> wechatList = new ArrayList<>();
         for(Receiver receiver : receivers) {
-            wechatList.add(receiver.getWechat());
+            if(!Strings.isNullOrEmpty(receiver.getWechat())) {
+                wechatList.add(receiver.getWechat());
+            }
         }
         return wechatList;
     }
@@ -150,7 +153,9 @@ public class AlarmMessage {
     public List<String> getMailList() {
         List<String> mailList = new ArrayList<>();
         for(Receiver receiver : receivers) {
-            mailList.add(receiver.getMail());
+            if(!Strings.isNullOrEmpty(receiver.getMail())) {
+                mailList.add(receiver.getMail());
+            }
         }
         return mailList;
     }
@@ -158,7 +163,9 @@ public class AlarmMessage {
     public List<String> getQQList() {
         List<String> qqList = new ArrayList<>();
         for(Receiver receiver : receivers) {
-            qqList.add(receiver.getQq());
+            if(!Strings.isNullOrEmpty(receiver.getQq())) {
+                qqList.add(receiver.getQq());
+            }
         }
         return qqList;
     }
@@ -166,7 +173,9 @@ public class AlarmMessage {
     public List<String> getPhoneList() {
         List<String> phoneList = new ArrayList<>();
         for(Receiver receiver : receivers) {
-            phoneList.add(receiver.getPhone());
+            if(!Strings.isNullOrEmpty(receiver.getPhone())) {
+                phoneList.add(receiver.getPhone());
+            }
         }
         return phoneList;
     }
