@@ -10,11 +10,16 @@ import java.util.List;
  * Created by caijt on 2017/1/28.
  */
 public interface ReceiverDao {
-    @Select("select re.* from tb_receiver re left join tb_group_member gm on re.id=gm.receiver_id and gm.group_id=#{group_id} ")
+    @Select("select tr.id, tr.name, tr.phone, tr.wechat, tr.qq " +
+            "from tb_receiver tr, tb_group_member tgm " +
+            "where tgm.group_id=#{groupId} and tgm.receiver_id=tr.id")
     List<Receiver> getByGroupId(int groupId);
 
     @Select("select id, name, phone, mail, wechat, qq from tb_receiver order by id desc limit #{begin}, #{length}")
     List<Receiver> get(@Param("begin") int begin, @Param("length") int length);
+
+    @Select("select id, name, phone, mail, wechat, qq from tb_receiver")
+    List<Receiver> getAll();
 
     @Select("select id, name, phone, mail, wechat, qq from tb_receiver where id=#{id}")
     Receiver getById(@Param("id") int id);

@@ -24,7 +24,7 @@ public interface ProjectDao {
     @Select("select id, name from tb_project where name like #{name} order by id desc limit #{begin}, #{length}")
     List<Project> getByName(@Param("name") String name, @Param("begin") int begin, @Param("length") int length);
 
-    @Select("select count(id) where name like #{name}")
+    @Select("select count(id) from tb_project where name like #{name}")
     int getCountByName(@Param("name") String name);
 
     @Insert("insert into tb_project(name) values(#{name})")
