@@ -17,6 +17,7 @@ import javax.sql.DataSource;
 
 /**
  * Created by caijt on 2017/2/20.
+ * 数据库配置
  */
 @Configuration
 @PropertySource(ignoreResourceNotFound = true, value = "classpath*:application.properties")

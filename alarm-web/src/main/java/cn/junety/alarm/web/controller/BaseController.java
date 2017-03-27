@@ -18,14 +18,16 @@ public class BaseController {
     private static final Logger logger = LoggerFactory.getLogger(BaseController.class);
 
     @ExceptionHandler(HttpMessageConversionException.class)
-    public String invalidParameterHandler(HttpServletRequest req, Exception e) {
-        logger.error("{}", e);
-        return ResponseHelper.buildResponse(4000, "invalid params");
+    public String invalidParameterHandler(HttpServletRequest request, Exception e) {
+        String reqId = request.getSession().getId();
+        logger.error("reqId:{}, {}", reqId, e);
+        return ResponseHelper.buildResponse(4000, reqId, "invalid params");
     }
 
     @ExceptionHandler(Exception.class)
-    public String badService(Exception e) {
-        logger.error("{}", e);
-        return ResponseHelper.buildResponse(5000, "bad service");
+    public String badService(HttpServletRequest request, Exception e) {
+        String reqId = request.getSession().getId();
+        logger.error("reqId:{}, {}", reqId, e);
+        return ResponseHelper.buildResponse(5000, reqId, "bad service");
     }
 }

@@ -19,7 +19,8 @@ public class IndexController {
 
     @RequestMapping(value = "/index", method = RequestMethod.GET)
     public String getAlarms(HttpServletRequest request) {
-        logger.info("GET /index, body:{}");
+        String reqId = request.getSession().getId();
+        logger.info("reqId:{}, GET /index, body:{}", reqId, request.getSession().getId());
         return "home";
     }
 }

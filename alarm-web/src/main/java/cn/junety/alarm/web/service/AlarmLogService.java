@@ -3,6 +3,8 @@ package cn.junety.alarm.web.service;
 import cn.junety.alarm.base.dao.AlarmLogDao;
 import cn.junety.alarm.base.entity.AlarmLog;
 import cn.junety.alarm.web.vo.AlarmLogForm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +16,14 @@ import java.util.List;
 @Service
 public class AlarmLogService {
 
+    private static final Logger logger = LoggerFactory.getLogger(AlarmLogService.class);
+
     @Autowired
     private AlarmLogDao alarmLogDao;
 
     public List<AlarmLog> getLogs(AlarmLogForm alarmLogForm) {
         int length = alarmLogForm.getLength();
-        int begin =  (alarmLogForm.getPage() - 1) * length;
+        int begin = (alarmLogForm.getPage() - 1) * length;
 
         if(alarmLogForm.getCode() != null) {
             return alarmLogDao.getByCode(alarmLogForm.getCode(), begin, length);

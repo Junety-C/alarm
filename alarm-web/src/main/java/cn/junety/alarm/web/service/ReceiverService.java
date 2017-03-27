@@ -3,6 +3,8 @@ package cn.junety.alarm.web.service;
 import cn.junety.alarm.base.dao.ReceiverDao;
 import cn.junety.alarm.base.entity.Receiver;
 import cn.junety.alarm.web.vo.ReceiverForm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,8 @@ import java.util.List;
  */
 @Service
 public class ReceiverService {
+
+    private static final Logger logger = LoggerFactory.getLogger(ReceiverService.class);
 
     @Autowired
     private ReceiverDao receiverDao;

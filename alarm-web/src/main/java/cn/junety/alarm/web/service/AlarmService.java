@@ -80,7 +80,7 @@ public class AlarmService {
 
     public int createAlarm(Alarm alarm) {
         // 自动生成code
-        if(alarm.getCode() == 0) {
+        if(alarm.getCode() <= 0) {
             alarm.setCode(alarmDao.getMaxCode() + 1);
         }
         return alarmDao.save(alarm);

@@ -6,7 +6,6 @@ import cn.junety.alarm.base.entity.Module;
 import cn.junety.alarm.base.entity.Project;
 import com.alibaba.fastjson.JSON;
 
-import java.util.Map;
 
 /**
  * Created by caijt on 2017/3/26.
