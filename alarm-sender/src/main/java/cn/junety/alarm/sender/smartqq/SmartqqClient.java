@@ -40,10 +40,8 @@ public class SmartqqClient implements Closeable {
     //消息发送失败重发次数
     private static final long RETRY_TIMES = 5;
 
-    //客户端
     private Client client;
 
-    //会话
     private Session session;
 
     //二维码令牌
@@ -70,10 +68,9 @@ public class SmartqqClient implements Closeable {
         getPtwebqq(url);
         getVfwebqq();
         getUinAndPsessionid();
-        //getFriendStatus(); //修复Api返回码[103]的问题
-        //登录成功欢迎语
+        getFriendStatus(); //修复Api返回码[103]的问题
         UserInfo userInfo = getAccountInfo();
-        logger.info(userInfo.getNick() + "，欢迎！");
+        logger.info("登录成功, 欢迎:" + userInfo.getNick());
     }
 
     //登录流程1：获取二维码
@@ -83,7 +80,7 @@ public class SmartqqClient implements Closeable {
         //本地存储二维码图片
         String filePath;
         try {
-            filePath = new File("/Users/caijt/Desktop/qrcode.png").getCanonicalPath();
+            filePath = new File("/Users/caijt/Desktop/qq-qrcode.png").getCanonicalPath();
         } catch (IOException e) {
             throw new IllegalStateException("二维码保存失败");
         }
@@ -96,7 +93,7 @@ public class SmartqqClient implements Closeable {
                 break;
             }
         }
-        logger.info("二维码已保存在 " + filePath + " 文件中，请打开手机QQ并扫描二维码");
+        logger.info("二维码已保存在 " + filePath + " 文件中,请打开手机QQ并扫描二维码");
 
         //使用默认软件打开二维码
         Desktop desk = Desktop.getDesktop();
@@ -134,7 +131,7 @@ public class SmartqqClient implements Closeable {
                     }
                 }
             } else if (result.contains("已失效")) {
-                logger.info("二维码已失效，尝试重新获取二维码");
+                logger.info("二维码已失效,尝试重新获取二维码");
                 getQRCode();
             }
         }
@@ -175,14 +172,12 @@ public class SmartqqClient implements Closeable {
 
     public List<FriendStatus> getFriendStatus() {
         logger.debug("开始获取好友状态");
-
         Response<String> response = get(ApiURL.GET_FRIEND_STATUS, vfwebqq, psessionid);
         return JSON.parseArray(getJsonArrayResult(response).toJSONString(), FriendStatus.class);
     }
 
     public UserInfo getAccountInfo() {
         logger.debug("开始获取登录用户信息");
-
         Response<String> response = get(ApiURL.GET_ACCOUNT_INFO);
         return JSON.parseObject(getJsonObjectResult(response).toJSONString(), UserInfo.class);
     }
@@ -215,24 +210,24 @@ public class SmartqqClient implements Closeable {
     //检验Json返回结果
     private static JSONObject getResponseJson(Response<String> response) {
         if (response.getStatusCode() != 200) {
-            throw new RequestException(String.format("请求失败，Http返回码[%d]", response.getStatusCode()));
+            throw new RequestException(String.format("请求失败,Http返回码[%d]", response.getStatusCode()));
         }
         JSONObject json = JSON.parseObject(response.getBody());
         Integer retCode = json.getInteger("retcode");
         if (retCode == null) {
-            throw new RequestException(String.format("请求失败，Api返回异常", retCode));
+            throw new RequestException("请求失败,Api返回异常");
         } else if (retCode != 0) {
             switch (retCode) {
                 case 103: {
-                    logger.error("请求失败，Api返回码[103]。你需要进入http://w.qq.com，检查是否能正常接收消息。如果可以的话点击[设置]->[退出登录]后查看是否恢复正常");
+                    logger.error("请求失败,Api返回码[103]。你需要进入http://w.qq.com，检查是否能正常接收消息。如果可以的话点击[设置]->[退出登录]后查看是否恢复正常");
                     break;
                 }
                 case 100100: {
-                    logger.debug("请求失败，Api返回码[100100]");
+                    logger.debug("请求失败,Api返回码[100100]");
                     break;
                 }
                 default: {
-                    throw new RequestException(String.format("请求失败，Api返回码[%d]", retCode));
+                    throw new RequestException(String.format("请求失败,Api返回码[%d]", retCode));
                 }
             }
         }
@@ -256,17 +251,14 @@ public class SmartqqClient implements Closeable {
 
     /**
      * 获得好友列表（包含分组信息）
-     *
-     * @return
      */
     public List<Category> getFriendListWithCategory() {
         logger.debug("开始获取好友列表");
+        JSONObject body = new JSONObject();
+        body.put("vfwebqq", vfwebqq);
+        body.put("hash", hash());
 
-        JSONObject r = new JSONObject();
-        r.put("vfwebqq", vfwebqq);
-        r.put("hash", hash());
-
-        Response<String> response = post(ApiURL.GET_FRIEND_LIST, r);
+        Response<String> response = post(ApiURL.GET_FRIEND_LIST, body);
         JSONObject result = getJsonObjectResult(response);
         //获得好友信息
         Map<Long, Friend> friendMap = parseFriendMap(result);
@@ -348,22 +340,19 @@ public class SmartqqClient implements Closeable {
 
     /**
      * 发送消息
-     *
-     * @param friendId 好友id
-     * @param msg      消息内容
      */
     public boolean sendMessageToFriend(long friendId, String msg) {
         logger.debug("开始发送消息");
 
-        JSONObject r = new JSONObject();
-        r.put("to", friendId);
-        r.put("content", JSON.toJSONString(Arrays.asList(msg, Arrays.asList("font", Font.DEFAULT_FONT))));  //注意这里虽然格式是Json，但是实际是String
-        r.put("face", 573);
-        r.put("clientid", Client_ID);
-        r.put("msg_id", MESSAGE_ID++);
-        r.put("psessionid", psessionid);
+        JSONObject body = new JSONObject();
+        body.put("to", friendId);
+        body.put("content", JSON.toJSONString(Arrays.asList(msg, Arrays.asList("font", Font.DEFAULT_FONT))));  //注意这里虽然格式是Json，但是实际是String
+        body.put("face", 573);
+        body.put("clientid", Client_ID);
+        body.put("msg_id", MESSAGE_ID++);
+        body.put("psessionid", psessionid);
 
-        Response<String> response = postWithRetry(ApiURL.SEND_MESSAGE_TO_FRIEND, r);
+        Response<String> response = postWithRetry(ApiURL.SEND_MESSAGE_TO_FRIEND, body);
         return checkSendMsgResult(response);
     }
 
@@ -381,7 +370,7 @@ public class SmartqqClient implements Closeable {
     //检查消息是否发送成功
     private static boolean checkSendMsgResult(Response<String> response) {
         if (response.getStatusCode() != 200) {
-            logger.error(String.format("发送失败，Http返回码[%d]", response.getStatusCode()));
+            logger.error(String.format("发送失败,Http返回码[%d]", response.getStatusCode()));
         }
         JSONObject json = JSON.parseObject(response.getBody());
         Integer errCode = json.getInteger("errCode");
@@ -390,16 +379,13 @@ public class SmartqqClient implements Closeable {
             logger.debug("发送成功");
             return true;
         } else {
-            logger.error(String.format("发送失败，Api返回码[%d]", retcode));
+            logger.error(String.format("发送失败,Api返回码[%d]", retcode));
             return false;
         }
     }
 
     /**
      * 获得qq号
-     *
-     * @param friendId 用户id
-     * @return
      */
     public long getQQById(long friendId) {
         logger.debug("开始获取QQ号");

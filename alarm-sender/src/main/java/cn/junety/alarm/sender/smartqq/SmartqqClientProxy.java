@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,16 +37,20 @@ public class SmartqqClientProxy {
     }
 
     private void refreshFriendList() {
-        List<Category> categories = client.getFriendListWithCategory();
-        Map<String, Long> qqToUserId = new HashMap<>();
-        for (Category category : categories) {
-            for (Friend friend : category.getFriends()) {
-                Long qq = client.getQQById(friend.getUserId());
-                qqToUserId.put(""+qq, friend.getUserId());
+        try {
+            List<Category> categories = client.getFriendListWithCategory();
+            Map<String, Long> qqToUserId = new HashMap<>();
+            for (Category category : categories) {
+                for (Friend friend : category.getFriends()) {
+                    Long qq = client.getQQById(friend.getUserId());
+                    qqToUserId.put("" + qq, friend.getUserId());
+                }
             }
+            userIdMapper = qqToUserId;
+            logger.debug("qq friend list refresh success, size:{}", userIdMapper.size());
+        } catch (Exception e) {
+            logger.error("refresh friend list error, caused by", e);
         }
-        userIdMapper = qqToUserId;
-        logger.debug("qq friend list refresh success, size:{}", userIdMapper.size());
     }
 
     public void send(List<String> qqList, String content) {
@@ -69,5 +74,10 @@ public class SmartqqClientProxy {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) {
+        SmartqqClientProxy client = new SmartqqClientProxy();
+        client.send(Arrays.asList("your qq number"), "告警测试");
     }
 }

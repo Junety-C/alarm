@@ -79,5 +79,6 @@
     <logger name="org.hibernate" level="WARN"/>
     <logger name="org.apache" level="WARN"/>
     <logger name="org.mybatis" level="WARN"/>
+    <logger name="net.dongliu.requests" level="WARN"/>
 
 </configuration>
