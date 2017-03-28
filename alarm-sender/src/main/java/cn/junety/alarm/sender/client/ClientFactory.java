@@ -2,6 +2,8 @@ package cn.junety.alarm.sender.client;
 
 import cn.junety.alarm.sender.client.impl.DeliveryStatusClient;
 import cn.junety.alarm.sender.client.impl.MailClient;
+import cn.junety.alarm.sender.client.impl.QQClient;
+import cn.junety.alarm.sender.common.Configure;
 import org.springframework.context.ApplicationContext;
 
 /**
@@ -9,13 +11,18 @@ import org.springframework.context.ApplicationContext;
  */
 public class ClientFactory {
 
-    public static MailClient buildMailClient(String name, String queueName) {
+    public static MailClient buildMailClient(String name) {
         System.setProperty("log.home", name);
-        return new MailClient(name, queueName);
+        return new MailClient(name, Configure.MAIL_QUEUE);
     }
 
-    public static DeliveryStatusClient buildDeliveryStatusClient(String name, String queueName, ApplicationContext context) {
+    public static QQClient buildQQClient(String name) {
         System.setProperty("log.home", name);
-        return new DeliveryStatusClient(name, queueName, context);
+        return new QQClient(name, Configure.QQ_QUEUE);
+    }
+
+    public static DeliveryStatusClient buildDeliveryStatusClient(String name, ApplicationContext context) {
+        System.setProperty("log.home", name);
+        return new DeliveryStatusClient(name, Configure.DELIVERY_QUEUE, context);
     }
 }

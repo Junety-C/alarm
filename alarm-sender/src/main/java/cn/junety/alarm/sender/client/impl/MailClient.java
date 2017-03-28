@@ -4,7 +4,6 @@ import cn.junety.alarm.base.entity.QueueMessage;
 import cn.junety.alarm.sender.client.Client;
 import cn.junety.alarm.sender.common.Configure;
 import com.alibaba.fastjson.JSON;
-import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.HtmlEmail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,10 +39,11 @@ public class MailClient extends Client {
     private boolean send(String title, String content, List<String> receivers) {
         try {
             HtmlEmail email = new HtmlEmail();
-            email.setAuthenticator(new DefaultAuthenticator(Configure.MAIL_SENDER, Configure.MAIL_SENDER_PASSWORD));
+            System.out.println(Configure.MAIL_SENDER_USERNAME);
+            email.setAuthentication(Configure.MAIL_SENDER_USERNAME, Configure.MAIL_SENDER_PASSWORD);
             email.setHostName(Configure.MAIL_SENDER_SMTP_HOST);
             email.setSmtpPort(Configure.MAIL_SENDER_SMTP_PORT);
-            email.setFrom(Configure.MAIL_SENDER, Configure.MAIL_SENDER_NAME);
+            email.setFrom(Configure.MAIL_SENDER_USERNAME, Configure.MAIL_SENDER_NAME);
             email.setSubject(title);
             email.setHtmlMsg(content);
             email.addTo(receivers.stream().toArray(String[]::new));

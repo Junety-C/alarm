@@ -30,11 +30,10 @@ public abstract class Client {
     }
 
     public void start() {
-        logger.info("start {} client, queue:{}", name, queueName);
+        logger.info("start {} client success", name);
         while (true) {
             try (Jedis jedis = JedisFactory.getJedisInstance(queueName)) {
                 String message = jedis.blpop(0, queueName).get(1);
-                //QueueMessage queueMessage = JSON.parseObject(client.blpop(0, queueName).get(1), QueueMessage.class);
                 if (!send(message)) {
                     // 消费失败，进行重试
                     resend(message);
