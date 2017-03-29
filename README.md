@@ -55,9 +55,9 @@ AlarmClient.info(233, "monitor.ram.alarm", "告警机器的内存炸了, 快来�
 
 如上表，"monitor.ram.alarm"这个路由值能匹配到"monitor.ram.alarm"和"monitor.ram.*"，所以实际上就只有"运维小组C"和"告警维护小组"能接收到告警信息。
 
-注：路由值通过"."来分割词组,其中'\*'代表匹配任意一个词组
+注：路由值通过"."来分割词组,其中"\*"代表匹配任意一个词组
 
-(PS:不好看或者不好用不要太介意,毕竟没怎么写过前端)
+(PS:界面不好看或者不好用不要太介意,毕竟没怎么写过前端)
 
 ## 告警服务端(alarm-server)
 
@@ -86,6 +86,7 @@ IP:127.0.0.1
 先把各个模块中的数据库、邮件、redis等配置修改成你自己的，然后进行打包。
 
 打包后分别运行 java -jar alarm-server.jar 和 java -jar alarm-web.jar，启动服务端和配置中心。
+
 运行 java -jar alarm-server.jar {channel} {name} 启动发送端。例如：
 
 - java -jar alarm-server.jar mail mail_1 (启动邮件发送端)
@@ -93,4 +94,5 @@ IP:127.0.0.1
 - java -jar alarm-server.jar wechat wechat_1 (启动微信发送端,会要你扫二维码登录微信)
 
 使用QQ和微信只能把告警信息发送给好友，所以申请个账号作为告警机器人，然后添加上要发送的接收人即可。
+
 (PS:如果有微信企业号，那么就直接使用微信企业号发送吧）
