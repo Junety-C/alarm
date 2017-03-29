@@ -68,7 +68,6 @@
     </appender>
 
     <root level="DEBUG">
-        <appender-ref ref="console"/>
         <appender-ref ref="debug-out"/>
         <appender-ref ref="info-out"/>
         <appender-ref ref="error-out"/>
@@ -79,5 +78,6 @@
     <logger name="org.hibernate" level="WARN"/>
     <logger name="org.apache" level="WARN"/>
     <logger name="org.mybatis" level="WARN"/>
+    <logger name="cn.junety.alarm.base.dao" level="WARN"/>
 
 </configuration>
