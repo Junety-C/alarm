@@ -12,7 +12,7 @@ public class ApiURL {
     public static final String GET_QR_CODE_URL = "https://login.weixin.qq.com/qrcode/{uuid}";
 
     public static final String VERIFY_QR_CODE_URL = "https://login.weixin.qq.com/cgi-bin/mmwebwx-bin/login" +
-                                                    "?tip={tip}&uuid={uuid}&_={_}";
+                                                    "?tip={tip}&uuid={uuid}&_={time}";
 
     public static final String WECHAT_INIT_URL = "{baseUri}/webwxinit?r={time}&pass_ticket={passTicket}&skey={skey}";
 

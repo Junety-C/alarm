@@ -109,8 +109,8 @@ public class WechatClient implements Closeable {
             try {
                 sleep(3);
                 String response = get(ApiURL.VERIFY_QR_CODE_URL.replace("{tip}", "1")
-                                    .replace("{uuid}", params.getUuid()
-                                    .replace("{_}", System.currentTimeMillis() / 1000 + "")))
+                                    .replace("{uuid}", params.getUuid())
+                                    .replace("{time}", System.currentTimeMillis() / 1000 + ""))
                                     .getBody();
                 String code = match("window.code=(\\d+);", response);
                 if ("201".equals(code)) {

@@ -11,7 +11,7 @@
 
     <artifactId>alarm-sender</artifactId>
     <properties>
-        <bootstrap.class>cn.junety.alarm.server.Bootstrap</bootstrap.class>
+        <bootstrap.class>cn.junety.alarm.sender.Bootstrap</bootstrap.class>
     </properties>
 
     <profiles>

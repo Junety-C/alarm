@@ -25,6 +25,7 @@ public class QQClient extends Client {
     @Override
     protected boolean send(String message) {
         try {
+            logger.debug("start send qq alarm, body:{}", message);
             QueueMessage queueMessage = JSON.parseObject(message, QueueMessage.class);
             client.send(queueMessage.getReceivers(), queueMessage.getContent());
             this.markDeliveryStatus(queueMessage.getLogId(), channel);

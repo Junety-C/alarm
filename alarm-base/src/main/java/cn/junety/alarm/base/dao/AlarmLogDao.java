@@ -2,10 +2,7 @@ package cn.junety.alarm.base.dao;
 
 import cn.junety.alarm.base.entity.AlarmLog;
 import cn.junety.alarm.base.entity.DeliveryStatus;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -18,6 +15,7 @@ public interface AlarmLogDao {
             "receivers, content, ip, status, delivery_status, create_time) values(#{reportId}, #{code}, #{alarmName}, " +
             "#{projectName}, #{moduleName}, #{groupName}, #{level}, #{receivers}, #{content}, #{ip}, #{status}, #{deliveryStatus}, " +
             "#{createTime})")
+    @Options(useGeneratedKeys = true, keyProperty = "id")
     void save(AlarmLog alarmLog);
 
     @Update("update tb_alarm_log set delivery_status=concat(delivery_status, #{channel}, ',') where id=#{logId}")

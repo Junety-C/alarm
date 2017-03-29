@@ -25,7 +25,8 @@ public class SmsChannel extends Channel {
 
         QueueMessage queueMessage = new QueueMessage(null, content, alarmMessage.getPhoneList(),
                 alarmMessage.getLogId(), alarmMessage.getLevel());
-        this.save(JSON.toJSONString(queueMessage));
+        // 不支持啊！没钱啊！
+        //this.save(JSON.toJSONString(queueMessage));
     }
 
     @Override

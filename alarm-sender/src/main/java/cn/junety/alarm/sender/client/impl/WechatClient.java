@@ -25,6 +25,7 @@ public class WechatClient extends Client {
     @Override
     protected boolean send(String message) {
         try {
+            logger.debug("start send wechat alarm, body:{}", message);
             QueueMessage queueMessage = JSON.parseObject(message, QueueMessage.class);
             client.send(queueMessage.getReceivers(), queueMessage.getContent());
             this.markDeliveryStatus(queueMessage.getLogId(), channel);

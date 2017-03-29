@@ -63,7 +63,7 @@ public class AlarmForm {
     }
 
     public boolean validate() {
-        if(code == null || StringUtils.isEmpty(content.trim()) || routeKey == null || level == null) {
+        if(code == null || StringUtils.isEmpty(content.trim()) || level == null) {
             return false;
         }
         return true;

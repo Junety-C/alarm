@@ -26,6 +26,7 @@ public class DeliveryStatusClient extends Client {
     protected boolean send(String message) {
         try {
             DeliveryStatus deliveryStatus = JSON.parseObject(message, DeliveryStatus.class);
+            logger.debug("update delivery status, body:{}", JSON.toJSONString(deliveryStatus));
             return alarmLogDao.updateDeliveryStatus(deliveryStatus) > 0;
         } catch (Exception e) {
             logger.error("send delivery status error, message:{}, caused by", message, e);

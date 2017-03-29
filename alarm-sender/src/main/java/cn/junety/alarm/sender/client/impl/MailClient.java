@@ -24,6 +24,7 @@ public class MailClient extends Client {
     @Override
     protected boolean send(String message) {
         try {
+            logger.debug("start send mail alarm, body:{}", message);
             QueueMessage queueMessage = JSON.parseObject(message, QueueMessage.class);
             if(send(queueMessage.getTitle(), queueMessage.getContent(), queueMessage.getReceivers())) {
                 this.markDeliveryStatus(queueMessage.getLogId(), channel);
