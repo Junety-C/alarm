@@ -9,18 +9,44 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 /**
  * Created by caijt on 2017/3/29.
  */
-public class HttpHelper {
+public class AlarmSender {
 
-    private static Logger logger = LoggerFactory.getLogger(HttpHelper.class);
+    private static Logger logger = LoggerFactory.getLogger(AlarmSender.class);
 
-    public static boolean sendPost(String url, String body) {
+    private static final String ALARM_API = "http://localhost:8089/v1/alarm";
+
+    private final BlockingQueue<String> queue;
+
+    public AlarmSender(int queueSize) {
+        queue = new ArrayBlockingQueue<>(queueSize);
+        new Thread(() -> {
+            logger.info("start alarm sender success");
+            while(true) {
+                try {
+                    sendPost(queue.take());
+                } catch (Exception e) {
+                    logger.error("send alarm message error, caused by", e);
+                }
+            }
+        }).start();
+    }
+
+    public void send(String body) {
+        if (!queue.offer(body)) {
+            logger.debug("queue full, throw away, content:{}", body);
+        }
+    }
+
+    private boolean sendPost(String body) {
         StringBuilder buffer = new StringBuilder();
         try {
-            URL e = new URL(url);
+            URL e = new URL(ALARM_API);
             HttpURLConnection httpUrlConn = (HttpURLConnection)e.openConnection();
             httpUrlConn.setDoOutput(true);
             httpUrlConn.setDoInput(true);

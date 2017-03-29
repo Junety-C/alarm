@@ -28,7 +28,7 @@ public class HttpHelper {
         params.put("code", code);
         params.put("content", content);
         String body = JSON.toJSONString(params);
-        logger.info("Response: {\"httpCode\":\"{}\", \"body\":\"{}\"}", httpCode, body);
+        logger.info("response body:{}", body);
         return new ResponseEntity<>(body, headers, HttpStatus.valueOf(httpCode));
     }
 

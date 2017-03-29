@@ -162,8 +162,6 @@ public class AlarmService {
 
         alarmLogDao.save(alarmLog);
 
-        logger.debug("=========== " + alarmLog.getId());
-
         alarmMessage.addLogId(alarmLog.getId());
     }
 
