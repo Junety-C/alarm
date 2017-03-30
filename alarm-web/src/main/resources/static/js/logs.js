@@ -23,6 +23,12 @@ function getLogs(search) {
                 var logs = data["content"]["logs"];
                 for(var i = 0; i < logs.length; i++) {
                     var log  = logs[i];
+                    var status;
+                    if(log["status"] == 1) status = "已发送";
+                    else if(log["status"] == 2)status = "限频";
+                    else if(log["status"]== 3)status = "测试";
+                    else status = "创建";
+
                     html += "<tr><td>"+log["reportId"]+"</td>"
                         + "<td>"+log["code"]+"</td>"
                         + "<td>"+log["alarmName"]+"</td>"
@@ -30,7 +36,7 @@ function getLogs(search) {
                         + "<td>"+log["projectName"]+"</td>"
                         + "<td>"+log["groupName"]+"</td>"
                         + "<td>"+log["receivers"]+"</td>"
-                        + "<td>"+log["status"]+"</td>"
+                        + "<td>"+status+"</td>"
                         + "<td>"+log["deliveryStatus"]+"</td>"
                         + "<td>"+log["content"]+"</td></tr>";
                 }

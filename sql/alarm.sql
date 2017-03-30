@@ -22,7 +22,7 @@ CREATE TABLE `tb_alarm_log` (
   `receivers` varchar(500) DEFAULT NULL COMMENT '接收者',
   `content` varchar(512) NOT NULL COMMENT '告警内容',
   `ip` varchar(25) DEFAULT NULL COMMENT 'ip地址',
-  `status` varchar(10) NOT NULL COMMENT '告警状态：发送/抑制/测试',
+  `status` tinyint NOT NULL COMMENT '告警状态：0:创建、1:已发送、2:限频、3:测试',
   `delivery_status` varchar(30) DEFAULT NULL COMMENT '推送状态',
   `create_time` bigint(20) NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
