@@ -19,7 +19,7 @@ public interface AlarmLogDao {
     void save(AlarmLog alarmLog);
 
     @Update("update tb_alarm_log set status=#{status}, delivery_status=concat(delivery_status, #{channel}, ',') where id=#{logId}")
-    int updateDeliveryStatus(@Param("status") int status, DeliveryStatus deliveryStatus);
+    int updateDeliveryStatus(@Param("status") int status, @Param("channel") String channel, @Param("logId") long logId);
 
     @Select("select id, report_id, code, alarm_name, project_name, module_name, group_name, level, receivers, " +
             "content, ip, status, delivery_status, create_time from tb_alarm_log " +
