@@ -1,6 +1,7 @@
 package cn.junety.alarm.sender.client.impl;
 
 import cn.junety.alarm.base.dao.AlarmLogDao;
+import cn.junety.alarm.base.entity.AlarmStatus;
 import cn.junety.alarm.base.entity.DeliveryStatus;
 import cn.junety.alarm.sender.client.Client;
 import com.alibaba.fastjson.JSON;
@@ -27,7 +28,7 @@ public class DeliveryStatusClient extends Client {
         try {
             DeliveryStatus deliveryStatus = JSON.parseObject(message, DeliveryStatus.class);
             logger.debug("update delivery status, body:{}", JSON.toJSONString(deliveryStatus));
-            return alarmLogDao.updateDeliveryStatus(deliveryStatus) > 0;
+            return alarmLogDao.updateDeliveryStatus(AlarmStatus.SEND.getNumber(), deliveryStatus) > 0;
         } catch (Exception e) {
             logger.error("send delivery status error, message:{}, caused by", message, e);
         }

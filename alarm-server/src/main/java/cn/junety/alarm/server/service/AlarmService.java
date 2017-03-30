@@ -3,6 +3,7 @@ package cn.junety.alarm.server.service;
 import cn.junety.alarm.base.dao.*;
 import cn.junety.alarm.base.entity.*;
 import cn.junety.alarm.base.exception.AlarmNotFoundException;
+import cn.junety.alarm.base.redis.JedisFactory;
 import cn.junety.alarm.server.channel.Channel;
 import cn.junety.alarm.server.common.Configuration;
 import cn.junety.alarm.server.common.HttpHelper;
@@ -10,6 +11,7 @@ import cn.junety.alarm.server.common.IdGenerator;
 import cn.junety.alarm.server.vo.AlarmForm;
 import cn.junety.alarm.server.vo.AlarmMessage;
 import cn.junety.alarm.server.vo.JsonConfig;
+import com.alibaba.fastjson.JSON;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import org.slf4j.Logger;
@@ -17,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import redis.clients.jedis.Jedis;
 
 import java.util.*;
 
@@ -27,6 +30,10 @@ import java.util.*;
 public class AlarmService {
 
     private static final Logger logger = LoggerFactory.getLogger(AlarmService.class);
+
+    // 限频参数
+    private static final int DEFAULT_TIME_INTERVAL_LIMIT = 5;   //分钟
+    private static final int DEFAULT_SEND_TIMES_LIMIT = 10;     //次数
 
     @Autowired
     private AlarmDao alarmDao;
@@ -67,9 +74,15 @@ public class AlarmService {
                 receivers = removeDuplicatedReceiver(receivers, sent);
                 if(receivers.size() != 0) {
                     Group group = groupDao.getById(alarm.getGroupId());
-                    AlarmMessage alarmMessage = buildAlarmMessage(alarm, alarmForm, receivers, reportId);
-                    saveAlarmLog(alarmMessage, group);
-                    triggerAlarm(alarmMessage);
+                    AlarmMessage alarmMessage = buildAlarmMessage(alarm, alarmForm, receivers, reportId, group);
+                    if (alarmForm.isTest()) {
+                        saveAlarmLog(alarmMessage, AlarmStatus.TEST);
+                    } else if(isFrequencyLimited(alarmMessage)) {
+                        saveAlarmLog(alarmMessage, AlarmStatus.LIMIT);
+                    } else {
+                        saveAlarmLog(alarmMessage, AlarmStatus.CREATE);
+                        triggerAlarm(alarmMessage);
+                    }
                 }
             }
             // 告警信息无接收人, 发送告警信息给管理员
@@ -88,24 +101,31 @@ public class AlarmService {
         Integer code = alarmForm.getCode();
         List<Alarm> alarms = alarmDao.getAllByCode(code);
 
-        String routeKey = alarmForm.getRouteKey() == null ? "" : alarmForm.getRouteKey().trim();
-        if(Strings.isNullOrEmpty(alarmForm.getRouteKey())) {
-            return alarms;
-        }
-
+        String routeKey = alarmForm.getRouteKey();
         List<Alarm> legalAlarm = new ArrayList<>();
-        for(Alarm alarm : alarms) {
-            if(isMatch(routeKey, alarm.getRouteKey())) {
-                legalAlarm.add(alarm);
+        if(Strings.isNullOrEmpty(alarmForm.getRouteKey())) {
+            for (Alarm alarm : alarms) {
+                if (Strings.isNullOrEmpty(alarm.getRouteKey())) {
+                    legalAlarm.add(alarm);
+                }
+            }
+        } else {
+            for (Alarm alarm : alarms) {
+                if (isMatch(routeKey, alarm.getRouteKey())) {
+                    legalAlarm.add(alarm);
+                }
             }
         }
-        if(alarms.size() == 0) {
+        if (legalAlarm.size() == 0) {
             throw new AlarmNotFoundException();
         }
         return legalAlarm;
     }
 
     private boolean isMatch(String userRouteKey, String alarmRouteKey) {
+        if(Strings.isNullOrEmpty(alarmRouteKey)) {
+            return false;
+        }
         List<String> userPart = Splitter.on(".").splitToList(userRouteKey);
         List<String> alarmPart = Splitter.on(".").splitToList(alarmRouteKey);
 
@@ -131,6 +151,7 @@ public class AlarmService {
 
     private void triggerAlarm(AlarmMessage alarmMessage) {
         JsonConfig config = new JsonConfig(alarmMessage.getConfig());
+
         if(config.getConfig("sms", false)) {
             smsChannel.send(alarmMessage);
         }
@@ -145,7 +166,45 @@ public class AlarmService {
         }
     }
 
-    private void saveAlarmLog(AlarmMessage alarmMessage, Group group) {
+    private boolean isFrequencyLimited(AlarmMessage alarmMessage) {
+        JsonConfig config = new JsonConfig(alarmMessage.getConfig());
+        if (!config.getConfig("freq_limit", true)) {
+            return false;
+        }
+        switch (alarmMessage.getLevel()) {
+            case DEBUG:
+                Integer debugTimes = config.getConfig("debug_times", DEFAULT_SEND_TIMES_LIMIT);
+                Integer debugInterval = config.getConfig("debug_interval", DEFAULT_TIME_INTERVAL_LIMIT);
+                return checkFrequencyLimited(alarmMessage, debugTimes, debugInterval);
+            case INFO:
+                Integer infoTimes = config.getConfig("info_times", DEFAULT_SEND_TIMES_LIMIT);
+                Integer infoInterval = config.getConfig("info_interval", DEFAULT_TIME_INTERVAL_LIMIT);
+                return checkFrequencyLimited(alarmMessage, infoTimes, infoInterval);
+            case ERROR:
+                Integer errorTimes = config.getConfig("error_times", DEFAULT_SEND_TIMES_LIMIT);
+                Integer errorInterval = config.getConfig("error_interval", DEFAULT_TIME_INTERVAL_LIMIT);
+                return checkFrequencyLimited(alarmMessage, errorTimes, errorInterval);
+            default:
+                logger.info("unknow alarm level, throw away, content:{}", JSON.toJSONString(alarmMessage));
+                return true;
+        }
+    }
+
+    private boolean checkFrequencyLimited(AlarmMessage alarmMessage, int times, int interval) {
+        String key = alarmMessage.getCode() + "." + alarmMessage.getRouteKey();
+        try (Jedis jedis = JedisFactory.getJedisInstance()) {
+            long currentTimes = jedis.incr(key);
+            if (currentTimes == 1) {
+                jedis.expire(key, interval * 60);
+            }
+            return currentTimes > times;
+        } catch (Exception e) {
+            logger.error("check frequency limited error, caused by", e);
+            return false;
+        }
+    }
+
+    private void saveAlarmLog(AlarmMessage alarmMessage, AlarmStatus alarmStatus) {
         AlarmLog alarmLog = new AlarmLog();
         alarmLog.setReportId(alarmMessage.getReportId());
         alarmLog.setCode(alarmMessage.getCode());
@@ -153,11 +212,11 @@ public class AlarmService {
         alarmLog.setProjectName(alarmMessage.getProjectName());
         alarmLog.setModuleName(alarmMessage.getModuleName());
         alarmLog.setLevel(alarmMessage.getLevel());
-        alarmLog.setGroupName(group.getName());
+        alarmLog.setGroupName(alarmMessage.getGroup());
         alarmLog.setReceivers(getReceiversName(alarmMessage.getReceivers()));
         alarmLog.setContent(alarmMessage.getContent(512));
         alarmLog.setIp(alarmMessage.getIp());
-        alarmLog.setStatus(AlarmStatus.CREATE.getTag());
+        alarmLog.setStatus(alarmStatus.getNumber());
         alarmLog.setDeliveryStatus("");
         alarmLog.setCreateTime(alarmMessage.getCreateTime());
 
@@ -166,7 +225,7 @@ public class AlarmService {
         alarmMessage.addLogId(alarmLog.getId());
     }
 
-    private AlarmMessage buildAlarmMessage(Alarm alarm, AlarmForm alarmForm, List<Receiver> receivers, long reportId) {
+    private AlarmMessage buildAlarmMessage(Alarm alarm, AlarmForm alarmForm, List<Receiver> receivers, long reportId, Group group) {
         Module module = moduleDao.getById(alarm.getModuleId());
         Project project = projectDao.getById(module.getProjectId());
 
@@ -176,7 +235,8 @@ public class AlarmService {
                 .addProject(project)
                 .addModule(module)
                 .addReceivers(receivers)
-                .addReportId(reportId);
+                .addReportId(reportId)
+                .addGroup(group);
 
         return alarmMessage;
     }

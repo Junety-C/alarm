@@ -16,15 +16,6 @@ public class Configuration {
     public static final String QQ_REDIS_QUEUE = "qq.queue";
     public static final String ALARM_REPORT_ID_POOL = "alarm.report.id.pool";
 
-    @Key("server.port")
-    public static Integer SERVER_PORT;
-
-    @Key("server.allowedorigins")
-    public static String ALLOWED_ORIGINS;
-
-    @Key("server.contextpath")
-    public static String CONTEXT_PATH;
-
     static {
         PropertiesLoader.init(Configuration.class);
     }

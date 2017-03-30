@@ -22,6 +22,7 @@ public class AlarmMessage {
     private String content;
     private String ip;
     private AlarmStatus status;
+    private String group;
     private long createTime;
     private String config;
     private long reportId;
@@ -34,6 +35,7 @@ public class AlarmMessage {
     public AlarmMessage addAlarmForm(AlarmForm alarmForm) {
         this.level = alarmForm.getLevel();
         this.content = alarmForm.getContent();
+        this.routeKey = alarmForm.getRouteKey();
         this.ip = alarmForm.getIp();
         return this;
     }
@@ -41,7 +43,6 @@ public class AlarmMessage {
     public AlarmMessage addAlarm(Alarm alarm) {
         this.code = alarm.getCode();
         this.alarmName = alarm.getName();
-        this.routeKey = alarm.getRouteKey();
         this.config = alarm.getConfig();
         return this;
     }
@@ -63,6 +64,11 @@ public class AlarmMessage {
 
     public AlarmMessage addReportId(long reportId) {
         this.reportId = reportId;
+        return this;
+    }
+
+    public AlarmMessage addGroup(Group group) {
+        this.group = group.getName();
         return this;
     }
 
@@ -178,5 +184,9 @@ public class AlarmMessage {
             }
         }
         return phoneList;
+    }
+
+    public String getGroup() {
+        return group;
     }
 }

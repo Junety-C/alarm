@@ -35,6 +35,12 @@ $(function() {
         $("input[name=config]").each(function() {
             config[$(this).val()] = $(this).prop("checked");
         });
+        config["debug_interval"] = parseInt($("#debug-interval").val());
+        config["debug_times"] = parseInt($("#debug-times").val());
+        config["info_interval"] = parseInt($("#info-interval").val());
+        config["info_times"] = parseInt($("#info-times").val());
+        config["error_interval"] = parseInt($("#error-interval").val());
+        config["error_times"] = parseInt($("#error-times").val());
 
         var alarm_data = {
             code: code,
@@ -70,6 +76,12 @@ $(function() {
         $("input[name=config-update]").each(function() {
             config[$(this).val()] = $(this).prop("checked");
         });
+        config["debug_interval"] = parseInt($("#debug-update-interval").val());
+        config["debug_times"] = parseInt($("#debug-update-times").val());
+        config["info_interval"] = parseInt($("#info-update-interval").val());
+        config["info_times"] = parseInt($("#info-update-times").val());
+        config["error_interval"] = parseInt($("#error-update-interval").val());
+        config["error_times"] = parseInt($("#error-update-times").val());
 
         var alarm_data = {
             id: alarm_id,
@@ -224,6 +236,13 @@ function getAlarmById(aid) {
                 $("#wechat").prop("checked", config["wechat"]);
                 $("#sms").prop("checked", config["sms"]);
                 $("#qq").prop("checked", config["qq"]);
+
+                $("#debug-update-interval").val(config["debug_interval"]);
+                $("#debug-update-times").val(config["debug_times"]);
+                $("#info-update-interval").val(config["info_interval"]);
+                $("#info-update-times").val(config["info_times"]);
+                $("#error-update-interval").val(config["error_interval"]);
+                $("#error-update-times").val(config["error_times"]);
 
                 // get module list when project change
                 $("#alarm-project-update").change(function() {

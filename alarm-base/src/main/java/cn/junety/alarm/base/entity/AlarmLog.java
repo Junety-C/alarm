@@ -15,7 +15,7 @@ public class AlarmLog {
     private String receivers;
     private String content;
     private String ip;
-    private String status;
+    private int status;
     private String deliveryStatus;
     private long createTime;
 
@@ -99,11 +99,11 @@ public class AlarmLog {
         this.ip = ip;
     }
 
-    public String getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 

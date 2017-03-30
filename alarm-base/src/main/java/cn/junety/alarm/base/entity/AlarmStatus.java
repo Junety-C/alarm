@@ -4,15 +4,15 @@ package cn.junety.alarm.base.entity;
  * Created by caijt on 2017/1/28.
  */
 public enum AlarmStatus {
-    CREATE("创建"), SEND("发送"), INHIBITION("抑制"), TEST("测试");
+    CREATE(0), SEND(1), LIMIT(2), TEST(3);
 
-    private String tag;
+    private int number;
 
-    AlarmStatus(String tag) {
-        this.tag = tag;
+    AlarmStatus(int number) {
+        this.number = number;
     }
 
-    public String getTag() {
-        return tag;
+    public int getNumber() {
+        return number;
     }
 }

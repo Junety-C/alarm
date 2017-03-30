@@ -117,6 +117,7 @@
 							<label class="col-md-3 control-label">配置：</label>
 							<div class="col-md-8">
 								<div class="checkbox">
+									<label><input name="config" type="checkbox" value="freq_limit"/>限频</label>
 									<label><input name="config" type="checkbox" checked="checked" value="mail"/>邮件</label>
 									<label><input name="config" type="checkbox" checked="checked" value="wechat"/>微信</label>
 									<label><input name="config" type="checkbox" value="sms"/>短信</label>
@@ -124,6 +125,27 @@
 								</div>
 							</div>
 						</div>
+                        <div class="form-group" style="height:26px; margin-top:3px;margin-bottom:3px;padding-top:3px;padding-bottom:3px;">
+                            <label class="col-md-3 control-label" style="line-height:15px;">DEBUG限频：</label>
+                            <div class="form-inline col-md-8" style="height:26px;">
+                                <input id="debug-interval" type="number" class="form-control input-sm" style="width:100px;height:26px;" value="5">&nbsp;分钟&nbsp;
+                                <input id="debug-times" type="number" class="form-control input-sm" style="width:100px;height:26px;" value="10">&nbsp;次数&nbsp;
+                            </div>
+                        </div>
+                        <div class="form-group" style="height:26px; margin-top:3px;margin-bottom:3px;padding-top:3px;padding-bottom:3px;">
+                            <label class="col-md-3 control-label" style="line-height:15px;">INFO限频：</label>
+                            <div class="form-inline col-md-8" style="height:26px;">
+                                <input id="info-interval" type="number" class="form-control input-sm" style="width:100px;height:26px;" value="5">&nbsp;分钟&nbsp;
+                                <input id="info-times" type="number" class="form-control input-sm" style="width:100px;height:26px;" value="10">&nbsp;次数&nbsp;
+                            </div>
+                        </div>
+                        <div class="form-group" style="height:26px; margin-top:3px;padding-top:3px;">
+                            <label class="col-md-3 control-label" style="line-height:15px;">ERROR限频：</label>
+                            <div class="form-inline col-md-8" style="height:26px;">
+                                <input id="error-interval" type="number" class="form-control input-sm" style="width:100px;height:26px;" value="5">&nbsp;分钟&nbsp;
+                                <input id="error-times" type="number" class="form-control input-sm" style="width:100px;height:26px;" value="10">&nbsp;次数&nbsp;
+                            </div>
+                        </div>
 						<div style="text-align:right; padding-right:50px;">
 							<button id="alarm-add" type="button" class="btn btn-info">保存</button>　
 							<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
@@ -181,6 +203,7 @@
 							<label class="col-md-3 control-label">配置：</label>
 							<div class="col-md-8">
 								<div class="checkbox">
+									<label><input id="freq_limit" name="config-update" type="checkbox" value="freq_limit"/>限频</label>
 									<label><input id="mail" name="config-update" type="checkbox" value="mail"/>邮件</label>
 									<label><input id="wechat" name="config-update" type="checkbox" value="wechat"/>微信</label>
 									<label><input id="sms" name="config-update" type="checkbox" value="sms"/>短信</label>
@@ -188,6 +211,28 @@
 								</div>
 							</div>
 						</div>
+						<div class="form-group" style="height:26px; margin-top:3px;margin-bottom:3px;padding-top:3px;padding-bottom:3px;">
+							<label class="col-md-3 control-label" style="line-height:15px;">DEBUG限频：</label>
+							<div class="form-inline col-md-8" style="height:26px;">
+								<input id="debug-update-interval" type="number" class="form-control input-sm" style="width:100px;height:26px;" value="5">&nbsp;分钟&nbsp;
+								<input id="debug-update-times" type="number" class="form-control input-sm" style="width:100px;height:26px;" value="10">&nbsp;次数&nbsp;
+							</div>
+						</div>
+						<div class="form-group" style="height:26px; margin-top:3px;margin-bottom:3px;padding-top:3px;padding-bottom:3px;">
+							<label class="col-md-3 control-label" style="line-height:15px;">INFO限频：</label>
+							<div class="form-inline col-md-8" style="height:26px;">
+								<input id="info-update-interval" type="number" class="form-control input-sm" style="width:100px;height:26px;" value="5">&nbsp;分钟&nbsp;
+								<input id="info-update-times" type="number" class="form-control input-sm" style="width:100px;height:26px;" value="10">&nbsp;次数&nbsp;
+							</div>
+						</div>
+						<div class="form-group" style="height:26px; margin-top:3px;padding-top:3px;">
+							<label class="col-md-3 control-label" style="line-height:15px;">ERROR限频：</label>
+							<div class="form-inline col-md-8" style="height:26px;">
+								<input id="error-update-interval" type="number" class="form-control input-sm" style="width:100px;height:26px;" value="5">&nbsp;分钟&nbsp;
+								<input id="error-update-times" type="number" class="form-control input-sm" style="width:100px;height:26px;" value="10">&nbsp;次数&nbsp;
+							</div>
+						</div>
+
 						<div style="text-align:right; padding-right:50px;">
 							<button id="alarm-update" type="button" class="btn btn-info" data-dismiss="modal">保存</button>　
 							<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>

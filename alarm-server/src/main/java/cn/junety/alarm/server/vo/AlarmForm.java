@@ -31,6 +31,9 @@ public class AlarmForm {
     }
 
     public String getRouteKey() {
+        if (routeKey == null) {
+            return "";
+        }
         return routeKey;
     }
 
