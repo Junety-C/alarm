@@ -1,7 +1,6 @@
 package cn.junety.alarm.sender;
 
 import cn.junety.alarm.sender.client.ClientFactory;
-import cn.junety.alarm.sender.common.Configure;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;

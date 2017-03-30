@@ -75,11 +75,12 @@ public class AlarmService {
             // 告警信息无接收人, 发送告警信息给管理员
             if(sent.size() == 0) {
                 // TODO 无接收人的告警
+                return HttpHelper.buildResponse(404, 4004, "receivers is empty");
             }
             return HttpHelper.buildResponse(200, 2000, "success");
         } catch (AlarmNotFoundException e) {
             logger.error("alarm not found by code:{}", alarmForm.getCode());
-            return HttpHelper.buildResponse(400, 4000, "alarm not found.");
+            return HttpHelper.buildResponse(404, 4004, "alarm not found.");
         }
     }
 

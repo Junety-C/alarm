@@ -67,4 +67,8 @@ public class GroupService {
     public int deleteReceiverFromGroup(int gid, int rid) {
         return groupDao.deleteReceiverFromGroup(gid, rid);
     }
+
+    public int deleteReceiver(int rid) {
+        return groupDao.deleteReceiver(rid);
+    }
 }

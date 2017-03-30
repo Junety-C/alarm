@@ -2,6 +2,7 @@ package cn.junety.alarm.web.controller;
 
 import cn.junety.alarm.base.entity.Receiver;
 import cn.junety.alarm.web.common.ResponseHelper;
+import cn.junety.alarm.web.service.GroupService;
 import cn.junety.alarm.web.service.ReceiverService;
 import cn.junety.alarm.web.vo.ReceiverForm;
 import com.alibaba.fastjson.JSON;
@@ -26,6 +27,8 @@ public class ReceiverController {
 
     @Autowired
     private ReceiverService receiverService;
+    @Autowired
+    private GroupService groupService;
 
     @RequestMapping(value = "/receivers", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public String getReceivers(HttpServletRequest request) {
@@ -67,6 +70,7 @@ public class ReceiverController {
     public String deleteReceiver(@PathVariable Integer rid) {
         logger.info("DELETE /receivers/{}", rid);
         receiverService.deleteReceiver(rid);
+        groupService.deleteReceiver(rid);
         return ResponseHelper.buildResponse(2000, "success");
     }
 }
