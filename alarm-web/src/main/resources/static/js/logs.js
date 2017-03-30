@@ -32,7 +32,7 @@ function getLogs(search) {
                     html += "<tr><td>"+log["reportId"]+"</td>"
                         + "<td>"+log["code"]+"</td>"
                         + "<td>"+log["alarmName"]+"</td>"
-                        + "<td>"+log["createTime"]+"</td>"
+                        + "<td>"+formatDate(new Date(log["createTime"]))+"</td>"
                         + "<td>"+log["projectName"]+"</td>"
                         + "<td>"+log["groupName"]+"</td>"
                         + "<td>"+log["receivers"]+"</td>"
@@ -60,4 +60,14 @@ function setPageBtnClick() {
 function setTableTotalSize(count) {
     if (count == null || count == undefined) count = 0;
     $(".table-total-size").text("共有 "+count+" 条数据");
+}
+
+function formatDate(date)   {
+    var year = date.getFullYear();
+    var month = date.getMonth()+1;
+    var day = date.getDate();
+    var hour = date.getHours();
+    var minute = date.getMinutes();
+    var second = date.getSeconds();
+    return year+"-"+month+"-"+day+" "+hour+":"+minute+":"+second;
 }
