@@ -5,6 +5,8 @@ import cn.junety.alarm.api.AlarmClient;
  */
 public class Test {
     public static void main(String[] args) {
-        AlarmClient.info(20, "告警测试");
+        for (int i = 0; i < 10; i++) {
+            AlarmClient.debug(2, "alarm.test.limit", "告警测试");
+        }
     }
 }

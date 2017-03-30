@@ -62,3 +62,20 @@ CREATE TABLE `tb_receiver` (
   `qq` varchar(30) DEFAULT NULL COMMENT 'QQ号',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+
+
+-- 初始化数据
+insert into tb_project(id, name) values(1, '告警系统');
+
+insert into tb_module(id, project_id, name) values(1, 1, '告警服务端'),(2, 1, '告警发送端'),(3, 1, '告警web端');
+
+-- 替换成你的信息
+insert into tb_receiver(id, name, phone, mail, wechat, qq) values(1, 'your name', 'phone', 'mail', 'wechat', 'qq');
+
+insert into tb_group(id, name) values(1, '告警系统管理组');
+insert into tb_group_member(group_id, receiver_id) VALUES(1, 1);
+
+insert into tb_alarm(id, code, name, project_id, module_id, group_id, route_key, config) values
+  (1, 1, '告警服务端异常', 1, 1, 1, 'alarm.server.*', '{"freq_limit":false,"mail":true,"wechat":true,"sms":false,"qq":true,"debug_interval":5,"debug_times":10,"info_interval":3,"info_times":10,"error_interval":1,"error_times":10}'),
+  (2, 1, '告警发送异常', 1, 1, 1, 'alarm.sender.*', '{"freq_limit":false,"mail":true,"wechat":true,"sms":false,"qq":true,"debug_interval":5,"debug_times":10,"info_interval":3,"info_times":10,"error_interval":1,"error_times":10}'),
+  (3, 1, '告警web端异常', 1, 1, 1, 'alarm.web.*', '{"freq_limit":false,"mail":true,"wechat":true,"sms":false,"qq":true,"debug_interval":5,"debug_times":10,"info_interval":3,"info_times":10,"error_interval":1,"error_times":10}');

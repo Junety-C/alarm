@@ -236,6 +236,7 @@ function getAlarmById(aid) {
                 $("#wechat").prop("checked", config["wechat"]);
                 $("#sms").prop("checked", config["sms"]);
                 $("#qq").prop("checked", config["qq"]);
+                $("#freq_limit").prop("checked", config["freq_limit"]);
 
                 $("#debug-update-interval").val(config["debug_interval"]);
                 $("#debug-update-times").val(config["debug_times"]);

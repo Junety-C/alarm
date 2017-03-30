@@ -111,6 +111,9 @@ function setGroupClickEvent() {
     $(".group-del").click(function() {
         $("#group-del").attr("_val", $(this).attr("_val"));
     });
+    $(".receiver-del").click(function() {
+        $("#receiver-del").attr("_val", $(this).attr("_val"));
+    });
 }
 
 function getReceiverByGroupId(gid) {
