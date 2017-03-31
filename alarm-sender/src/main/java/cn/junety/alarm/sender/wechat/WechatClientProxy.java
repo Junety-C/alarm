@@ -30,7 +30,9 @@ public class WechatClientProxy {
     public WechatClientProxy() {
         client = new WechatClient();
         this.scheduledExecutorService =  Executors.newSingleThreadScheduledExecutor();
-        refreshFriendList();
+        while(aliasMapper == null) {
+            refreshFriendList();
+        }
         scheduledExecutorService.scheduleAtFixedRate( () -> new Thread(this::refreshFriendList).start(),
                 DEFAULT_TIME_INTERVAL, DEFAULT_TIME_INTERVAL, TimeUnit.SECONDS);
     }
