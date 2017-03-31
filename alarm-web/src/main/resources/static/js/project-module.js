@@ -42,7 +42,7 @@ $(function() {
 
 function getProjects(search) {
     $.ajax({
-        url: "http://localhost:8088/projects?page="+current_page+"&length="+page_length+"&"+search,
+        url: "/projects?page="+current_page+"&length="+page_length+"&"+search,
         type: "GET",
         success: function(data){
             if(data["code"] == 2000) {
@@ -108,7 +108,7 @@ function setProjectClickEvent() {
 
 function getModuleByProjectId(pid) {
     $.ajax({
-        url: "http://localhost:8088/projects/"+pid+"/modules",
+        url: "/projects/"+pid+"/modules",
         type: "GET",
         success: function(data){
             if(data["code"] == 2000) {
@@ -130,7 +130,7 @@ function getModuleByProjectId(pid) {
 
 function addProject(name) {
     $.ajax({
-        url: "http://localhost:8088/projects/"+name,
+        url: "/projects/"+name,
         type: "POST",
         data: JSON.stringify({}),
         dataType: "json",
@@ -146,7 +146,7 @@ function addProject(name) {
 
 function deleteProject(pid) {
     $.ajax({
-        url: "http://localhost:8088/projects/"+pid,
+        url: "/projects/"+pid,
         type: "DELETE",
         data: JSON.stringify({}),
         dataType: "json",
@@ -162,7 +162,7 @@ function deleteProject(pid) {
 
 function addModule(pid, name) {
     $.ajax({
-        url: "http://localhost:8088/projects/"+pid+"/modules/"+name,
+        url: "/projects/"+pid+"/modules/"+name,
         type: "POST",
         data: JSON.stringify({}),
         dataType: "json",
@@ -178,7 +178,7 @@ function addModule(pid, name) {
 
 function deleteModule(mid) {
     $.ajax({
-        url: "http://localhost:8088/modules/"+mid,
+        url: "/modules/"+mid,
         type: "DELETE",
         data: JSON.stringify({}),
         dataType: "json",

@@ -57,7 +57,7 @@ $(function() {
 
 function getReceivers(search) {
     $.ajax({
-        url: "http://localhost:8088/receivers?page="+current_page+"&length="+page_length+"&"+search,
+        url: "/receivers?page="+current_page+"&length="+page_length+"&"+search,
         type: "GET",
         success: function(data){
             if(data["code"] == 2000) {
@@ -103,7 +103,7 @@ function setReceiverClickEvent() {
 
 function getReceiverById(rid) {
     $.ajax({
-        url: "http://localhost:8088/receivers/"+rid,
+        url: "/receivers/"+rid,
         type: "GET",
         success: function(data){
             if(data["code"] == 2000) {
@@ -120,7 +120,7 @@ function getReceiverById(rid) {
 
 function addReceiver(receiver_data) {
     $.ajax({
-        url: "http://localhost:8088/receivers",
+        url: "/receivers",
         type: "POST",
         data: JSON.stringify(receiver_data),
         dataType: "json",
@@ -136,7 +136,7 @@ function addReceiver(receiver_data) {
 
 function deleteReceiver(rid) {
     $.ajax({
-        url: "http://localhost:8088/receivers/"+rid,
+        url: "/receivers/"+rid,
         type: "DELETE",
         data: JSON.stringify({}),
         dataType: "json",
@@ -152,7 +152,7 @@ function deleteReceiver(rid) {
 
 function updateReceiver(receiver_data) {
     $.ajax({
-        url: "http://localhost:8088/receivers",
+        url: "/receivers",
         type: "PUT",
         data: JSON.stringify(receiver_data),
         dataType: "json",

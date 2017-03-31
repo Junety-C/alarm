@@ -39,7 +39,7 @@ $(function() {
 
 function getGroups(search) {
     $.ajax({
-        url: "http://localhost:8088/groups?page="+current_page+"&length="+page_length+"&"+search,
+        url: "/groups?page="+current_page+"&length="+page_length+"&"+search,
         type: "GET",
         success: function(data){
             if(data["code"] == 2000) {
@@ -118,7 +118,7 @@ function setGroupClickEvent() {
 
 function getReceiverByGroupId(gid) {
     $.ajax({
-        url: "http://localhost:8088/groups/"+gid+"/receivers",
+        url: "/groups/"+gid+"/receivers",
         type: "GET",
         success: function(data){
             if(data["code"] == 2000) {
@@ -140,7 +140,7 @@ function getReceiverByGroupId(gid) {
 
 function addGroup(name) {
     $.ajax({
-        url: "http://localhost:8088/groups/"+name,
+        url: "/groups/"+name,
         type: "POST",
         data: JSON.stringify({}),
         dataType: "json",
@@ -156,7 +156,7 @@ function addGroup(name) {
 
 function deleteGroup(gid) {
     $.ajax({
-        url: "http://localhost:8088/groups/"+gid,
+        url: "/groups/"+gid,
         type: "DELETE",
         data: JSON.stringify({}),
         dataType: "json",
@@ -172,7 +172,8 @@ function deleteGroup(gid) {
 
 function addReceiverToGroup(gid, rid) {
     $.ajax({
-        url: "http://localhost:8088/groups/"+gid+"/receivers/"+rid,
+        url: "" +
+        "/groups/"+gid+"/receivers/"+rid,
         type: "POST",
         data: JSON.stringify({}),
         dataType: "json",
@@ -188,7 +189,7 @@ function addReceiverToGroup(gid, rid) {
 
 function deleteReceiverFromGroup(gid, rid) {
     $.ajax({
-        url: "http://localhost:8088/groups/"+gid+"/receivers/"+rid,
+        url: "/groups/"+gid+"/receivers/"+rid,
         type: "DELETE",
         data: JSON.stringify({}),
         dataType: "json",

@@ -1,5 +1,6 @@
 package cn.junety.alarm.server.controller;
 
+import cn.junety.alarm.api.AlarmClient;
 import cn.junety.alarm.server.common.HttpHelper;
 import cn.junety.alarm.server.service.AlarmService;
 import cn.junety.alarm.server.vo.AlarmForm;
@@ -39,6 +40,7 @@ public class AlarmController {
             return HttpHelper.buildResponse(400, 4000, "invalid params");
         } catch (Exception e) {
             logger.error("bad service", e);
+            AlarmClient.error(1, "alarm.server.bad-service", "告警处理异常,error:" + e.getMessage());
             return HttpHelper.buildResponse(500, 5000, "bad service");
         }
     }

@@ -1,5 +1,6 @@
 package cn.junety.alarm.server.service;
 
+import cn.junety.alarm.api.AlarmClient;
 import cn.junety.alarm.base.dao.*;
 import cn.junety.alarm.base.entity.*;
 import cn.junety.alarm.base.exception.AlarmNotFoundException;
@@ -87,7 +88,7 @@ public class AlarmService {
             }
             // 告警信息无接收人, 发送告警信息给管理员
             if(sent.size() == 0) {
-                // TODO 无接收人的告警
+                AlarmClient.info(1, "alarm.server.noreceiver", String.format("接收到无接收者的告警,reportId:%s", reportId));
                 return HttpHelper.buildResponse(404, 4004, "receivers is empty");
             }
             return HttpHelper.buildResponse(200, 2000, "success");

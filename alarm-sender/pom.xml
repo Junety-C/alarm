@@ -26,6 +26,16 @@
         </profile>
 
         <profile>
+            <id>pre</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <runtime.env>src/main/resources/properties/pre</runtime.env>
+            </properties>
+        </profile>
+
+        <profile>
             <id>product</id>
             <activation>
                 <activeByDefault>false</activeByDefault>

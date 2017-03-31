@@ -1,5 +1,6 @@
 package cn.junety.alarm.web.controller;
 
+import cn.junety.alarm.api.AlarmClient;
 import cn.junety.alarm.web.common.ResponseHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,7 @@ public class BaseController {
     @ExceptionHandler(Exception.class)
     public String badService(HttpServletRequest request, Exception e) {
         logger.error("{}", e);
+        AlarmClient.error(1, "alarm.web.bad-service", "告警web端异常,error:" + e.getMessage());
         return ResponseHelper.buildResponse(5000, "bad service");
     }
 }

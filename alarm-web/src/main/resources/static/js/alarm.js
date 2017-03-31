@@ -102,7 +102,7 @@ $(function() {
 
 function getAlarms(search) {
     $.ajax({
-        url: "http://localhost:8088/alarms?page="+current_page+"&length="+page_length+"&"+search,
+        url: "/alarms?page="+current_page+"&length="+page_length+"&"+search,
         type: "GET",
         success: function(data){
             if(data["code"] == 2000) {
@@ -150,7 +150,7 @@ function setAlarmClickEvent() {
 
 function deleteAlarm(aid) {
     $.ajax({
-        url: "http://localhost:8088/alarms/"+aid,
+        url: "/alarms/"+aid,
         type: "DELETE",
         data: JSON.stringify({}),
         dataType: "json",
@@ -166,7 +166,7 @@ function deleteAlarm(aid) {
 
 function updateAlarm(alarm_data) {
     $.ajax({
-        url: "http://localhost:8088/alarms",
+        url: "/alarms",
         type: "PUT",
         data: JSON.stringify(alarm_data),
         dataType: "json",
@@ -182,7 +182,7 @@ function updateAlarm(alarm_data) {
 
 function getAlarmById(aid) {
     $.ajax({
-        url: "http://localhost:8088/alarms/"+aid,
+        url: "/alarms/"+aid,
         type: "GET",
         success: function(data){
             if(data["code"] == 2000) {
@@ -256,7 +256,7 @@ function getAlarmById(aid) {
 
 function getCreateInfo() {
     $.ajax({
-        url: "http://localhost:8088/alarms/info",
+        url: "/alarms/info",
         type: "GET",
         success: function(data){
             if(data["code"] == 2000) {
@@ -318,7 +318,7 @@ function setTableTotalSize(count) {
 
 function getModuleByProjectId(pid) {
     $.ajax({
-        url: "http://localhost:8088/projects/"+pid+"/modules",
+        url: "/projects/"+pid+"/modules",
         type: "GET",
         success: function(data){
             if(data["code"] == 2000) {
@@ -338,7 +338,7 @@ function getModuleByProjectId(pid) {
 
 function getModuleByProjectIdUpdate(pid) {
     $.ajax({
-        url: "http://localhost:8088/projects/"+pid+"/modules",
+        url: "/projects/"+pid+"/modules",
         type: "GET",
         success: function(data){
             if(data["code"] == 2000) {
@@ -358,7 +358,7 @@ function getModuleByProjectIdUpdate(pid) {
 
 function addAlarm(alarm_data) {
     $.ajax({
-        url: "http://localhost:8088/alarms",
+        url: "/alarms",
         type: "POST",
         data: JSON.stringify(alarm_data),
         dataType: "json",

@@ -15,7 +15,7 @@ $(function() {
 
 function getLogs(search) {
     $.ajax({
-        url: "http://localhost:8088/logs?page="+current_page+"&length="+page_length+"&"+search,
+        url: "/logs?page="+current_page+"&length="+page_length+"&"+search,
         type: "GET",
         success: function(data){
             if(data["code"] == 2000) {

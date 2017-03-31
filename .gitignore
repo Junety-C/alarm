@@ -7,3 +7,4 @@ alarm-sender/target/
 alarm-server/target/
 alarm-web/target/
 **/dev/alarm-config.properties
+**/pre/
