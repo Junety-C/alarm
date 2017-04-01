@@ -31,7 +31,9 @@ public class SmartqqClientProxy {
     public SmartqqClientProxy() {
         client = new SmartqqClient();
         this.scheduledExecutorService =  Executors.newSingleThreadScheduledExecutor();
-        refreshFriendList();
+        while(userIdMapper == null) {
+            refreshFriendList();
+        }
         scheduledExecutorService.scheduleAtFixedRate( () -> new Thread(this::refreshFriendList).start(),
                 DEFAULT_TIME_INTERVAL, DEFAULT_TIME_INTERVAL, TimeUnit.SECONDS);
     }
