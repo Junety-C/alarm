@@ -55,8 +55,9 @@ public class ProjectService {
         return projectDao.save(project);
     }
 
-    public int deleteProject(int id) {
-        return projectDao.deleteById(id);
+    public void deleteProject(int id) {
+        moduleDao.deleteByPid(id);
+        projectDao.deleteById(id);
     }
 
     public int createModule(Integer pid, String name) {

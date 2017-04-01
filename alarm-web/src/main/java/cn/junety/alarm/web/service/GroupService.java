@@ -56,8 +56,9 @@ public class GroupService {
         return groupDao.save(group);
     }
 
-    public int deleteGroup(int id) {
-        return groupDao.deleteById(id);
+    public void deleteGroup(int id) {
+        groupDao.deleteReceiverByGroupId(id);
+        groupDao.deleteById(id);
     }
 
     public int addReceiverFromGroup(int gid, int rid) {

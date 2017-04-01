@@ -36,6 +36,9 @@ public interface GroupDao {
     @Delete("delete from tb_group where id=#{id}")
     int deleteById(@Param("id") int id);
 
+    @Delete("delete from tb_group_member where group_id=#{gid}")
+    int deleteReceiverByGroupId(@Param("gid") int gid);
+
     @Insert("insert into tb_group_member(group_id, receiver_id) values(#{gid}, #{rid}) on duplicate key update group_id=#{gid}")
     int saveReceiverToGroup(@Param("gid") int gid, @Param("rid") int rid);
 
