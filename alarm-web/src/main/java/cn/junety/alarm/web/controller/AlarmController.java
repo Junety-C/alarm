@@ -22,7 +22,7 @@ import java.util.Map;
  * Created by caijt on 2017/3/24.
  */
 @RestController
-public class AlarmController extends BaseController {
+public class AlarmController {
 
     private static final Logger logger = LoggerFactory.getLogger(AlarmController.class);
 
