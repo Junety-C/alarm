@@ -261,7 +261,7 @@ function getCreateInfo() {
         success: function(data){
             if(data["code"] == 2000) {
                 // code list
-                var codes = data["content"]["codes"];
+                var codes = data["codes"];
                 var codeList = [{id: 0, text: '自动生成'}];
                 for (var i = 0; i < codes.length; i++) {
                     codeList.push({id: codes[i], text: codes[i]});
@@ -271,7 +271,7 @@ function getCreateInfo() {
                 });
 
                 // project list
-                var projects = data["content"]["projects"];
+                var projects = data["projects"];
                 var projectList = [];
                 for (var i = 0; i < projects.length; i++) {
                     projectList.push({id: projects[i]["id"], text: projects[i]["name"]});
@@ -281,7 +281,7 @@ function getCreateInfo() {
                 });
 
                 // module list
-                var modules = data["content"]["modules"];
+                var modules = data["modules"];
                 var moduleList = [];
                 for (var i = 0; i < modules.length; i++) {
                     moduleList.push({id: modules[i]["id"], text: modules[i]["name"]});
@@ -291,7 +291,7 @@ function getCreateInfo() {
                 });
 
                 // group list
-                var groups = data["content"]["groups"];
+                var groups = data["groups"];
                 var groupList = [];
                 for (var i = 0; i < groups.length; i++) {
                     groupList.push({id: groups[i]["id"], text: groups[i]["name"]});
@@ -300,7 +300,6 @@ function getCreateInfo() {
                     data: groupList
                 });
             }
-            alert("finish");
         }
     });
 }

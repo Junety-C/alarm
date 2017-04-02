@@ -155,20 +155,23 @@ public class AlarmService {
         return alarmDao.save(alarm);
     }
 
-    public List<Integer> getCodes() {
-        return alarmDao.getCodes();
-    }
-
-    public List<Project> getProjects() {
-        return projectDao.getAll();
+    /**
+     * 获取告警代号列表
+     * @param user
+     * @return
+     */
+    public List<Integer> getAlarmCodeList(User user) {
+        if (user.getType() == UserTypeEnum.ADMIN_USER.value()) {
+            logger.debug("get all alarm code list, user:{}", JSON.toJSONString(user));
+            return alarmDao.getAlarmCodeList();
+        } else {
+            logger.debug("get user alarm code list, user:{}", JSON.toJSONString(user));
+            return alarmDao.getUserAlarmCodeList(user.getId());
+        }
     }
 
     public List<Group> getGroups() {
         return groupDao.getAll();
-    }
-
-    public List<Module> getModules(int pid) {
-        return moduleDao.getByPid(pid);
     }
 
     public int deleteAlarmById(Integer aid) {

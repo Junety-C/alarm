@@ -25,6 +25,10 @@ public class GroupService {
     @Autowired
     private ReceiverDao receiverDao;
 
+    public List<Group> getAllGroup() {
+        return groupDao.getAllGroup();
+    }
+
     public List<Group> getGroups(GroupForm groupForm) {
         int length = groupForm.getLength();
         int begin =  (groupForm.getPage() - 1) * length;

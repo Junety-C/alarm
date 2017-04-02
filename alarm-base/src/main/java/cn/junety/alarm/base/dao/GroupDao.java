@@ -47,4 +47,11 @@ public interface GroupDao {
 
     @Delete("delete from tb_group_member where receiver_id=#{rid}")
     int deleteReceiver(@Param("rid") int rid);
+
+
+
+
+    /* ===============v2================== */
+    @Select("select id, name from tb_group")
+    List<Group> getAllGroup();
 }

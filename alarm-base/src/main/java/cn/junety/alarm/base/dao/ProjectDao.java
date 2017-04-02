@@ -38,4 +38,9 @@ public interface ProjectDao {
 
     @Select("select count(id) from tb_project")
     int count();
+
+
+    /* ===============v2================== */
+    @Select("select id, name from tb_project order by id desc")
+    List<Project> getAllProject();
 }

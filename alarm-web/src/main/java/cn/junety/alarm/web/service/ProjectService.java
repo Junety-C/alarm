@@ -25,6 +25,10 @@ public class ProjectService {
     @Autowired
     private ProjectDao projectDao;
 
+    public List<Project> getProjectList() {
+        return projectDao.getAllProject();
+    }
+
     public List<Module> getModuleByPid(int pid) {
         return moduleDao.getByPid(pid);
     }
