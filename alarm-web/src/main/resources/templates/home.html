@@ -1,23 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8">
-	<!--
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
-	-->
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 	<title>告警中心</title>
 
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
-	<link rel="stylesheet" type="text/css" href="css/bootstrap-vertical-menu.css">
-	<link rel="stylesheet" type="text/css" href="css/index.css"/>
+	<link rel="stylesheet" type="text/css" href="css/base.css"/>
 	<link rel="stylesheet" type="text/css" href="css/select2.min.css"/>
-
+	
 	<script src="js/jquery.min.js" type="text/javascript"></script>
 	<script src="js/bootstrap.min.js" type="text/javascript"></script>
 	<script src="js/select2.min.js" type="text/javascript"></script>
 </head>
-<body style="min-width:1000px;background-color:#f2f4f8;">
+<body>
 
 	<!-- 导航 -->
 	<nav class="navbar navbar-default navbar-fixed-top mg0 bg-white" role="navigation">
@@ -40,7 +35,7 @@
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 							<span class="fa glyphicon glyphicon-user"></span>
-							username
+							caijt@jpush.cn
 							<span class="caret"></span>
 						</a>
 						<ul class="dropdown-menu" role="menu">
@@ -58,55 +53,43 @@
 	<nav class="menu navbar navbar-vertical-left mg0">
 		<ul class="nav navbar-nav">
 			<li>
-				<a href="#" _href="main.html">
+				<a href="home.html">
 					<i class="fa glyphicon glyphicon-home icon"></i>
 					<span class="icon-desc">首页</span>
 				</a>
 			</li>
 		    <li>
-				<a href="#" _href="alarm.html">
+				<a href="alarm.html">
 					<i class="fa glyphicon glyphicon-bell icon"></i>
 					<span class="icon-desc">告警配置</span>
 				</a>
 		 	</li>
 		 	<li>
-				<a href="#" _href="project-module.html">
+				<a href="project-module.html">
 					<i class="fa glyphicon glyphicon-tasks icon"></i>
 					<span class="icon-desc">项目/模块</span>
 				</a>
 		 	</li>
 			<li>
-			    <a href="#" _href="receiver.html">
+			    <a href="receiver.html">
 					<i class="fa glyphicon glyphicon-user icon"></i>
 					<span class="icon-desc">接收人</span>
 				</a>
 			</li>
 			<li>
-				<a href="#" _href="group.html">
+				<a href="group.html">
 					<i class="fa glyphicon glyphicon-user icon"></i>
 					<span class="icon-desc">接收组</span>
 				</a>
 			</li>
 			<li>
-				<a href="#" _href="log.html">
+				<a href="log.html">
 					<i class="fa glyphicon glyphicon-list-alt icon"></i>
 					<span class="icon-desc">告警日志</span>
 				</a>
 			</li>
 		</ul>
 	</nav>
-	
-	<!-- 主体内容 -->
-	<div class="page-container">
-		<iframe class="iframe-page" scrolling="yes" src="main.html" frameborder="0"></iframe>
-	</div>
-
-	<script type="text/javascript">
-		$(".menu a").click(function() {
-			var page = $(this).attr("_href");
-			$(".iframe-page").attr("src", page);
-		});
-	</script>
 	
 </body>
 </html>

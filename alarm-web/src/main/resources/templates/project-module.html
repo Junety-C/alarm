@@ -1,21 +1,98 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 	<title>项目/模块</title>
 
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
-	<link rel="stylesheet" type="text/css" href="css/index.css"/>
-	<link rel="stylesheet" type="text/css" href="css/page.css"/>
+	<link rel="stylesheet" type="text/css" href="css/base.css"/>
 	<link rel="stylesheet" type="text/css" href="css/select2.min.css"/>
-
+	
 	<script src="js/jquery.min.js" type="text/javascript"></script>
 	<script src="js/bootstrap.min.js" type="text/javascript"></script>
 	<script src="js/select2.min.js" type="text/javascript"></script>
 	<script src="js/page.js" type="text/javascript"></script>
-	<script src="js/project-module.js" type="text/javascript"></script>
 </head>
-<body style="background:#F2F4F8;">
+<body>
+
+	<!-- 导航 -->
+	<nav class="navbar navbar-default navbar-fixed-top mg0 bg-white" role="navigation">
+		<div class="container-fluid">
+			<!-- logo -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#personal-center">
+					<span class="sr-only"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">Logo</a>
+				<a class="navbar-brand" href="#">Alarm Center</a>
+			</div>
+
+			<!-- 个人中心 -->
+			<div class="collapse navbar-collapse" id="personal-center">
+				<ul class="nav navbar-nav navbar-right">
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+							<span class="fa glyphicon glyphicon-user"></span>
+							caijt@jpush.cn
+							<span class="caret"></span>
+						</a>
+						<ul class="dropdown-menu" role="menu">
+							<li><a href="#">个人信息</a></li>
+							<li><a href="#">注销</a></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<nav class="navbar mg0"></nav>
+	
+	<!-- 菜单栏 -->
+	<nav class="menu navbar navbar-vertical-left mg0">
+		<ul class="nav navbar-nav">
+			<li>
+				<a href="home.html">
+					<i class="fa glyphicon glyphicon-home icon"></i>
+					<span class="icon-desc">首页</span>
+				</a>
+			</li>
+		    <li>
+				<a href="alarm.html">
+					<i class="fa glyphicon glyphicon-bell icon"></i>
+					<span class="icon-desc">告警配置</span>
+				</a>
+		 	</li>
+		 	<li>
+				<a href="project-module.html">
+					<i class="fa glyphicon glyphicon-tasks icon"></i>
+					<span class="icon-desc">项目/模块</span>
+				</a>
+		 	</li>
+			<li>
+			    <a href="receiver.html">
+					<i class="fa glyphicon glyphicon-user icon"></i>
+					<span class="icon-desc">接收人</span>
+				</a>
+			</li>
+			<li>
+				<a href="group.html">
+					<i class="fa glyphicon glyphicon-user icon"></i>
+					<span class="icon-desc">接收组</span>
+				</a>
+			</li>
+			<li>
+				<a href="log.html">
+					<i class="fa glyphicon glyphicon-list-alt icon"></i>
+					<span class="icon-desc">告警日志</span>
+				</a>
+			</li>
+		</ul>
+	</nav>
+
+	<!-- 项目/模块 -->
 	<div class="page">
 		<div class="panel-header">
 			<b>告警中心 > 项目/模块</b>
@@ -140,9 +217,5 @@
 			</div>
 		</div>
 	</div>
-
-	<script type="text/javascript">
-
-	</script>
 </body>
 </html>
