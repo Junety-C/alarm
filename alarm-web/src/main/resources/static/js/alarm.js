@@ -300,6 +300,7 @@ function getCreateInfo() {
                     data: groupList
                 });
             }
+            alert("finish");
         }
     });
 }

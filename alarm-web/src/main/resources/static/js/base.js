@@ -6,7 +6,7 @@ $(function() {
 	$("[data-toggle='tooltip']").tooltip();
 
 	// 菜单页面跳转
-	$(".page").click(function () {
+	$(".page-item").click(function () {
 		var location = $(this).attr("_val");
         window.location = "/" + location;
     });
