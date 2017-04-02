@@ -107,7 +107,7 @@ function getAlarms(search) {
         success: function(data){
             if(data["code"] == 2000) {
                 var html = "";
-                var alarms = data["content"]["alarms"];
+                var alarms = data["alarms"];
                 for(var i = 0; i < alarms.length; i++) {
                     var alarm  = alarms[i];
                     html += "<tr>"
@@ -127,10 +127,10 @@ function getAlarms(search) {
                 }
                 $(".alarms-body").html(html);
                 setAlarmClickEvent();
-                var page_count = parseInt((data["content"]["count"] + page_length - 1)/page_length);
+                var page_count = parseInt((data["count"] + page_length - 1)/page_length);
                 $(".page-footer").html(setPageButton(page_count, current_page));
                 setPageBtnClick();
-                setTableTotalSize(data["content"]["count"]);
+                setTableTotalSize(data["count"]);
             }
         }
     });

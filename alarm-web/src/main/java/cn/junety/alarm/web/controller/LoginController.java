@@ -20,9 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class LoginController extends BaseController {
 
-    @Autowired
-    private UserLoginStatusService userLoginStatusService;
-
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String toLoginPage() {
         logger.info("GET /login");
@@ -36,10 +33,10 @@ public class LoginController extends BaseController {
 
         User user = userService.getByUsername(loginForm.getUsername());
         if (user != null) {
-            if ("caijt".equals(loginForm.getUsername()) && "38526".equals(loginForm.getPassword())) {
+            //if ("caijt".equals(loginForm.getUsername()) && "38526".equals(loginForm.getPassword())) {
                 userLoginStatusService.addLoginStatus(request, user.getIdentification());
                 return ResponseHelper.buildResponse(2000, "status", "success");
-            }
+            //}
         }
         return ResponseHelper.buildResponse(4004, "status", "invalid username or password");
     }

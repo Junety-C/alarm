@@ -2,12 +2,18 @@ var current_page = 1;
 var page_length = 10;
 
 $(function() {
-	//$(".page-footer").html(setPageButton(50, current_page));
 
 	$("[data-toggle='tooltip']").tooltip();
 
-})
+	// 菜单页面跳转
+	$(".page").click(function () {
+		var location = $(this).attr("_val");
+        window.location = "/" + location;
+    });
 
+});
+
+// 分页按钮
 function setPageButton(page_count, current_page) {
 	var a, b, c, d;
 	b = Math.max(1, parseInt(current_page) - 4);

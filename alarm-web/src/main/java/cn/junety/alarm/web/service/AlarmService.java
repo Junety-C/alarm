@@ -7,6 +7,7 @@ import cn.junety.alarm.base.dao.ProjectDao;
 import cn.junety.alarm.base.entity.*;
 import cn.junety.alarm.web.vo.AlarmForm;
 import cn.junety.alarm.web.vo.AlarmVO;
+import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,21 +33,22 @@ public class AlarmService {
     @Autowired
     private GroupDao groupDao;
 
-    public List<AlarmVO> getAlarmInfo(AlarmForm alarmForm) {
-        int length = alarmForm.getLength();
-        int begin =  (alarmForm.getPage() - 1) * length;
+    /**
+     * 获取告警列表
+     * @param user
+     * @param alarmForm
+     * @return
+     */
+    public List<AlarmVO> getAlarmInfo(User user, AlarmForm alarmForm) {
         List<Alarm> alarms;
 
-        if(alarmForm.getCode() != null) {
-            alarms = alarmDao.getByCode(alarmForm.getCode(), begin, length);
-        } else if(alarmForm.getAlarmName() != null) {
-            alarms = alarmDao.getByName(alarmForm.getAlarmName()+"%", begin, length);
-        } else if(alarmForm.getGroupName() != null){
-            alarms = alarmDao.getByGroupName(alarmForm.getGroupName()+"%", begin, length);
-        } else if(alarmForm.getProjectName() != null) {
-            alarms = alarmDao.getByProjectName(alarmForm.getProjectName()+"%", begin, length);
+        // 管理员获取所有告警, 普通用户获取自己能接收到的告警
+        if (user.getType() == UserTypeEnum.ADMIN_USER.value()) {
+            alarms = getAllAlarm(alarmForm);
+            logger.debug("get all alarm info, user:{}", JSON.toJSONString(user));
         } else {
-            alarms = alarmDao.get(begin, length);
+            alarms = getUserAlarm(user, alarmForm);
+            logger.debug("get user alarm info, user:{}", JSON.toJSONString(user));
         }
 
         List<AlarmVO> results = new ArrayList<>();
@@ -61,17 +63,84 @@ public class AlarmService {
         return results;
     }
 
-    public int getAlarmInfoCount(AlarmForm alarmForm) {
+    private List<Alarm> getAllAlarm(AlarmForm alarmForm) {
+        // 分页参数
+        int length = alarmForm.getLength();
+        int begin =  (alarmForm.getPage() - 1) * length;
+
         if(alarmForm.getCode() != null) {
-            return alarmDao.getCountByCode(alarmForm.getCode());
+            return alarmDao.getAlarmByCode(alarmForm.getCode(), begin, length);
         } else if(alarmForm.getAlarmName() != null) {
-            return alarmDao.getCountByName(alarmForm.getAlarmName()+"%");
+            return alarmDao.getAlarmByName(alarmForm.getAlarmName()+"%", begin, length);
         } else if(alarmForm.getGroupName() != null){
-            return alarmDao.getCountByGroupName(alarmForm.getGroupName()+"%");
+            return alarmDao.getAlarmByGroupName(alarmForm.getGroupName()+"%", begin, length);
         } else if(alarmForm.getProjectName() != null) {
-            return alarmDao.getCountByProjectName(alarmForm.getProjectName()+"%");
+            return alarmDao.getAlarmByProjectName(alarmForm.getProjectName()+"%", begin, length);
+        } else {
+            return alarmDao.getAlarm(begin, length);
         }
-        return alarmDao.getCount();
+    }
+
+    private List<Alarm> getUserAlarm(User user, AlarmForm alarmForm) {
+        // 分页参数
+        int length = alarmForm.getLength();
+        int begin =  (alarmForm.getPage() - 1) * length;
+
+        if(alarmForm.getCode() != null) {
+            return alarmDao.getUserAlarmByCode(alarmForm.getCode(), user.getId(), begin, length);
+        } else if(alarmForm.getAlarmName() != null) {
+            return alarmDao.getUserAlarmByName(alarmForm.getAlarmName()+"%", user.getId(), begin, length);
+        } else if(alarmForm.getGroupName() != null){
+            return alarmDao.getUserAlarmByGroupName(alarmForm.getGroupName()+"%", user.getId(), begin, length);
+        } else if(alarmForm.getProjectName() != null) {
+            return alarmDao.getUserAlarmByProjectName(alarmForm.getProjectName()+"%", user.getId(), begin, length);
+        } else {
+            return alarmDao.getUserAlarm(user.getId(), begin, length);
+        }
+    }
+
+    /**
+     * 获取告警列表的长度，用于分页
+     * @param alarmForm
+     * @return
+     */
+    public int getAlarmInfoCount(User user, AlarmForm alarmForm) {
+        // 管理员获取所有告警, 普通用户获取自己能接收到的告警
+        if (user.getType() == UserTypeEnum.ADMIN_USER.value()) {
+            logger.debug("get all alarm info count, user:{}", JSON.toJSONString(user));
+            return getAllAlarmCount(alarmForm);
+        } else {
+            logger.debug("get user alarm info count, user:{}", JSON.toJSONString(user));
+            return getUserAlarmCount(user, alarmForm);
+        }
+    }
+
+    private int getAllAlarmCount(AlarmForm alarmForm) {
+        if(alarmForm.getCode() != null) {
+            return alarmDao.getAlarmCountByCode(alarmForm.getCode());
+        } else if(alarmForm.getAlarmName() != null) {
+            return alarmDao.getAlarmCountByName(alarmForm.getAlarmName()+"%");
+        } else if(alarmForm.getGroupName() != null){
+            return alarmDao.getAlarmCountByGroupName(alarmForm.getGroupName()+"%");
+        } else if(alarmForm.getProjectName() != null) {
+            return alarmDao.getAlarmCountByProjectName(alarmForm.getProjectName()+"%");
+        } else {
+            return alarmDao.getAlarmCount();
+        }
+    }
+
+    private int getUserAlarmCount(User user, AlarmForm alarmForm) {
+        if(alarmForm.getCode() != null) {
+            return alarmDao.getUserAlarmCountByCode(alarmForm.getCode(), user.getId());
+        } else if(alarmForm.getAlarmName() != null) {
+            return alarmDao.getUserAlarmCountByName(alarmForm.getAlarmName()+"%", user.getId());
+        } else if(alarmForm.getGroupName() != null){
+            return alarmDao.getUserAlarmCountByGroupName(alarmForm.getGroupName()+"%", user.getId());
+        } else if(alarmForm.getProjectName() != null) {
+            return alarmDao.getUserAlarmCountByProjectName(alarmForm.getProjectName()+"%", user.getId());
+        } else {
+            return alarmDao.getUserAlarmCount(user.getId());
+        }
     }
 
     public Alarm getAlarmById(Integer aid) {
