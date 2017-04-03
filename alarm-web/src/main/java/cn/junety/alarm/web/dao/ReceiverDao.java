@@ -1,6 +1,7 @@
 package cn.junety.alarm.web.dao;
 
 import cn.junety.alarm.base.entity.Receiver;
+import cn.junety.alarm.web.vo.ReceiverSearch;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -13,9 +14,6 @@ public interface ReceiverDao {
             "from tb_receiver tr, tb_group_member tgm " +
             "where tgm.group_id=#{groupId} and tgm.receiver_id=tr.id")
     List<Receiver> getReceiverByGroupId(int groupId);
-
-    @Select("select id, name, phone, mail, wechat, qq from tb_receiver order by id desc limit #{begin}, #{length}")
-    List<Receiver> getReceiver(@Param("begin") int begin, @Param("length") int length);
 
     @Select("select id, name, phone, mail, wechat, qq from tb_receiver")
     List<Receiver> getAllReceiver();
@@ -32,56 +30,60 @@ public interface ReceiverDao {
     @Delete("delete from tb_receiver where id=#{id}")
     int deleteById(int id);
 
+
+    @Select("select id, name, phone, mail, wechat, qq from tb_receiver order by id desc limit #{page.start}, #{page.pageSize}")
+    List<Receiver> getReceiver(ReceiverSearch receiverSearch);
+
     @Select("select count(id) from tb_receiver")
     int getReceiverCount();
 
     @Select("select id, name, phone, mail, wechat, qq " +
             "from tb_receiver " +
-            "where name like #{name} " +
+            "where name like '${name}%' " +
             "order by id desc " +
-            "limit #{begin}, #{length}")
-    List<Receiver> getReceiverByName(@Param("name") String name, @Param("begin") int begin, @Param("length") int length);
+            "limit #{page.start}, #{page.pageSize}")
+    List<Receiver> getReceiverByName(ReceiverSearch receiverSearch);
 
-    @Select("select count(id) from tb_receiver where name like #{name}")
-    int getReceiverCountByName(@Param("name") String name);
+    @Select("select count(id) from tb_receiver where name like '${name}%'")
+    int getReceiverCountByName(ReceiverSearch receiverSearch);
 
     @Select("select id, name, phone, mail, wechat, qq " +
             "from tb_receiver " +
-            "where mail like #{mail} " +
+            "where mail like '${mail}%' " +
             "order by id desc " +
-            "limit #{begin}, #{length}")
-    List<Receiver> getReceiverByMail(@Param("mail") String mail, @Param("begin") int begin, @Param("length") int length);
+            "limit #{page.start}, #{page.pageSize}")
+    List<Receiver> getReceiverByMail(ReceiverSearch receiverSearch);
 
-    @Select("select count(id) from tb_receiver where mail like #{mail}")
-    int getReceiverCountByMail(@Param("mail") String mail);
+    @Select("select count(id) from tb_receiver where mail like '${mail}%'")
+    int getReceiverCountByMail(ReceiverSearch receiverSearch);
 
     @Select("select id, name, phone, mail, wechat, qq " +
             "from tb_receiver " +
-            "where phone like #{phone} " +
+            "where phone like '${phone}%' " +
             "order by id desc " +
-            "limit #{begin}, #{length}")
-    List<Receiver> getReceiverByPhone(@Param("phone") String phone, @Param("begin") int begin, @Param("length") int length);
+            "limit #{page.start}, #{page.pageSize}")
+    List<Receiver> getReceiverByPhone(ReceiverSearch receiverSearch);
 
-    @Select("select count(id) from tb_receiver where phone like #{phone}")
-    int getReceiverCountByPhone(@Param("phone") String phone);
+    @Select("select count(id) from tb_receiver where phone like '${phone}%'")
+    int getReceiverCountByPhone(ReceiverSearch receiverSearch);
 
     @Select("select id, name, phone, mail, wechat, qq " +
             "from tb_receiver " +
-            "where wechat like #{wechat} " +
+            "where wechat like '${wechat}%' " +
             "order by id desc " +
-            "limit #{begin}, #{length}")
-    List<Receiver> getReceiverByWechat(@Param("wechat") String wechat, @Param("begin") int begin, @Param("length") int length);
+            "limit #{page.start}, #{page.pageSize}")
+    List<Receiver> getReceiverByWechat(ReceiverSearch receiverSearch);
 
-    @Select("select count(id) from tb_receiver where wechat like #{wechat}")
-    int getReceiverCountByWechat(@Param("wechat") String wechat);
+    @Select("select count(id) from tb_receiver where wechat like '${wechat}%'")
+    int getReceiverCountByWechat(ReceiverSearch receiverSearch);
 
     @Select("select id, name, phone, mail, wechat, qq " +
             "from tb_receiver " +
-            "where qq like #{qq} " +
+            "where qq like '${qq}%' " +
             "order by id desc " +
-            "limit #{begin}, #{length}")
-    List<Receiver> getReceiverByQq(@Param("qq") String qq, @Param("begin") int begin, @Param("length") int length);
+            "limit #{page.start}, #{page.pageSize}")
+    List<Receiver> getReceiverByQq(ReceiverSearch receiverSearch);
 
-    @Select("select count(id) from tb_receiver where qq like #{qq}")
-    int getReceiverCountByQq(@Param("qq") String qq);
+    @Select("select count(id) from tb_receiver where qq like '${qq}%'")
+    int getReceiverCountByQq(ReceiverSearch receiverSearch);
 }

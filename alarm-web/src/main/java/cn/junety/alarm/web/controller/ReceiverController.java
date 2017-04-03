@@ -5,7 +5,7 @@ import cn.junety.alarm.base.entity.User;
 import cn.junety.alarm.web.common.ResponseHelper;
 import cn.junety.alarm.web.service.GroupService;
 import cn.junety.alarm.web.service.ReceiverService;
-import cn.junety.alarm.web.vo.ReceiverForm;
+import cn.junety.alarm.web.vo.ReceiverSearch;
 import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -30,11 +30,11 @@ public class ReceiverController extends BaseController {
     public String getReceiverList(HttpServletRequest request) {
         User user = getUser(request);
         try {
-            ReceiverForm receiverForm = new ReceiverForm(request);
-            logger.info("GET /receivers, user:{}, form:{}", JSON.toJSONString(user), JSON.toJSONString(receiverForm));
+            ReceiverSearch receiverSearch = new ReceiverSearch(request);
+            logger.info("GET /receivers, user:{}, search:{}", JSON.toJSONString(user), JSON.toJSONString(receiverSearch));
 
-            List<Receiver> receivers = receiverService.getReceiverList(receiverForm);
-            int count = receiverService.getReceiverCount(receiverForm);
+            List<Receiver> receivers = receiverService.getReceiverList(receiverSearch);
+            int count = receiverService.getReceiverCount(receiverSearch);
 
             return ResponseHelper.buildResponse(2000, "receivers", receivers, "count", count);
         } catch (Exception e) {

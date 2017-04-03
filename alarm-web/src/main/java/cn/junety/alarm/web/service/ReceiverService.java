@@ -2,7 +2,7 @@ package cn.junety.alarm.web.service;
 
 import cn.junety.alarm.base.entity.Receiver;
 import cn.junety.alarm.web.dao.ReceiverDao;
-import cn.junety.alarm.web.vo.ReceiverForm;
+import cn.junety.alarm.web.vo.ReceiverSearch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,44 +23,41 @@ public class ReceiverService {
 
     /**
      * 获取接收者列表
-     * @param receiverForm
+     * @param receiverSearch
      * @return
      */
-    public List<Receiver> getReceiverList(ReceiverForm receiverForm) {
-        int length = receiverForm.getLength();
-        int begin =  (receiverForm.getPage() - 1) * length;
-
-        if(receiverForm.getName() != null) {
-            return receiverDao.getReceiverByName("%"+receiverForm.getName()+"%", begin, length);
-        } else if(receiverForm.getMail() != null) {
-            return receiverDao.getReceiverByMail("%"+receiverForm.getMail()+"%", begin, length);
-        } else if(receiverForm.getPhone() != null){
-            return receiverDao.getReceiverByPhone("%"+receiverForm.getPhone()+"%", begin, length);
-        } else if(receiverForm.getWechat() != null) {
-            return receiverDao.getReceiverByWechat("%"+receiverForm.getWechat()+"%", begin, length);
-        } else if(receiverForm.getQq() != null) {
-            return receiverDao.getReceiverByQq("%"+receiverForm.getQq()+"%", begin, length);
+    public List<Receiver> getReceiverList(ReceiverSearch receiverSearch) {
+        if(receiverSearch.getName() != null) {
+            return receiverDao.getReceiverByName(receiverSearch);
+        } else if(receiverSearch.getMail() != null) {
+            return receiverDao.getReceiverByMail(receiverSearch);
+        } else if(receiverSearch.getPhone() != null){
+            return receiverDao.getReceiverByPhone(receiverSearch);
+        } else if(receiverSearch.getWechat() != null) {
+            return receiverDao.getReceiverByWechat(receiverSearch);
+        } else if(receiverSearch.getQq() != null) {
+            return receiverDao.getReceiverByQq(receiverSearch);
         } else {
-            return receiverDao.getReceiver(begin, length);
+            return receiverDao.getReceiver(receiverSearch);
         }
     }
 
     /**
      * 获取接收者列表的长度，用于分页
-     * @param receiverForm
+     * @param receiverSearch
      * @return
      */
-    public int getReceiverCount(ReceiverForm receiverForm) {
-        if(receiverForm.getName() != null) {
-            return receiverDao.getReceiverCountByName("%"+receiverForm.getName()+"%");
-        } else if(receiverForm.getMail() != null) {
-            return receiverDao.getReceiverCountByMail("%"+receiverForm.getMail()+"%");
-        } else if(receiverForm.getPhone() != null){
-            return receiverDao.getReceiverCountByPhone("%"+receiverForm.getPhone()+"%");
-        } else if(receiverForm.getWechat() != null) {
-            return receiverDao.getReceiverCountByWechat("%"+receiverForm.getWechat()+"%");
-        } else if(receiverForm.getQq() != null) {
-            return receiverDao.getReceiverCountByQq("%"+receiverForm.getQq()+"%");
+    public int getReceiverCount(ReceiverSearch receiverSearch) {
+        if(receiverSearch.getName() != null) {
+            return receiverDao.getReceiverCountByName(receiverSearch);
+        } else if(receiverSearch.getMail() != null) {
+            return receiverDao.getReceiverCountByMail(receiverSearch);
+        } else if(receiverSearch.getPhone() != null){
+            return receiverDao.getReceiverCountByPhone(receiverSearch);
+        } else if(receiverSearch.getWechat() != null) {
+            return receiverDao.getReceiverCountByWechat(receiverSearch);
+        } else if(receiverSearch.getQq() != null) {
+            return receiverDao.getReceiverCountByQq(receiverSearch);
         } else {
             return receiverDao.getReceiverCount();
         }

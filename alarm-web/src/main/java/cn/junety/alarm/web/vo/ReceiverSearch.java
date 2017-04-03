@@ -1,24 +1,26 @@
 package cn.junety.alarm.web.vo;
 
 import com.google.common.base.Strings;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import javax.servlet.http.HttpServletRequest;
 
 /**
  * Created by caijt on 2017/3/27.
  */
-public class ReceiverForm {
-    private Integer page;
-    private Integer length;
+public class ReceiverSearch {
+    private Page page;
     private String name;
     private String phone;
     private String mail;
     private String wechat;
     private String qq;
 
-    public ReceiverForm(HttpServletRequest request) {
-        this.page = Integer.valueOf(request.getParameter("page"));
-        this.length = Integer.valueOf(request.getParameter("length"));
+    public ReceiverSearch(HttpServletRequest request) {
+        int pageNo = NumberUtils.toInt(request.getParameter("page_no"), 1);
+        int pageSize = NumberUtils.toInt(request.getParameter("page_size"), 10);
+        this.page = new Page(pageNo, pageSize);
+
         if(!Strings.isNullOrEmpty(request.getParameter("name"))) {
             this.name = request.getParameter("name").trim();
         } else if(!Strings.isNullOrEmpty(request.getParameter("phone"))) {
@@ -32,26 +34,12 @@ public class ReceiverForm {
         }
     }
 
-    public Integer getPage() {
-        if (page == null || page < 1) {
-            return 1;
-        }
+    public Page getPage() {
         return page;
     }
 
-    public void setPage(Integer page) {
+    public void setPage(Page page) {
         this.page = page;
-    }
-
-    public Integer getLength() {
-        if (length == null) {
-            return 10;
-        }
-        return length;
-    }
-
-    public void setLength(Integer length) {
-        this.length = length;
     }
 
     public String getName() {

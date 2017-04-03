@@ -1,4 +1,4 @@
-var search_select="name";
+var search_select="";
 var search_input="";
 
 $(function() {
@@ -57,7 +57,7 @@ $(function() {
 
 function getReceivers(search) {
     $.ajax({
-        url: "/receivers?page="+current_page+"&length="+page_length+"&"+search,
+        url: "/receivers?page_no="+current_page+"&page_size="+page_length+"&"+search,
         type: "GET",
         success: function(data){
             if(data["code"] == 2000) {
