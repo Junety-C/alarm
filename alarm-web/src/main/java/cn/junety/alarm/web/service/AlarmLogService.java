@@ -1,7 +1,7 @@
 package cn.junety.alarm.web.service;
 
-import cn.junety.alarm.base.dao.AlarmLogDao;
 import cn.junety.alarm.base.entity.AlarmLog;
+import cn.junety.alarm.web.dao.AlarmLogDao;
 import cn.junety.alarm.web.vo.AlarmLogForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

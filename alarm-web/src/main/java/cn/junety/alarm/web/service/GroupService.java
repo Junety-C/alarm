@@ -1,9 +1,9 @@
 package cn.junety.alarm.web.service;
 
-import cn.junety.alarm.base.dao.GroupDao;
-import cn.junety.alarm.base.dao.ReceiverDao;
 import cn.junety.alarm.base.entity.Group;
 import cn.junety.alarm.base.entity.Receiver;
+import cn.junety.alarm.web.dao.GroupDao;
+import cn.junety.alarm.web.dao.ReceiverDao;
 import cn.junety.alarm.web.vo.GroupForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +41,7 @@ public class GroupService {
     }
 
     public List<Receiver> getReceivers() {
-        return receiverDao.getAll();
+        return receiverDao.getAllReceiver();
     }
 
     public int getGroupCount(GroupForm groupForm) {
@@ -53,7 +53,7 @@ public class GroupService {
     }
 
     public List<Receiver> getReceiverByGroupId(Integer gid) {
-        return receiverDao.getByGroupId(gid);
+        return receiverDao.getReceiverByGroupId(gid);
     }
 
     public int createGroup(Group group) {

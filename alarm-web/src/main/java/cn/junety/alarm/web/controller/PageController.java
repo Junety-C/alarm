@@ -41,4 +41,14 @@ public class PageController extends BaseController {
 
         return new ModelAndView("project-module");
     }
+
+    @RequestMapping(value = "/receiver", method = RequestMethod.GET)
+    public ModelAndView toReceiverPage(HttpServletRequest request, Model model) {
+        User user = getUser(request);
+        logger.info("GET /receiver, user:{}", JSON.toJSONString(user));
+
+        model.addAttribute("user", user);
+
+        return new ModelAndView("receiver");
+    }
 }

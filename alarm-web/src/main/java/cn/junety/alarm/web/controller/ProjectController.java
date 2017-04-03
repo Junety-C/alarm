@@ -54,9 +54,7 @@ public class ProjectController extends BaseController {
         User user = getUser(request);
         logger.info("POST /projects/{}, user:{}, name:{}", JSON.toJSONString(user), name);
 
-        Project project = new Project();
-        project.setName(name);
-        projectService.createProject(project);
+        projectService.createProject(name);
 
         return ResponseHelper.buildResponse(2000);
     }

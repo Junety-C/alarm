@@ -1,10 +1,10 @@
 package cn.junety.alarm.web.service;
 
-import cn.junety.alarm.base.dao.AlarmDao;
-import cn.junety.alarm.base.dao.GroupDao;
-import cn.junety.alarm.base.dao.ModuleDao;
-import cn.junety.alarm.base.dao.ProjectDao;
 import cn.junety.alarm.base.entity.*;
+import cn.junety.alarm.web.dao.AlarmDao;
+import cn.junety.alarm.web.dao.GroupDao;
+import cn.junety.alarm.web.dao.ModuleDao;
+import cn.junety.alarm.web.dao.ProjectDao;
 import cn.junety.alarm.web.vo.AlarmForm;
 import cn.junety.alarm.web.vo.AlarmVO;
 import com.alibaba.fastjson.JSON;

@@ -1,9 +1,9 @@
 package cn.junety.alarm.web.service;
 
-import cn.junety.alarm.base.dao.ModuleDao;
-import cn.junety.alarm.base.dao.ProjectDao;
 import cn.junety.alarm.base.entity.Module;
 import cn.junety.alarm.base.entity.Project;
+import cn.junety.alarm.web.dao.ModuleDao;
+import cn.junety.alarm.web.dao.ProjectDao;
 import cn.junety.alarm.web.vo.ProjectForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +26,7 @@ public class ProjectService {
     private ProjectDao projectDao;
 
     /**
-     * 获取所有项目信息
+     * 获取项目列表（全部）
      * @return
      */
     public List<Project> getProjectList() {
@@ -43,7 +43,7 @@ public class ProjectService {
     }
 
     /**
-     * 获取项目信息（分页）
+     * 获取项目列表
      * @param projectForm
      * @return
      */
@@ -61,6 +61,11 @@ public class ProjectService {
         return projects;
     }
 
+    /**
+     * 获取项目列表的长度，用于分页
+     * @param projectForm
+     * @return
+     */
     public int getProjectCount(ProjectForm projectForm) {
         if(projectForm.getName() != null) {
             return projectDao.getProjectCountByName(projectForm.getName()+"%");
@@ -69,19 +74,39 @@ public class ProjectService {
         }
     }
 
-    public int createProject(Project project) {
-        return projectDao.save(project);
+    /**
+     * 新建项目
+     * @param name
+     * @return
+     */
+    public int createProject(String name) {
+        return projectDao.save(name);
     }
 
+    /**
+     * 删除项目
+     * @param id
+     */
     public void deleteProjectById(int id) {
         moduleDao.deleteByProjectId(id);
         projectDao.deleteById(id);
     }
 
+    /**
+     * 新建模块
+     * @param pid
+     * @param name
+     * @return
+     */
     public int createModule(Integer pid, String name) {
         return moduleDao.save(pid, name);
     }
 
+    /**
+     * 删除模块
+     * @param id
+     * @return
+     */
     public int deleteModuleById(int id) {
         return moduleDao.deleteById(id);
     }

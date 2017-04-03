@@ -1,7 +1,7 @@
 package cn.junety.alarm.web.service;
 
-import cn.junety.alarm.base.dao.UserDao;
 import cn.junety.alarm.base.entity.User;
+import cn.junety.alarm.web.dao.UserDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
