@@ -20,7 +20,7 @@ function getLogs(search) {
         success: function(data){
             if(data["code"] == 2000) {
                 var html = "";
-                var logs = data["content"]["logs"];
+                var logs = data["logs"];
                 for(var i = 0; i < logs.length; i++) {
                     var log  = logs[i];
                     var status;
@@ -41,10 +41,10 @@ function getLogs(search) {
                         + "<td>"+log["content"]+"</td></tr>";
                 }
                 $(".logs-body").html(html);
-                var page_count = parseInt((data["content"]["count"] + page_length - 1)/page_length);
+                var page_count = parseInt((data["count"] + page_length - 1)/page_length);
                 $(".page-footer").html(setPageButton(page_count, current_page));
                 setPageBtnClick();
-                setTableTotalSize(data["content"]["count"]);
+                setTableTotalSize(data["count"]);
             }
         }
     });
