@@ -62,7 +62,7 @@ function getReceivers(search) {
         success: function(data){
             if(data["code"] == 2000) {
                 var html = "";
-                var receivers = data["content"]["receivers"];
+                var receivers = data["receivers"];
                 for(var i = 0; i < receivers.length; i++) {
                     var receiver  = receivers[i];
                     html += "<tr><td>"+receiver["name"]+"</td>"
@@ -79,10 +79,10 @@ function getReceivers(search) {
                 }
                 $(".receivers-body").html(html);
                 setReceiverClickEvent();
-                var page_count = parseInt((data["content"]["count"] + page_length - 1)/page_length);
+                var page_count = parseInt((data["count"] + page_length - 1)/page_length);
                 $(".page-footer").html(setPageButton(page_count, current_page));
                 setPageBtnClick();
-                setTableTotalSize(data["content"]["count"]);
+                setTableTotalSize(data["count"]);
             }
         }
     });
@@ -107,7 +107,7 @@ function getReceiverById(rid) {
         type: "GET",
         success: function(data){
             if(data["code"] == 2000) {
-                var receiver = data["content"]["receiver"];
+                var receiver = data["receiver"];
                 $("#receiver-name-update").val(receiver["name"]);
                 $("#receiver-mail-update").val(receiver["mail"]);
                 $("#receiver-phone-update").val(receiver["phone"]);

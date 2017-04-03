@@ -10,7 +10,6 @@ import cn.junety.alarm.web.vo.AlarmVO;
 import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -22,7 +21,7 @@ import java.util.List;
 /**
  * Created by caijt on 2017/3/24.
  */
-@Controller
+@RestController
 public class AlarmController extends BaseController {
 
     @Autowired
@@ -32,17 +31,6 @@ public class AlarmController extends BaseController {
     @Autowired
     private GroupService groupService;
 
-    @RequestMapping(value = "/alarm", method = RequestMethod.GET)
-    public ModelAndView toAlarmPage(HttpServletRequest request, Model model) {
-        User user = getUser(request);
-        logger.info("GET /alarm, user:{}", JSON.toJSONString(user));
-
-        model.addAttribute("user", user);
-
-        return new ModelAndView("alarm");
-    }
-
-    @ResponseBody
     @RequestMapping(value = "/alarms", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public String getAlarmList(HttpServletRequest request) {
         User user = getUser(request);
@@ -60,7 +48,6 @@ public class AlarmController extends BaseController {
         }
     }
 
-    @ResponseBody
     @RequestMapping(value = "/alarms/info", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public String getCreateInfo(HttpServletRequest request) {
         User user = getUser(request);
@@ -80,7 +67,6 @@ public class AlarmController extends BaseController {
                 "modules", modules, "groups", groups);
     }
 
-    @ResponseBody
     @RequestMapping(value = "/alarms/{aid}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public String getAlarmById(HttpServletRequest request, @PathVariable Integer aid) {
         User user = getUser(request);
@@ -101,7 +87,6 @@ public class AlarmController extends BaseController {
                 "modules", modules, "groups", groups, "alarm", alarm);
     }
 
-    @ResponseBody
     @RequestMapping(value = "/alarms", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public String createAlarm(HttpServletRequest request, @RequestBody Alarm alarm) {
         User user = getUser(request);
@@ -116,7 +101,6 @@ public class AlarmController extends BaseController {
         }
     }
 
-    @ResponseBody
     @RequestMapping(value = "/alarms", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public String updateAlarm(HttpServletRequest request, @RequestBody Alarm alarm) {
         User user = getUser(request);
@@ -131,7 +115,6 @@ public class AlarmController extends BaseController {
         }
     }
 
-    @ResponseBody
     @RequestMapping(value = "/alarms/{aid}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public String deleteAlarm(HttpServletRequest request, @PathVariable Integer aid) {
         User user = getUser(request);
