@@ -2,7 +2,7 @@ package cn.junety.alarm.web.service;
 
 import cn.junety.alarm.base.entity.AlarmLog;
 import cn.junety.alarm.web.dao.AlarmLogDao;
-import cn.junety.alarm.web.vo.AlarmLogForm;
+import cn.junety.alarm.web.vo.AlarmLogSearch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,29 +21,26 @@ public class AlarmLogService {
     @Autowired
     private AlarmLogDao alarmLogDao;
 
-    public List<AlarmLog> getLogs(AlarmLogForm alarmLogForm) {
-        int length = alarmLogForm.getLength();
-        int begin = (alarmLogForm.getPage() - 1) * length;
-
-        if(alarmLogForm.getCode() != null) {
-            return alarmLogDao.getByCode(alarmLogForm.getCode(), begin, length);
-        } else if(alarmLogForm.getAlarmName() != null) {
-            return alarmLogDao.getByAlarmName(alarmLogForm.getAlarmName()+"%", begin, length);
-        } else if(alarmLogForm.getProjectName() != null) {
-            return alarmLogDao.getByProjectName(alarmLogForm.getProjectName()+"%", begin, length);
+    public List<AlarmLog> getLogList(AlarmLogSearch alarmLogSearch) {
+        if(alarmLogSearch.getCode() != null) {
+            return alarmLogDao.getLogByCode(alarmLogSearch);
+        } else if(alarmLogSearch.getAlarmName() != null) {
+            return alarmLogDao.getLogByAlarmName(alarmLogSearch);
+        } else if(alarmLogSearch.getProjectName() != null) {
+            return alarmLogDao.getLogByProjectName(alarmLogSearch);
         } else {
-            return alarmLogDao.get(begin, length);
+            return alarmLogDao.getLog(alarmLogSearch);
         }
     }
 
-    public int getLogCount(AlarmLogForm alarmLogForm) {
-        if(alarmLogForm.getCode() != null) {
-            return alarmLogDao.getCountByCode(alarmLogForm.getCode());
-        } else if(alarmLogForm.getAlarmName() != null) {
-            return alarmLogDao.getCountByAlarmName(alarmLogForm.getAlarmName()+"%");
-        } else if(alarmLogForm.getProjectName() != null) {
-            return alarmLogDao.getCountByProjectName(alarmLogForm.getProjectName()+"%");
+    public int getLogCount(AlarmLogSearch alarmLogSearch) {
+        if(alarmLogSearch.getCode() != null) {
+            return alarmLogDao.getLogCountByCode(alarmLogSearch);
+        } else if(alarmLogSearch.getAlarmName() != null) {
+            return alarmLogDao.getLogCountByAlarmName(alarmLogSearch);
+        } else if(alarmLogSearch.getProjectName() != null) {
+            return alarmLogDao.getLogCountByProjectName(alarmLogSearch);
         }
-        return alarmLogDao.getCount();
+        return alarmLogDao.getLogCount();
     }
 }

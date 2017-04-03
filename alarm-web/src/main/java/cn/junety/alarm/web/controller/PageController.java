@@ -61,4 +61,14 @@ public class PageController extends BaseController {
 
         return new ModelAndView("group");
     }
+
+    @RequestMapping(value = "/log", method = RequestMethod.GET)
+    public ModelAndView toLogPage(HttpServletRequest request, Model model) {
+        User user = getUser(request);
+        logger.info("GET /log, user:{}", JSON.toJSONString(user));
+
+        model.addAttribute("user", user);
+
+        return new ModelAndView("log");
+    }
 }
