@@ -14,7 +14,6 @@ $(function() {
             password: password
         };
 
-        alert("dashjkdashdkjas");
         login(login_data);
     });
 });
