@@ -25,23 +25,37 @@ public class ProjectService {
     @Autowired
     private ProjectDao projectDao;
 
+    /**
+     * 获取所有项目信息
+     * @return
+     */
     public List<Project> getProjectList() {
         return projectDao.getAllProject();
     }
 
-    public List<Module> getModuleByPid(int pid) {
-        return moduleDao.getByPid(pid);
+    /**
+     * 根据项目id获取对应模块信息
+     * @param pid
+     * @return
+     */
+    public List<Module> getModuleByProjectId(int pid) {
+        return moduleDao.getModuleByPprojectId(pid);
     }
 
-    public List<Project> getProjects(ProjectForm projectForm) {
+    /**
+     * 获取项目信息（分页）
+     * @param projectForm
+     * @return
+     */
+    public List<Project> getProjectList(ProjectForm projectForm) {
         int length = projectForm.getLength();
         int begin =  (projectForm.getPage() - 1) * length;
         List<Project> projects;
 
         if(projectForm.getName() != null) {
-            projects = projectDao.getByName(projectForm.getName()+"%", begin, length);
+            projects = projectDao.getProjectByName(projectForm.getName()+"%", begin, length);
         } else {
-            projects = projectDao.get(begin, length);
+            projects = projectDao.getProject(begin, length);
         }
 
         return projects;
@@ -49,9 +63,9 @@ public class ProjectService {
 
     public int getProjectCount(ProjectForm projectForm) {
         if(projectForm.getName() != null) {
-            return projectDao.getCountByName(projectForm.getName()+"%");
+            return projectDao.getProjectCountByName(projectForm.getName()+"%");
         } else {
-            return projectDao.getCount();
+            return projectDao.getProjectCount();
         }
     }
 
@@ -59,8 +73,8 @@ public class ProjectService {
         return projectDao.save(project);
     }
 
-    public void deleteProject(int id) {
-        moduleDao.deleteByPid(id);
+    public void deleteProjectById(int id) {
+        moduleDao.deleteByProjectId(id);
         projectDao.deleteById(id);
     }
 
@@ -68,7 +82,7 @@ public class ProjectService {
         return moduleDao.save(pid, name);
     }
 
-    public int deleteModule(int id) {
+    public int deleteModuleById(int id) {
         return moduleDao.deleteById(id);
     }
 }

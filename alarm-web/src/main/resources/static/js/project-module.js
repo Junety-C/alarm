@@ -47,7 +47,7 @@ function getProjects(search) {
         success: function(data){
             if(data["code"] == 2000) {
                 var html = "";
-                var projects = data["content"]["projects"];
+                var projects = data["projects"];
                 for(var i = 0; i < projects.length; i++) {
                     var project  = projects[i];
                     if (i == 0) {
@@ -67,17 +67,16 @@ function getProjects(search) {
                 }
                 $(".projects-body").html(html);
                 setProjectClickEvent();
-                var page_count = parseInt((data["content"]["count"] + page_length - 1)/page_length);
+                var page_count = parseInt((data["count"] + page_length - 1)/page_length);
                 $(".page-footer").html(setPageButton(page_count, current_page));
                 setPageBtnClick();
-                setTableTotalSize(data["content"]["count"]);
+                setTableTotalSize(data["count"]);
 
                 // module modal
                 html = "";
-                var modules = data["content"]["modules"];
+                var modules = data["modules"];
                 for(var i = 0; i < modules.length; i++) {
                     var module  = modules[i];
-                    //html += "<tr><td>"+module["name"]+"</td></tr>";
                     html += "<tr class='module' _val='"+module["id"]+"'>"
                         + "<td><div>"+module["name"]+""
                         + "<button class='btn btn-danger module-del' data-toggle='modal' data-target='#modal-module-del' "
@@ -113,7 +112,7 @@ function getModuleByProjectId(pid) {
         success: function(data){
             if(data["code"] == 2000) {
                 var html = "";
-                var modules = data["content"]["modules"];
+                var modules = data["modules"];
                 for(var i = 0; i < modules.length; i++) {
                     var module  = modules[i];
                     html += "<tr class='module' _val='"+module["id"]+"'>"

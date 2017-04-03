@@ -9,8 +9,6 @@ import java.util.List;
  * Created by caijt on 2017/3/26.
  */
 public interface GroupDao {
-    @Select("select id, name from tb_group where id=#{id}")
-    Group getById(@Param("id") int id);
 
     @Select("select id, name from tb_group")
     List<Group> getAll();
@@ -52,6 +50,10 @@ public interface GroupDao {
 
 
     /* ===============v2================== */
+
+    @Select("select id, name from tb_group where id=#{id}")
+    Group getGroupById(@Param("id") int id);
+
     @Select("select id, name from tb_group")
     List<Group> getAllGroup();
 }

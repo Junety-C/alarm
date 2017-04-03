@@ -48,7 +48,7 @@ public class AlarmController extends BaseController {
         User user = getUser(request);
         try {
             AlarmForm alarmForm = new AlarmForm(request);
-            logger.info("GET /alarms, user:{}, body:{}", JSON.toJSONString(user), JSON.toJSONString(alarmForm));
+            logger.info("GET /alarms, user:{}, form:{}", JSON.toJSONString(user), JSON.toJSONString(alarmForm));
 
             List<AlarmVO> alarms = alarmService.getAlarmInfo(user, alarmForm);
             int count = alarmService.getAlarmInfoCount(user, alarmForm);
@@ -70,7 +70,7 @@ public class AlarmController extends BaseController {
         List<Project> projects = projectService.getProjectList();
         List<Module> modules;
         if (projects.size() > 0) {
-            modules = projectService.getModuleByPid(projects.get(0).getId());
+            modules = projectService.getModuleByProjectId(projects.get(0).getId());
         } else {
             modules = Collections.emptyList();
         }
@@ -90,7 +90,7 @@ public class AlarmController extends BaseController {
         List<Project> projects = projectService.getProjectList();
         List<Module> modules;
         if (projects.size() > 0) {
-            modules = projectService.getModuleByPid(projects.get(0).getId());
+            modules = projectService.getModuleByProjectId(projects.get(0).getId());
         } else {
             modules = Collections.emptyList();
         }
@@ -105,7 +105,7 @@ public class AlarmController extends BaseController {
     @RequestMapping(value = "/alarms", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public String createAlarm(HttpServletRequest request, @RequestBody Alarm alarm) {
         User user = getUser(request);
-        logger.info("POST /alarms, user:{}, body:{}", JSON.toJSONString(user), JSON.toJSONString(alarm));
+        logger.info("POST /alarms, user:{}, alarm:{}", JSON.toJSONString(user), JSON.toJSONString(alarm));
 
         try {
             alarmService.createAlarm(alarm);
@@ -120,7 +120,7 @@ public class AlarmController extends BaseController {
     @RequestMapping(value = "/alarms", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public String updateAlarm(HttpServletRequest request, @RequestBody Alarm alarm) {
         User user = getUser(request);
-        logger.info("PUT /alarms, user:{}, body:{}", JSON.toJSONString(user), JSON.toJSONString(alarm));
+        logger.info("PUT /alarms, user:{}, alarm:{}", JSON.toJSONString(user), JSON.toJSONString(alarm));
 
         try {
             alarmService.updateAlarm(alarm);

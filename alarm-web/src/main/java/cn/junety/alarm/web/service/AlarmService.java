@@ -55,9 +55,9 @@ public class AlarmService {
         for(Alarm alarm : alarms) {
             AlarmVO alarmVO = new AlarmVO();
             alarmVO.setAlarm(alarm);
-            alarmVO.setProject(projectDao.getById(alarm.getProjectId()));
-            alarmVO.setModule(moduleDao.getById(alarm.getModuleId()));
-            alarmVO.setGroup(groupDao.getById(alarm.getGroupId()));
+            alarmVO.setProject(projectDao.getProjectById(alarm.getProjectId()));
+            alarmVO.setModule(moduleDao.getModuleById(alarm.getModuleId()));
+            alarmVO.setGroup(groupDao.getGroupById(alarm.getGroupId()));
             results.add(alarmVO);
         }
         return results;
@@ -149,7 +149,7 @@ public class AlarmService {
      * @return
      */
     public Alarm getAlarmById(Integer aid) {
-        return alarmDao.getById(aid);
+        return alarmDao.getAlarmById(aid);
     }
 
     /**
