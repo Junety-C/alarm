@@ -1,25 +1,29 @@
 package cn.junety.alarm.web.vo;
 
 import com.google.common.base.Strings;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import javax.servlet.http.HttpServletRequest;
 
 /**
  * Created by caijt on 2017/3/26.
  */
-public class AlarmForm {
-    private Integer page;
-    private Integer length;
+public class AlarmSearch {
+    private Page page;
+    private Integer userId;
     private Integer code;
     private String alarmName;
     private String projectName;
     private String groupName;
 
-    public AlarmForm(HttpServletRequest request) {
-        this.page = Integer.valueOf(request.getParameter("page"));
-        this.length = Integer.valueOf(request.getParameter("length"));
+    public AlarmSearch(HttpServletRequest request) {
+        int pageNo = NumberUtils.toInt(request.getParameter("page_no"), 1);
+        int pageSize = NumberUtils.toInt(request.getParameter("page_size"), 10);
+        this.page = new Page(pageNo, pageSize);
+
         if(!Strings.isNullOrEmpty(request.getParameter("code"))) {
-            this.code = Integer.valueOf(request.getParameter("code").trim());
+            this.code = NumberUtils.toInt(request.getParameter("code"), 0);
         } else if(!Strings.isNullOrEmpty(request.getParameter("name"))) {
             this.alarmName = request.getParameter("name").trim();
         } else if(!Strings.isNullOrEmpty(request.getParameter("group"))) {
@@ -29,26 +33,20 @@ public class AlarmForm {
         }
     }
 
-    public Integer getPage() {
-        if (page == null || page < 1) {
-            return 1;
-        }
+    public Page getPage() {
         return page;
     }
 
-    public void setPage(Integer page) {
+    public void setPage(Page page) {
         this.page = page;
     }
 
-    public Integer getLength() {
-        if (length == null) {
-            return 10;
-        }
-        return length;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setLength(Integer length) {
-        this.length = length;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public Integer getCode() {

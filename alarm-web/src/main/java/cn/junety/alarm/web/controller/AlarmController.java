@@ -5,14 +5,12 @@ import cn.junety.alarm.web.common.ResponseHelper;
 import cn.junety.alarm.web.service.AlarmService;
 import cn.junety.alarm.web.service.GroupService;
 import cn.junety.alarm.web.service.ProjectService;
-import cn.junety.alarm.web.vo.AlarmForm;
+import cn.junety.alarm.web.vo.AlarmSearch;
 import cn.junety.alarm.web.vo.AlarmVO;
 import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
@@ -35,11 +33,12 @@ public class AlarmController extends BaseController {
     public String getAlarmList(HttpServletRequest request) {
         User user = getUser(request);
         try {
-            AlarmForm alarmForm = new AlarmForm(request);
-            logger.info("GET /alarms, user:{}, form:{}", JSON.toJSONString(user), JSON.toJSONString(alarmForm));
+            AlarmSearch alarmSearch = new AlarmSearch(request);
+            logger.info("GET /alarms, user:{}, search:{}", JSON.toJSONString(user), JSON.toJSONString(alarmSearch));
 
-            List<AlarmVO> alarms = alarmService.getAlarmInfo(user, alarmForm);
-            int count = alarmService.getAlarmInfoCount(user, alarmForm);
+            alarmSearch.setUserId(user.getId());
+            List<AlarmVO> alarms = alarmService.getAlarmInfo(user, alarmSearch);
+            int count = alarmService.getAlarmInfoCount(user, alarmSearch);
 
             return ResponseHelper.buildResponse(2000, "alarms", alarms, "count", count);
         } catch (Exception e) {

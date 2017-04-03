@@ -5,7 +5,7 @@ import cn.junety.alarm.web.dao.AlarmDao;
 import cn.junety.alarm.web.dao.GroupDao;
 import cn.junety.alarm.web.dao.ModuleDao;
 import cn.junety.alarm.web.dao.ProjectDao;
-import cn.junety.alarm.web.vo.AlarmForm;
+import cn.junety.alarm.web.vo.AlarmSearch;
 import cn.junety.alarm.web.vo.AlarmVO;
 import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
@@ -36,18 +36,18 @@ public class AlarmService {
     /**
      * 获取告警列表
      * @param user
-     * @param alarmForm
+     * @param alarmSearch
      * @return
      */
-    public List<AlarmVO> getAlarmInfo(User user, AlarmForm alarmForm) {
+    public List<AlarmVO> getAlarmInfo(User user, AlarmSearch alarmSearch) {
         List<Alarm> alarms;
 
         // 管理员获取所有告警, 普通用户获取自己能接收到的告警
         if (user.getType() == UserTypeEnum.ADMIN_USER.value()) {
-            alarms = getAllAlarm(alarmForm);
+            alarms = getAllAlarm(alarmSearch);
             logger.debug("get all alarm info, user:{}", JSON.toJSONString(user));
         } else {
-            alarms = getUserAlarm(user, alarmForm);
+            alarms = getUserAlarm(alarmSearch);
             logger.debug("get user alarm info, user:{}", JSON.toJSONString(user));
         }
 
@@ -63,83 +63,75 @@ public class AlarmService {
         return results;
     }
 
-    private List<Alarm> getAllAlarm(AlarmForm alarmForm) {
-        // 分页参数
-        int length = alarmForm.getLength();
-        int begin =  (alarmForm.getPage() - 1) * length;
-
-        if(alarmForm.getCode() != null) {
-            return alarmDao.getAlarmByCode(alarmForm.getCode(), begin, length);
-        } else if(alarmForm.getAlarmName() != null) {
-            return alarmDao.getAlarmByName(alarmForm.getAlarmName()+"%", begin, length);
-        } else if(alarmForm.getGroupName() != null){
-            return alarmDao.getAlarmByGroupName(alarmForm.getGroupName()+"%", begin, length);
-        } else if(alarmForm.getProjectName() != null) {
-            return alarmDao.getAlarmByProjectName(alarmForm.getProjectName()+"%", begin, length);
+    private List<Alarm> getAllAlarm(AlarmSearch alarmSearch) {
+        if(alarmSearch.getCode() != null) {
+            return alarmDao.getAlarmByCode(alarmSearch);
+        } else if(alarmSearch.getAlarmName() != null) {
+            return alarmDao.getAlarmByName(alarmSearch);
+        } else if(alarmSearch.getGroupName() != null){
+            return alarmDao.getAlarmByGroupName(alarmSearch);
+        } else if(alarmSearch.getProjectName() != null) {
+            return alarmDao.getAlarmByProjectName(alarmSearch);
         } else {
-            return alarmDao.getAlarm(begin, length);
+            return alarmDao.getAlarm(alarmSearch);
         }
     }
 
-    private List<Alarm> getUserAlarm(User user, AlarmForm alarmForm) {
-        // 分页参数
-        int length = alarmForm.getLength();
-        int begin =  (alarmForm.getPage() - 1) * length;
-
-        if(alarmForm.getCode() != null) {
-            return alarmDao.getUserAlarmByCode(alarmForm.getCode(), user.getId(), begin, length);
-        } else if(alarmForm.getAlarmName() != null) {
-            return alarmDao.getUserAlarmByName(alarmForm.getAlarmName()+"%", user.getId(), begin, length);
-        } else if(alarmForm.getGroupName() != null){
-            return alarmDao.getUserAlarmByGroupName(alarmForm.getGroupName()+"%", user.getId(), begin, length);
-        } else if(alarmForm.getProjectName() != null) {
-            return alarmDao.getUserAlarmByProjectName(alarmForm.getProjectName()+"%", user.getId(), begin, length);
+    private List<Alarm> getUserAlarm(AlarmSearch alarmSearch) {
+        if(alarmSearch.getCode() != null) {
+            return alarmDao.getUserAlarmByCode(alarmSearch);
+        } else if(alarmSearch.getAlarmName() != null) {
+            return alarmDao.getUserAlarmByName(alarmSearch);
+        } else if(alarmSearch.getGroupName() != null){
+            return alarmDao.getUserAlarmByGroupName(alarmSearch);
+        } else if(alarmSearch.getProjectName() != null) {
+            return alarmDao.getUserAlarmByProjectName(alarmSearch);
         } else {
-            return alarmDao.getUserAlarm(user.getId(), begin, length);
+            return alarmDao.getUserAlarm(alarmSearch);
         }
     }
 
     /**
      * 获取告警列表的长度，用于分页
-     * @param alarmForm
+     * @param alarmSearch
      * @return
      */
-    public int getAlarmInfoCount(User user, AlarmForm alarmForm) {
+    public int getAlarmInfoCount(User user, AlarmSearch alarmSearch) {
         // 管理员获取所有告警, 普通用户获取自己能接收到的告警
         if (user.getType() == UserTypeEnum.ADMIN_USER.value()) {
             logger.debug("get all alarm info count, user:{}", JSON.toJSONString(user));
-            return getAllAlarmCount(alarmForm);
+            return getAllAlarmCount(alarmSearch);
         } else {
             logger.debug("get user alarm info count, user:{}", JSON.toJSONString(user));
-            return getUserAlarmCount(user, alarmForm);
+            return getUserAlarmCount(alarmSearch);
         }
     }
 
-    private int getAllAlarmCount(AlarmForm alarmForm) {
-        if(alarmForm.getCode() != null) {
-            return alarmDao.getAlarmCountByCode(alarmForm.getCode());
-        } else if(alarmForm.getAlarmName() != null) {
-            return alarmDao.getAlarmCountByName(alarmForm.getAlarmName()+"%");
-        } else if(alarmForm.getGroupName() != null){
-            return alarmDao.getAlarmCountByGroupName(alarmForm.getGroupName()+"%");
-        } else if(alarmForm.getProjectName() != null) {
-            return alarmDao.getAlarmCountByProjectName(alarmForm.getProjectName()+"%");
+    private int getAllAlarmCount(AlarmSearch alarmSearch) {
+        if(alarmSearch.getCode() != null) {
+            return alarmDao.getAlarmCountByCode(alarmSearch);
+        } else if(alarmSearch.getAlarmName() != null) {
+            return alarmDao.getAlarmCountByName(alarmSearch);
+        } else if(alarmSearch.getGroupName() != null){
+            return alarmDao.getAlarmCountByGroupName(alarmSearch);
+        } else if(alarmSearch.getProjectName() != null) {
+            return alarmDao.getAlarmCountByProjectName(alarmSearch);
         } else {
             return alarmDao.getAlarmCount();
         }
     }
 
-    private int getUserAlarmCount(User user, AlarmForm alarmForm) {
-        if(alarmForm.getCode() != null) {
-            return alarmDao.getUserAlarmCountByCode(alarmForm.getCode(), user.getId());
-        } else if(alarmForm.getAlarmName() != null) {
-            return alarmDao.getUserAlarmCountByName(alarmForm.getAlarmName()+"%", user.getId());
-        } else if(alarmForm.getGroupName() != null){
-            return alarmDao.getUserAlarmCountByGroupName(alarmForm.getGroupName()+"%", user.getId());
-        } else if(alarmForm.getProjectName() != null) {
-            return alarmDao.getUserAlarmCountByProjectName(alarmForm.getProjectName()+"%", user.getId());
+    private int getUserAlarmCount(AlarmSearch alarmSearch) {
+        if(alarmSearch.getCode() != null) {
+            return alarmDao.getUserAlarmCountByCode(alarmSearch);
+        } else if(alarmSearch.getAlarmName() != null) {
+            return alarmDao.getUserAlarmCountByName(alarmSearch);
+        } else if(alarmSearch.getGroupName() != null){
+            return alarmDao.getUserAlarmCountByGroupName(alarmSearch);
+        } else if(alarmSearch.getProjectName() != null) {
+            return alarmDao.getUserAlarmCountByProjectName(alarmSearch);
         } else {
-            return alarmDao.getUserAlarmCount(user.getId());
+            return alarmDao.getUserAlarmCount(alarmSearch);
         }
     }
 
