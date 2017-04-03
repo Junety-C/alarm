@@ -22,6 +22,10 @@ public class BaseController {
     protected UserLoginStatusService userLoginStatusService;
 
     public User getUser(HttpServletRequest request) {
+        Object user = request.getAttribute("user");
+        if (user != null) {
+            return (User) user;
+        }
         String identification = userLoginStatusService.getIdentificationFromLoginStatus(request);
         return userService.getByIdentification(identification);
     }

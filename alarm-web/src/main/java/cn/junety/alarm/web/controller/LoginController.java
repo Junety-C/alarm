@@ -38,6 +38,6 @@ public class LoginController extends BaseController {
                 return ResponseHelper.buildResponse(2000, "status", "success");
             //}
         }
-        return ResponseHelper.buildResponse(4004, "status", "invalid username or password");
+        return ResponseHelper.buildResponse(4004, "reason", "invalid username or password");
     }
 }

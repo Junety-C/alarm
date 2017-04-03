@@ -143,16 +143,47 @@ public class AlarmService {
         }
     }
 
+    /**
+     * 根据id获取告警
+     * @param aid
+     * @return
+     */
     public Alarm getAlarmById(Integer aid) {
         return alarmDao.getById(aid);
     }
 
+    /**
+     * 创建告警
+     * @param alarm
+     * @return
+     */
     public int createAlarm(Alarm alarm) {
         // 自动生成code
         if(alarm.getCode() <= 0) {
             alarm.setCode(alarmDao.getMaxCode() + 1);
         }
         return alarmDao.save(alarm);
+    }
+
+    /**
+     * 根据id删除告警
+     * @param aid
+     * @return
+     */
+    public int deleteAlarmById(Integer aid) {
+        return alarmDao.deleteById(aid);
+    }
+
+    /**
+     * 更新告警信息
+     * @param alarm
+     * @return
+     */
+    public int updateAlarm(Alarm alarm) {
+        if (alarm.getCode() <= 0) {
+            alarm.setCode(alarmDao.getMaxCode() + 1);
+        }
+        return alarmDao.updateById(alarm);
     }
 
     /**
@@ -168,20 +199,5 @@ public class AlarmService {
             logger.debug("get user alarm code list, user:{}", JSON.toJSONString(user));
             return alarmDao.getUserAlarmCodeList(user.getId());
         }
-    }
-
-    public List<Group> getGroups() {
-        return groupDao.getAll();
-    }
-
-    public int deleteAlarmById(Integer aid) {
-        return alarmDao.deleteById(aid);
-    }
-
-    public int updateAlarm(Alarm alarm) {
-        if (alarm.getCode() <= 0) {
-            alarm.setCode(alarmDao.getMaxCode() + 1);
-        }
-        return alarmDao.updateById(alarm);
     }
 }

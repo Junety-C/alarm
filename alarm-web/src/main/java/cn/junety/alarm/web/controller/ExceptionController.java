@@ -21,13 +21,13 @@ public class ExceptionController {
     @ExceptionHandler(HttpMessageConversionException.class)
     public String invalidParameterHandler(HttpServletRequest request, Exception e) {
         logger.error("{}", e);
-        return ResponseHelper.buildResponse(4000, "invalid params");
+        return ResponseHelper.buildResponse(4000, "reason", "invalid params");
     }
 
     @ExceptionHandler(Exception.class)
     public String badService(HttpServletRequest request, Exception e) {
         logger.error("{}", e);
         AlarmClient.error(1, "alarm.web.bad-service", "告警web端异常,error:" + e.getMessage());
-        return ResponseHelper.buildResponse(5000, "bad service");
+        return ResponseHelper.buildResponse(5000, "reason", "bad service");
     }
 }

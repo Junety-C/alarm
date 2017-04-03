@@ -16,7 +16,7 @@ $(function() {
 
     // get module list when project change
     $("#alarm-project").change(function() {
-        getModuleByProjectId($(this).val());
+        getModuleByProjectId($(this).val(), "#alarm-module");
     });
 
     // check and add alarm
@@ -105,33 +105,31 @@ function getAlarms(search) {
         url: "/alarms?page="+current_page+"&length="+page_length+"&"+search,
         type: "GET",
         success: function(data){
-            if(data["code"] == 2000) {
-                var html = "";
-                var alarms = data["alarms"];
-                for(var i = 0; i < alarms.length; i++) {
-                    var alarm  = alarms[i];
-                    html += "<tr>"
-                        + "<td>"+alarm["alarm"]["code"]+"</td>"
-                        + "<td>"+alarm["alarm"]["name"]+"</td>"
-                        + "<td>"+alarm["project"]["name"]+"</td>"
-                        + "<td>"+alarm["module"]["name"]+"</td>"
-                        + "<td>"+alarm["group"]["name"]+"</td>"
-                        + "<td>"+alarm["alarm"]["routeKey"]+"</td>"
-                        + "<td>"+alarm["config"]+"</td>"
-                        + "<td><button class='btn btn-info alarm-update' _val='"+alarm["alarm"]["id"]+"' "
-                        + "data-toggle='modal' data-target='#modal-alarm-update' "
-                        + "style='padding:0;margin:0;width:40px;height:26px;'>编辑</button>"
-                        + "&nbsp;&nbsp; <button class='btn btn-danger alarm-del' _val='"+alarm["alarm"]["id"]+"' "
-                        + "data-toggle='modal' data-target='#modal-alarm-del' "
-                        + "style='padding:0;margin:0;width:40px;height:26px;'>删除</button></td></tr>"
-                }
-                $(".alarms-body").html(html);
-                setAlarmClickEvent();
-                var page_count = parseInt((data["count"] + page_length - 1)/page_length);
-                $(".page-footer").html(setPageButton(page_count, current_page));
-                setPageBtnClick();
-                setTableTotalSize(data["count"]);
+            var html = "";
+            var alarms = data["alarms"];
+            for(var i = 0; i < alarms.length; i++) {
+                var alarm  = alarms[i];
+                html += "<tr>"
+                    + "<td>"+alarm["alarm"]["code"]+"</td>"
+                    + "<td>"+alarm["alarm"]["name"]+"</td>"
+                    + "<td>"+alarm["project"]["name"]+"</td>"
+                    + "<td>"+alarm["module"]["name"]+"</td>"
+                    + "<td>"+alarm["group"]["name"]+"</td>"
+                    + "<td>"+alarm["alarm"]["routeKey"]+"</td>"
+                    + "<td>"+alarm["config"]+"</td>"
+                    + "<td><button class='btn btn-info alarm-update' _val='"+alarm["alarm"]["id"]+"' "
+                    + "data-toggle='modal' data-target='#modal-alarm-update' "
+                    + "style='padding:0;margin:0;width:40px;height:26px;'>编辑</button>"
+                    + "&nbsp;&nbsp; <button class='btn btn-danger alarm-del' _val='"+alarm["alarm"]["id"]+"' "
+                    + "data-toggle='modal' data-target='#modal-alarm-del' "
+                    + "style='padding:0;margin:0;width:40px;height:26px;'>删除</button></td></tr>"
             }
+            $(".alarms-body").html(html);
+            setAlarmClickEvent();
+            var page_count = parseInt((data["count"] + page_length - 1)/page_length);
+            $(".page-footer").html(setPageButton(page_count, current_page));
+            setPageBtnClick();
+            setTableTotalSize(data["count"]);
         }
     });
 }
@@ -187,10 +185,10 @@ function getAlarmById(aid) {
         success: function(data){
             if(data["code"] == 2000) {
                 $("#alarm-project-update").unbind("change");
-                var alarm = data["content"]["alarm"];
+                var alarm = data["alarm"];
 
                 // code list
-                var codes = data["content"]["codes"];
+                var codes = data["codes"];
                 var codeList = [{id: 0, text: '自动生成'}];
                 for (var i = 0; i < codes.length; i++) {
                     codeList.push({id: codes[i], text: codes[i]});
@@ -200,7 +198,7 @@ function getAlarmById(aid) {
                 }).val(alarm["code"]).trigger("change");
 
                 // project list
-                var projects = data["content"]["projects"];
+                var projects = data["projects"];
                 var projectList = [];
                 for (var i = 0; i < projects.length; i++) {
                     projectList.push({id: projects[i]["id"], text: projects[i]["name"]});
@@ -210,7 +208,7 @@ function getAlarmById(aid) {
                 }).val(alarm["projectId"]).trigger("change");
 
                 // module list
-                var modules = data["content"]["modules"];
+                var modules = data["modules"];
                 var moduleList = [];
                 for (var i = 0; i < modules.length; i++) {
                     moduleList.push({id: modules[i]["id"], text: modules[i]["name"]});
@@ -220,7 +218,7 @@ function getAlarmById(aid) {
                 }).val(alarm["moduleId"]).trigger("change");
 
                 // group list
-                var groups = data["content"]["groups"];
+                var groups = data["groups"];
                 var groupList = [];
                 for (var i = 0; i < groups.length; i++) {
                     groupList.push({id: groups[i]["id"], text: groups[i]["name"]});
@@ -247,8 +245,10 @@ function getAlarmById(aid) {
 
                 // get module list when project change
                 $("#alarm-project-update").change(function() {
-                    getModuleByProjectIdUpdate($(this).val());
+                    getModuleByProjectId($(this).val(), "#alarm-module-update");
                 });
+            } else {
+                alert("获取告警信息失败...");
             }
         }
     });
@@ -299,58 +299,30 @@ function getCreateInfo() {
                 $("#alarm-group").select2({
                     data: groupList
                 });
+            } else {
+                alert("获取告警创建信息失败...");
             }
         }
     });
 }
 
-function setPageBtnClick() {
-    $(".page-btn").click(function () {
-        current_page = $(this).attr("_val");
-        getAlarms(search_select + "=" + search_input);
-    });
-}
-
-function setTableTotalSize(count) {
-    if (count == null || count == undefined) count = 0;
-    $(".table-total-size").text("共有 "+count+" 条数据");
-}
-
-function getModuleByProjectId(pid) {
+function getModuleByProjectId(pid, target) {
     $.ajax({
         url: "/projects/"+pid+"/modules",
         type: "GET",
         success: function(data){
             if(data["code"] == 2000) {
                 // module list
-                var modules = data["content"]["modules"];
+                var modules = data["modules"];
                 var moduleList = [];
                 for (var i = 0; i < modules.length; i++) {
                     moduleList.push({id: modules[i]["id"], text: modules[i]["name"]});
                 }
-                $("#alarm-module").html("").select2({
+                $(target).html("").select2({
                     data: moduleList
                 });
-            }
-        }
-    });
-}
-
-function getModuleByProjectIdUpdate(pid) {
-    $.ajax({
-        url: "/projects/"+pid+"/modules",
-        type: "GET",
-        success: function(data){
-            if(data["code"] == 2000) {
-                // module list
-                var modules = data["content"]["modules"];
-                var moduleList = [];
-                for (var i = 0; i < modules.length; i++) {
-                    moduleList.push({id: modules[i]["id"], text: modules[i]["name"]});
-                }
-                $("#alarm-module-update").html("").select2({
-                    data: moduleList
-                });
+            } else {
+                alert("获取项目模块失败...");
             }
         }
     });
@@ -370,4 +342,16 @@ function addAlarm(alarm_data) {
             location.replace(location.href);
         }
     });
+}
+
+function setPageBtnClick() {
+    $(".page-btn").click(function () {
+        current_page = $(this).attr("_val");
+        getAlarms(search_select + "=" + search_input);
+    });
+}
+
+function setTableTotalSize(count) {
+    if (count == null || count == undefined) count = 0;
+    $(".table-total-size").text("共有 "+count+" 条数据");
 }

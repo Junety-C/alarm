@@ -44,15 +44,20 @@ public class AlarmController extends BaseController {
 
     @ResponseBody
     @RequestMapping(value = "/alarms", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String getAlarms(HttpServletRequest request) {
+    public String getAlarmList(HttpServletRequest request) {
         User user = getUser(request);
-        AlarmForm alarmForm = new AlarmForm(request);
-        logger.info("GET /alarms, user:{}, body:{}", JSON.toJSONString(user), JSON.toJSONString(alarmForm));
+        try {
+            AlarmForm alarmForm = new AlarmForm(request);
+            logger.info("GET /alarms, user:{}, body:{}", JSON.toJSONString(user), JSON.toJSONString(alarmForm));
 
-        List<AlarmVO> alarms = alarmService.getAlarmInfo(user, alarmForm);
-        int count = alarmService.getAlarmInfoCount(user, alarmForm);
+            List<AlarmVO> alarms = alarmService.getAlarmInfo(user, alarmForm);
+            int count = alarmService.getAlarmInfoCount(user, alarmForm);
 
-        return ResponseHelper.buildResponse(2000, "alarms", alarms, "count", count);
+            return ResponseHelper.buildResponse(2000, "alarms", alarms, "count", count);
+        } catch (Exception e) {
+            logger.error("get alarm list error, caused by", e);
+            return ResponseHelper.buildResponse(5000, "alarms", Collections.emptyList(), "count", 0);
+        }
     }
 
     @ResponseBody
@@ -75,43 +80,65 @@ public class AlarmController extends BaseController {
                 "modules", modules, "groups", groups);
     }
 
-    //// 获取指定id的告警
-    //@ResponseBody
-    //@RequestMapping(value = "/alarms/{aid}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    //public String getAlarmById(@PathVariable Integer aid) {
-    //    logger.info("GET /alarms/{}", aid);
-    //    Map<String, Object> results = new HashMap<>();
-    //    results.put("codes", alarmService.getCodes());
-    //    List<Project> projects = alarmService.getProjects();
-    //    Alarm alarm = alarmService.getAlarmById(aid);
-    //    results.put("projects", projects);
-    //    results.put("modules", alarmService.getModules(alarm.getProjectId()));
-    //    results.put("groups", alarmService.getGroups());
-    //    results.put("alarm", alarm);
-    //    return ResponseHelper.buildResponse(2000, results);
-    //}
-//
-    //@ResponseBody
-    //@RequestMapping(value = "/alarms", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    //public String addAlarm(@RequestBody Alarm alarm) {
-    //    logger.info("POST /alarms, body:{}", alarm);
-    //    alarmService.createAlarm(alarm);
-    //    return ResponseHelper.buildResponse(2000, "success");
-    //}
-//
-    //@ResponseBody
-    //@RequestMapping(value = "/alarms", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    //public String updateAlarm(@RequestBody Alarm alarm) {
-    //    logger.info("PUT /alarms, body:{}", JSON.toJSONString(alarm));
-    //    alarmService.updateAlarm(alarm);
-    //    return ResponseHelper.buildResponse(2000, "success");
-    //}
-//
-    //@ResponseBody
-    //@RequestMapping(value = "/alarms/{aid}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    //public String deleteAlarm(@PathVariable Integer aid) {
-    //    logger.info("DELETE /alarms/{}", aid);
-    //    alarmService.deleteAlarmById(aid);
-    //    return ResponseHelper.buildResponse(2000, "success");
-    //}
+    @ResponseBody
+    @RequestMapping(value = "/alarms/{aid}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String getAlarmById(HttpServletRequest request, @PathVariable Integer aid) {
+        User user = getUser(request);
+        logger.info("GET /alarms/{}, user:{}", aid, JSON.toJSONString(user));
+
+        List<Integer> codes = alarmService.getAlarmCodeList(user);
+        List<Project> projects = projectService.getProjectList();
+        List<Module> modules;
+        if (projects.size() > 0) {
+            modules = projectService.getModuleByPid(projects.get(0).getId());
+        } else {
+            modules = Collections.emptyList();
+        }
+        List<Group> groups = groupService.getAllGroup();
+        Alarm alarm = alarmService.getAlarmById(aid);
+
+        return ResponseHelper.buildResponse(2000, "codes", codes, "projects", projects,
+                "modules", modules, "groups", groups, "alarm", alarm);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/alarms", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String createAlarm(HttpServletRequest request, @RequestBody Alarm alarm) {
+        User user = getUser(request);
+        logger.info("POST /alarms, user:{}, body:{}", JSON.toJSONString(user), JSON.toJSONString(alarm));
+
+        try {
+            alarmService.createAlarm(alarm);
+            return ResponseHelper.buildResponse(2000);
+        } catch (Exception e) {
+            logger.error("create alarm error, alarm:{}, caused by", JSON.toJSONString(alarm), e);
+            return ResponseHelper.buildResponse(5000, "reason", e.getMessage());
+        }
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/alarms", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String updateAlarm(HttpServletRequest request, @RequestBody Alarm alarm) {
+        User user = getUser(request);
+        logger.info("PUT /alarms, user:{}, body:{}", JSON.toJSONString(user), JSON.toJSONString(alarm));
+
+        try {
+            alarmService.updateAlarm(alarm);
+            return ResponseHelper.buildResponse(2000);
+        } catch (Exception e) {
+            logger.error("update alarm error, alarm:{}, caused by", JSON.toJSONString(alarm), e);
+            return ResponseHelper.buildResponse(5000, "reason", e.getMessage());
+        }
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/alarms/{aid}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String deleteAlarm(HttpServletRequest request, @PathVariable Integer aid) {
+        User user = getUser(request);
+        logger.info("DELETE /alarms/{}, user:{}", aid, JSON.toJSONString(user));
+
+        alarmService.deleteAlarmById(aid);
+
+        return ResponseHelper.buildResponse(2000);
+    }
 }

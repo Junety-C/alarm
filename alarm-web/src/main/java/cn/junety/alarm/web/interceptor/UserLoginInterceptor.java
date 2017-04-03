@@ -35,8 +35,7 @@ public class UserLoginInterceptor extends HandlerInterceptorAdapter {
 
         if (user == null) {
             logger.debug("login status check fail, identification:{}", identification);
-            String path = request.getSession(true).getServletContext().getContextPath();
-            response.sendRedirect(path + "/login");
+            response.sendRedirect("/login");
             return false;
         }
 
