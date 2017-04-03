@@ -17,9 +17,19 @@ import javax.servlet.http.HttpServletRequest;
 public class PageController extends BaseController {
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String toLoginPage() {
+    public ModelAndView toLoginPage() {
         logger.info("GET /login");
-        return "login";
+        return new ModelAndView("login");
+    }
+
+    @RequestMapping(value = "/home", method = RequestMethod.GET)
+    public ModelAndView getAlarms(HttpServletRequest request, Model model) {
+        User user = getUser(request);
+        logger.info("GET /index, user:{}", JSON.toJSONString(user));
+
+        model.addAttribute("user", user);
+
+        return new ModelAndView("home");
     }
 
     @RequestMapping(value = "/alarm", method = RequestMethod.GET)

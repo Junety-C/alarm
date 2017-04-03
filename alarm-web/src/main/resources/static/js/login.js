@@ -14,6 +14,7 @@ $(function() {
             password: password
         };
 
+        alert("dashjkdashdkjas");
         login(login_data);
     });
 });
@@ -30,7 +31,7 @@ function login(login_data) {
                 alert("用户名或密码错误");
                 return;
             }
-            window.location = "/index";
+            window.location = "/home";
         }
     });
 }
