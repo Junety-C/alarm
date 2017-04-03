@@ -1,6 +1,7 @@
 package cn.junety.alarm.web.dao;
 
 import cn.junety.alarm.base.entity.Group;
+import cn.junety.alarm.web.vo.GroupSearch;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -10,26 +11,8 @@ import java.util.List;
  */
 public interface GroupDao {
 
-    @Select("select id, name from tb_group")
-    List<Group> getAll();
-
-    @Select("select id, name from tb_group order by id desc limit #{begin}, #{length}")
-    List<Group> get(@Param("begin") int begin, @Param("length") int length);
-
-    @Select("select count(id) from tb_group")
-    int getCount();
-
-    @Select("select id, name from tb_group where name like #{name} order by id desc limit #{begin}, #{length}")
-    List<Group> getByName(@Param("name") String name, @Param("begin") int begin, @Param("length") int length);
-
-    @Select("select count(id) from tb_group where name like #{name}")
-    int getCountByName(@Param("name") String name);
-
     @Insert("insert into tb_group(name) values(#{name})")
-    int save(Group group);
-
-    @Update("update tb_group set name=#{name} where id=#{id}")
-    int updateById(@Param("id") int id);
+    int save(@Param("name") String name);
 
     @Delete("delete from tb_group where id=#{id}")
     int deleteById(@Param("id") int id);
@@ -48,12 +31,55 @@ public interface GroupDao {
 
 
 
-
-    /* ===============v2================== */
-
     @Select("select id, name from tb_group where id=#{id}")
     Group getGroupById(@Param("id") int id);
 
     @Select("select id, name from tb_group")
     List<Group> getAllGroup();
+
+
+    /* ===============管理员查询================== */
+
+    @Select("select id, name from tb_group " +
+            "order by id desc " +
+            "limit #{page.start}, #{page.pageSize}")
+    List<Group> getGroup(GroupSearch groupSearch);
+
+    @Select("select count(id) from tb_group")
+    int getGroupCount();
+
+    @Select("select id, name from tb_group where name like '${groupName}%' " +
+            "order by id desc " +
+            "limit #{page.start}, #{page.pageSize}")
+    List<Group> getGroupByName(GroupSearch groupSearch);
+
+    @Select("select count(id) from tb_group where name like '${groupName}%'")
+    int getGroupCountByName(GroupSearch groupSearch);
+
+
+    /* ===============用户查询================== */
+
+    @Select("select tg.id, tg.name from tb_group tg, tb_group_member tgm " +
+            "where tg.id=tgm.group_id and tgm.receiver_id in" +
+            "(select receiver_id from tb_user tu, tb_user_to_receiver tur where tu.id=tur.user_id and tu.id=#{userId}) " +
+            "order by tg.id desc " +
+            "limit #{page.start}, #{page.pageSize}")
+    List<Group> getUserGroup(GroupSearch groupSearch);
+
+    @Select("select count(tg.id) from tb_group tg, tb_group_member tgm " +
+            "where tg.id=tgm.group_id and tgm.receiver_id in" +
+            "(select receiver_id from tb_user tu, tb_user_to_receiver tur where tu.id=tur.user_id and tu.id=#{userId})")
+    int getUserGroupCount();
+
+    @Select("select tg.id, tg.name from tb_group tg, tb_group_member tgm " +
+            "where tg.name like '${groupName}%' and tg.id=tgm.group_id and tgm.receiver_id in" +
+            "(select receiver_id from tb_user tu, tb_user_to_receiver tur where tu.id=tur.user_id and tu.id=#{userId}) " +
+            "order by tg.id desc " +
+            "limit #{page.start}, #{page.pageSize}")
+    List<Group> getUserGroupByName(GroupSearch groupSearch);
+
+    @Select("select count(tg.id) from tb_group tg, tb_group_member tgm " +
+            "where tg.name like '${groupName}%' and tg.id=tgm.group_id and tgm.receiver_id in" +
+            "(select receiver_id from tb_user tu, tb_user_to_receiver tur where tu.id=tur.user_id and tu.id=#{userId})")
+    int getUserGroupCountByName(GroupSearch groupSearch);
 }

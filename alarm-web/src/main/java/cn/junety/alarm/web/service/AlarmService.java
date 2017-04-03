@@ -18,6 +18,7 @@ import java.util.List;
 
 /**
  * Created by caijt on 2017/3/26.
+ * 告警信息相关
  */
 @Service
 public class AlarmService {
@@ -35,9 +36,9 @@ public class AlarmService {
 
     /**
      * 获取告警列表
-     * @param user
-     * @param alarmSearch
-     * @return
+     * @param user 用户信息
+     * @param alarmSearch 查询参数
+     * @return 告警信息列表
      */
     public List<AlarmVO> getAlarmInfo(User user, AlarmSearch alarmSearch) {
         List<Alarm> alarms;
@@ -93,8 +94,9 @@ public class AlarmService {
 
     /**
      * 获取告警列表的长度，用于分页
-     * @param alarmSearch
-     * @return
+     * @param user 用户信息
+     * @param alarmSearch 查询参数
+     * @return 告警列表长度
      */
     public int getAlarmInfoCount(User user, AlarmSearch alarmSearch) {
         // 管理员获取所有告警, 普通用户获取自己能接收到的告警
@@ -137,8 +139,8 @@ public class AlarmService {
 
     /**
      * 根据id获取告警
-     * @param aid
-     * @return
+     * @param aid 告警id
+     * @return 告警信息
      */
     public Alarm getAlarmById(Integer aid) {
         return alarmDao.getAlarmById(aid);
@@ -146,42 +148,39 @@ public class AlarmService {
 
     /**
      * 创建告警
-     * @param alarm
-     * @return
+     * @param alarm 告警信息
      */
-    public int createAlarm(Alarm alarm) {
+    public void createAlarm(Alarm alarm) {
         // 自动生成code
         if(alarm.getCode() <= 0) {
             alarm.setCode(alarmDao.getMaxCode() + 1);
         }
-        return alarmDao.save(alarm);
+        alarmDao.save(alarm);
     }
 
     /**
      * 根据id删除告警
-     * @param aid
-     * @return
+     * @param aid 告警id
      */
-    public int deleteAlarmById(Integer aid) {
-        return alarmDao.deleteById(aid);
+    public void deleteAlarmById(Integer aid) {
+        alarmDao.deleteById(aid);
     }
 
     /**
      * 更新告警信息
-     * @param alarm
-     * @return
+     * @param alarm 告警信息
      */
-    public int updateAlarm(Alarm alarm) {
+    public void updateAlarm(Alarm alarm) {
         if (alarm.getCode() <= 0) {
             alarm.setCode(alarmDao.getMaxCode() + 1);
         }
-        return alarmDao.updateById(alarm);
+        alarmDao.updateById(alarm);
     }
 
     /**
      * 获取告警代号列表
-     * @param user
-     * @return
+     * @param user 用户信息
+     * @return 告警代号列表
      */
     public List<Integer> getAlarmCodeList(User user) {
         if (user.getType() == UserTypeEnum.ADMIN_USER.value()) {

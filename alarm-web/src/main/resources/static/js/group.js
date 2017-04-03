@@ -9,7 +9,7 @@ $(function() {
             alert("请输入接收组名称");
             return;
         }
-        addGroup(group_name);
+        createGroup(group_name);
     });
 
     // group delete modal
@@ -39,12 +39,12 @@ $(function() {
 
 function getGroups(search) {
     $.ajax({
-        url: "/groups?page="+current_page+"&length="+page_length+"&"+search,
+        url: "/groups?page_no="+current_page+"&page_size="+page_length+"&"+search,
         type: "GET",
         success: function(data){
             if(data["code"] == 2000) {
                 var html = "";
-                var groups = data["content"]["groups"];
+                var groups = data["groups"];
                 for(var i = 0; i < groups.length; i++) {
                     var group  = groups[i];
                     if (i == 0) {
@@ -64,14 +64,14 @@ function getGroups(search) {
                 }
                 $(".groups-body").html(html);
                 setGroupClickEvent();
-                var page_count = parseInt((data["content"]["count"] + page_length - 1)/page_length);
+                var page_count = parseInt((data["count"] + page_length - 1)/page_length);
                 $(".page-footer").html(setPageButton(page_count, current_page));
                 setPageBtnClick();
-                setTableTotalSize(data["content"]["count"]);
+                setTableTotalSize(data["count"]);
 
                 // receiver
                 html = "";
-                var receivers = data["content"]["receivers"];
+                var receivers = data["receivers"];
                 for(var i = 0; i < receivers.length; i++) {
                     var receiver  = receivers[i];
                     html += "<tr class='receiver' _val='"+receiver["id"]+"'>"
@@ -86,7 +86,7 @@ function getGroups(search) {
                 });
 
                 // all receiver
-                var all_receiver = data["content"]["all_receiver"];
+                var all_receiver = data["all_receiver"];
                 var receiverList = [];
                 for (var i = 0; i < all_receiver.length; i++) {
                     receiverList.push({id: all_receiver[i]["id"], text: all_receiver[i]["name"]+"("+all_receiver[i]["mail"]
@@ -123,7 +123,7 @@ function getReceiverByGroupId(gid) {
         success: function(data){
             if(data["code"] == 2000) {
                 var html = "";
-                var receivers = data["content"]["receivers"];
+                var receivers = data["receivers"];
                 for(var i = 0; i < receivers.length; i++) {
                     var receiver  = receivers[i];
                     html += "<tr class='receiver' _val='"+receiver["id"]+"'>"
@@ -133,12 +133,14 @@ function getReceiverByGroupId(gid) {
                         + "</div></td></tr>";
                 }
                 $(".receivers-body").html(html);
+            } else {
+                alert("获取接收者失败...");
             }
         }
     });
 }
 
-function addGroup(name) {
+function createGroup(name) {
     $.ajax({
         url: "/groups/"+name,
         type: "POST",

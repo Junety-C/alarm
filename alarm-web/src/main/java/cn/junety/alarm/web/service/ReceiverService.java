@@ -12,6 +12,7 @@ import java.util.List;
 
 /**
  * Created by caijt on 2017/3/27.
+ * 接收者相关
  */
 @Service
 public class ReceiverService {
@@ -23,8 +24,8 @@ public class ReceiverService {
 
     /**
      * 获取接收者列表
-     * @param receiverSearch
-     * @return
+     * @param receiverSearch 查询参数
+     * @return 接收者列表
      */
     public List<Receiver> getReceiverList(ReceiverSearch receiverSearch) {
         if(receiverSearch.getName() != null) {
@@ -44,8 +45,8 @@ public class ReceiverService {
 
     /**
      * 获取接收者列表的长度，用于分页
-     * @param receiverSearch
-     * @return
+     * @param receiverSearch 查询参数
+     * @return 接收者列表大小
      */
     public int getReceiverCount(ReceiverSearch receiverSearch) {
         if(receiverSearch.getName() != null) {
@@ -64,36 +65,33 @@ public class ReceiverService {
     }
 
     /**
-     * 创建用户
-     * @param receiver
-     * @return
+     * 创建接收者
+     * @param receiver 接收者信息
      */
-    public int createReceiver(Receiver receiver) {
-        return receiverDao.save(receiver);
+    public void createReceiver(Receiver receiver) {
+        receiverDao.save(receiver);
     }
 
     /**
-     * 删除用户
-     * @param id
-     * @return
+     * 删除接收者
+     * @param id 接收者id
      */
-    public int deleteReceiver(int id) {
-        return receiverDao.deleteById(id);
+    public void deleteReceiver(int id) {
+        receiverDao.deleteById(id);
     }
 
     /**
-     * 更新用户信息
-     * @param receiver
-     * @return
+     * 更新接收者信息
+     * @param receiver 接收者信息
      */
-    public int updateReceiver(Receiver receiver) {
-        return receiverDao.updateById(receiver);
+    public void updateReceiver(Receiver receiver) {
+        receiverDao.updateById(receiver);
     }
 
     /**
      * 根据接收者id获取接收者信息
-     * @param id
-     * @return
+     * @param id 接收者id
+     * @return 接收者信息
      */
     public Receiver getReceiverById(int id) {
         return receiverDao.getReceiverById(id);

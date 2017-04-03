@@ -17,11 +17,11 @@ public class BaseController {
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    protected UserService userService;
+    UserService userService;
     @Autowired
-    protected UserLoginStatusService userLoginStatusService;
+    UserLoginStatusService userLoginStatusService;
 
-    public User getUser(HttpServletRequest request) {
+    User getUser(HttpServletRequest request) {
         Object user = request.getAttribute("user");
         if (user != null) {
             return (User) user;

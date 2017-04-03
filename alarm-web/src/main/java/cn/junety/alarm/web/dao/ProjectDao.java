@@ -26,7 +26,7 @@ public interface ProjectDao {
     @Delete("delete from tb_project where id=#{id}")
     int deleteById(@Param("id") int id);
 
-    /* ===============管理员================== */
+    /* ===============管理员查询================== */
 
     @Select("select id, name from tb_project order by id desc limit #{page.start}, #{page.pageSize}")
     List<Project> getProject(ProjectSearch projectSearch);
@@ -41,7 +41,7 @@ public interface ProjectDao {
     @Select("select count(id) from tb_project where name like '${projectName}%'")
     int getProjectCountByName(ProjectSearch projectSearch);
 
-    /* ===============用户================== */
+    /* ===============用户查询================== */
 
     @Select("select id, name from tb_project " +
             "where id in (select project_id from tb_project_to_user where user_id=#{userId}) " +

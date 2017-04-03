@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * Created by caijt on 2017/4/2.
+ * 用户登录相关
  */
 @Service
 public class UserService {

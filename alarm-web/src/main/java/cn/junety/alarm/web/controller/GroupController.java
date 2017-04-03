@@ -2,12 +2,11 @@ package cn.junety.alarm.web.controller;
 
 import cn.junety.alarm.base.entity.Group;
 import cn.junety.alarm.base.entity.Receiver;
+import cn.junety.alarm.base.entity.User;
 import cn.junety.alarm.web.common.ResponseHelper;
 import cn.junety.alarm.web.service.GroupService;
-import cn.junety.alarm.web.vo.GroupForm;
+import cn.junety.alarm.web.vo.GroupSearch;
 import com.alibaba.fastjson.JSON;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,64 +24,85 @@ import java.util.Map;
  * Created by caijt on 2017/3/27.
  */
 @RestController
-public class GroupController {
-
-    private static final Logger logger = LoggerFactory.getLogger(GroupController.class);
+public class GroupController extends BaseController {
 
     @Autowired
     private GroupService groupService;
 
     @RequestMapping(value = "/groups", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public String getGroups(HttpServletRequest request) {
-        GroupForm groupForm = new GroupForm(request);
-        logger.info("GET /groups, body:{}", JSON.toJSONString(groupForm));
-        List<Group> groups = groupService.getGroups(groupForm);
-        List<Receiver> allReceiver = groupService.getReceivers();
-        List<Receiver> receivers = groupService.getReceiverByGroupId(groups.get(0).getId());
-        Map<String, Object> results = new HashMap<>();
-        results.put("groups", groups);
-        results.put("all_receiver", allReceiver);
-        results.put("receivers", receivers);
-        results.put("count", groupService.getGroupCount(groupForm));
-        return ResponseHelper.buildResponse(2000, results);
+        User user = getUser(request);
+
+        try {
+            GroupSearch groupSearch = new GroupSearch(request, user);
+            logger.info("GET /groups, user:{}, search:{}", JSON.toJSONString(user), JSON.toJSONString(groupSearch));
+
+            List<Group> groups = groupService.getGroupList(user, groupSearch);
+            List<Receiver> allReceiver = groupService.getReceiverList();
+            List<Receiver> receivers;
+            if (groups.size() > 0) {
+                receivers = groupService.getReceiverByGroupId(groups.get(0).getId());
+            } else {
+                receivers = Collections.emptyList();
+            }
+            int count = groupService.getGroupCount(user, groupSearch);
+
+            return ResponseHelper.buildResponse(2000, "groups", groups, "all_receiver", allReceiver,
+                    "receivers", receivers, "count", count);
+        } catch (Exception e) {
+            logger.error("get group list error, caused by", e);
+            return ResponseHelper.buildResponse(5000, "groups", Collections.emptyList(),
+                    "all_receiver", Collections.emptyList(), "receivers", Collections.emptyList(), "count", 0);
+        }
     }
 
     @RequestMapping(value = "/groups/{name}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String addGroup(@PathVariable String name) {
-        logger.info("POST /groups/{}", name);
-        Group group = new Group();
-        group.setName(name);
-        groupService.createGroup(group);
-        return ResponseHelper.buildResponse(2000, "success");
+    public String createGroup(HttpServletRequest request, @PathVariable String name) {
+        User user = getUser(request);
+        logger.info("POST /groups/{}, user:{}", name, JSON.toJSONString(user));
+
+        groupService.createGroup(name);
+
+        return ResponseHelper.buildResponse(2000);
     }
 
     @RequestMapping(value = "/groups/{gid}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String deleteGroup(@PathVariable Integer gid) {
-        logger.info("DELETE /groups/{}", gid);
+    public String deleteGroup(HttpServletRequest request, @PathVariable Integer gid) {
+        User user = getUser(request);
+        logger.info("DELETE /groups/{}, user:{}", gid, JSON.toJSONString(user));
+
         groupService.deleteGroup(gid);
-        return ResponseHelper.buildResponse(2000, "success");
+
+        return ResponseHelper.buildResponse(2000);
     }
 
     @RequestMapping(value = "/groups/{gid}/receivers", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String getReceiversFromGroup(@PathVariable Integer gid) {
-        logger.info("GET /groups/{}/receivers", gid);
+    public String getReceiversFromGroup(HttpServletRequest request, @PathVariable Integer gid) {
+        User user = getUser(request);
+        logger.info("GET /groups/{}/receivers, user:{}", gid, JSON.toJSONString(user));
+
         List<Receiver> receivers = groupService.getReceiverByGroupId(gid);
-        Map<String, Object> results = new HashMap<>();
-        results.put("receivers", receivers);
-        return ResponseHelper.buildResponse(2000, results);
+
+        return ResponseHelper.buildResponse(2000, "receivers", receivers);
     }
 
     @RequestMapping(value = "/groups/{gid}/receivers/{rid}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String addReceiverFromGroup(@PathVariable Integer gid, @PathVariable Integer rid) {
-        logger.info("POST /groups/{}/receivers/{}", gid, rid);
-        groupService.addReceiverFromGroup(gid, rid);
-        return ResponseHelper.buildResponse(2000, "success");
+    public String addReceiverToGroup(HttpServletRequest request, @PathVariable Integer gid, @PathVariable Integer rid) {
+        User user = getUser(request);
+        logger.info("POST /groups/{}/receivers/{}, user:{}", gid, rid, JSON.toJSONString(user));
+
+        groupService.addReceiverToGroup(gid, rid);
+
+        return ResponseHelper.buildResponse(2000);
     }
 
     @RequestMapping(value = "/groups/{gid}/receivers/{rid}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String deleteReceiverFromGroup(@PathVariable Integer gid, @PathVariable Integer rid) {
-        logger.info("DELETE /groups/{}/receivers/{}", gid, rid);
+    public String deleteReceiverFromGroup(HttpServletRequest request, @PathVariable Integer gid, @PathVariable Integer rid) {
+        User user = getUser(request);
+        logger.info("DELETE /groups/{}/receivers/{}, user:{}", gid, rid, JSON.toJSONString(user));
+
         groupService.deleteReceiverFromGroup(gid, rid);
-        return ResponseHelper.buildResponse(2000, "success");
+
+        return ResponseHelper.buildResponse(2000);
     }
 }

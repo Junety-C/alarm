@@ -17,6 +17,7 @@ import java.util.List;
 
 /**
  * Created by caijt on 2017/3/26.
+ * 项目/模块相关
  */
 @Service
 public class ProjectService {
@@ -30,7 +31,7 @@ public class ProjectService {
 
     /**
      * 获取项目列表（全部）
-     * @return
+     * @return 项目列表
      */
     public List<Project> getProjectList() {
         return projectDao.getAllProject();
@@ -38,8 +39,8 @@ public class ProjectService {
 
     /**
      * 根据项目id获取对应模块信息
-     * @param pid
-     * @return
+     * @param pid 项目id
+     * @return 模块列表
      */
     public List<Module> getModuleByProjectId(int pid) {
         return moduleDao.getModuleByPprojectId(pid);
@@ -47,21 +48,19 @@ public class ProjectService {
 
     /**
      * 获取项目列表
-     * @param user
-     * @param projectSearch
-     * @return
+     * @param user 用户信息
+     * @param projectSearch 查询参数
+     * @return 项目列表
      */
     public List<Project> getProjectList(User user, ProjectSearch projectSearch) {
-        List<Project> projects;
         // 管理员获取所有项目, 普通用户获取自己所属的项目
         if (user.getType() == UserTypeEnum.ADMIN_USER.value()) {
             logger.debug("get all project info, user:{}", JSON.toJSONString(user));
-            projects = getAllProject(projectSearch);
+            return getAllProject(projectSearch);
         } else {
             logger.debug("get user project info, user:{}", JSON.toJSONString(user));
-            projects = getUserProject(projectSearch);
+            return getUserProject(projectSearch);
         }
-        return projects;
     }
 
     private List<Project> getAllProject(ProjectSearch projectSearch) {
@@ -82,9 +81,9 @@ public class ProjectService {
 
     /**
      * 获取项目列表的长度，用于分页
-     * @param user
-     * @param projectSearch
-     * @return
+     * @param user 用户信息
+     * @param projectSearch 查询参数
+     * @return 项目列表大小
      */
     public int getProjectCount(User user, ProjectSearch projectSearch) {
         // 管理员获取所有项目, 普通用户获取自己所属的项目
@@ -115,16 +114,15 @@ public class ProjectService {
 
     /**
      * 新建项目
-     * @param name
-     * @return
+     * @param name 项目名称
      */
-    public int createProject(String name) {
-        return projectDao.save(name);
+    public void createProject(String name) {
+        projectDao.save(name);
     }
 
     /**
      * 删除项目
-     * @param id
+     * @param id 项目id
      */
     public void deleteProjectById(int id) {
         moduleDao.deleteByProjectId(id);
@@ -133,20 +131,18 @@ public class ProjectService {
 
     /**
      * 新建模块
-     * @param pid
-     * @param name
-     * @return
+     * @param pid 项目id
+     * @param name 模块名称
      */
-    public int createModule(Integer pid, String name) {
-        return moduleDao.save(pid, name);
+    public void createModule(Integer pid, String name) {
+        moduleDao.save(pid, name);
     }
 
     /**
      * 删除模块
-     * @param id
-     * @return
+     * @param id 模块id
      */
-    public int deleteModuleById(int id) {
-        return moduleDao.deleteById(id);
+    public void deleteModuleById(int id) {
+        moduleDao.deleteById(id);
     }
 }

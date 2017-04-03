@@ -30,7 +30,7 @@ public interface AlarmDao {
     @Delete("delete from tb_alarm where id=#{id}")
     int deleteById(@Param("id") int id);
 
-    /* ===============管理员================== */
+    /* ===============管理员查询================== */
 
     @Select("select id, code, name, project_id, module_id, group_id, route_key, config from tb_alarm " +
             "order by id desc " +
@@ -83,7 +83,7 @@ public interface AlarmDao {
     List<Integer> getAlarmCodeList();
 
 
-    /* ===============用户================== */
+    /* ===============用户查询================== */
 
     @Select("select id, code, name, project_id, module_id, group_id, route_key, config from tb_alarm " +
             "where group_id in (select group_id from tb_group_member where user_id=#{userId}) " +

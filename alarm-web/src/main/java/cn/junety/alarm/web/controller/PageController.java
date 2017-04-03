@@ -51,4 +51,14 @@ public class PageController extends BaseController {
 
         return new ModelAndView("receiver");
     }
+
+    @RequestMapping(value = "/group", method = RequestMethod.GET)
+    public ModelAndView toGroupPage(HttpServletRequest request, Model model) {
+        User user = getUser(request);
+        logger.info("GET /group, user:{}", JSON.toJSONString(user));
+
+        model.addAttribute("user", user);
+
+        return new ModelAndView("group");
+    }
 }
