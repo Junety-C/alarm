@@ -24,7 +24,7 @@ public interface GroupDao {
     int saveReceiverToGroup(@Param("gid") int gid, @Param("rid") int rid);
 
     @Delete("delete from tb_group_member where group_id=#{gid} and receiver_id=#{rid}")
-    int deleteReceiverFromGroup(@Param("gid") int gid, @Param("rid") int rid);
+    int removeReceiverFromGroup(@Param("gid") int gid, @Param("rid") int rid);
 
     @Delete("delete from tb_group_member where receiver_id=#{rid}")
     int deleteReceiver(@Param("rid") int rid);

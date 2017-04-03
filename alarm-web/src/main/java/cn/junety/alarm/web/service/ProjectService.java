@@ -7,6 +7,7 @@ import cn.junety.alarm.base.entity.UserTypeEnum;
 import cn.junety.alarm.web.dao.ModuleDao;
 import cn.junety.alarm.web.dao.ProjectDao;
 import cn.junety.alarm.web.vo.ProjectSearch;
+import cn.junety.alarm.web.vo.UserVO;
 import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -144,5 +145,27 @@ public class ProjectService {
      */
     public void deleteModuleById(int id) {
         moduleDao.deleteById(id);
+    }
+
+    public List<UserVO> getProjectMemberByProjectId(int pid) {
+        return projectDao.getProjectMemberBytId(pid);
+    }
+
+    /**
+     * 把用户从项目中移除
+     * @param uid 用户id
+     * @param pid 项目id
+     */
+    public void removeUserFromProject(int uid, int pid) {
+        projectDao.removeUserFromProject(uid, pid);
+    }
+
+    /**
+     * 添加用户到项目中
+     * @param uid 用户id
+     * @param pid 项目id
+     */
+    public void addUserToProject(int uid, int pid) {
+        projectDao.addUserToProject(uid, pid);
     }
 }

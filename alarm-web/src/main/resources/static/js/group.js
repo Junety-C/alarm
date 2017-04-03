@@ -174,8 +174,7 @@ function deleteGroup(gid) {
 
 function addReceiverToGroup(gid, rid) {
     $.ajax({
-        url: "" +
-        "/groups/"+gid+"/receivers/"+rid,
+        url: "/receivers/"+rid+"/to/groups/"+gid,
         type: "POST",
         data: JSON.stringify({}),
         dataType: "json",
@@ -191,7 +190,7 @@ function addReceiverToGroup(gid, rid) {
 
 function deleteReceiverFromGroup(gid, rid) {
     $.ajax({
-        url: "/groups/"+gid+"/receivers/"+rid,
+        url: "/receivers/"+rid+"/from/groups/"+gid,
         type: "DELETE",
         data: JSON.stringify({}),
         dataType: "json",

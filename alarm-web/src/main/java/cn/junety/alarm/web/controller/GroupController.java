@@ -86,22 +86,22 @@ public class GroupController extends BaseController {
         return ResponseHelper.buildResponse(2000, "receivers", receivers);
     }
 
-    @RequestMapping(value = "/groups/{gid}/receivers/{rid}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/receivers/{rid}/to/groups/{gid}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public String addReceiverToGroup(HttpServletRequest request, @PathVariable Integer gid, @PathVariable Integer rid) {
         User user = getUser(request);
-        logger.info("POST /groups/{}/receivers/{}, user:{}", gid, rid, JSON.toJSONString(user));
+        logger.info("POST /receivers/{}/to/groups/{}, user:{}", rid, gid, JSON.toJSONString(user));
 
         groupService.addReceiverToGroup(gid, rid);
 
         return ResponseHelper.buildResponse(2000);
     }
 
-    @RequestMapping(value = "/groups/{gid}/receivers/{rid}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String deleteReceiverFromGroup(HttpServletRequest request, @PathVariable Integer gid, @PathVariable Integer rid) {
+    @RequestMapping(value = "/receivers/{rid}/from/groups/{gid}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String removeReceiverFromGroup(HttpServletRequest request, @PathVariable Integer gid, @PathVariable Integer rid) {
         User user = getUser(request);
-        logger.info("DELETE /groups/{}/receivers/{}, user:{}", gid, rid, JSON.toJSONString(user));
+        logger.info("DELETE /receivers/{}/from/groups/{}, user:{}", rid, gid, JSON.toJSONString(user));
 
-        groupService.deleteReceiverFromGroup(gid, rid);
+        groupService.removeReceiverFromGroup(gid, rid);
 
         return ResponseHelper.buildResponse(2000);
     }

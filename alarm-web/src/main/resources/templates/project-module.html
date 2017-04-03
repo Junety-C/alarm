@@ -103,13 +103,15 @@
 		</div>
 
 		<div class="panel-content">
-			<div class="option">
-				<span class="fleft">
-					<a class="btn cr-yellow" data-toggle="modal" data-target="#modal-project-add"><span class="glyphicon glyphicon-plus"></span> 新建</a>
-				</span>
-			</div>
-
 			<div style="width:49%; height:450px;" class="fleft">
+				<div class="option">
+					<span class="fleft">
+						<a class="btn cr-yellow" data-toggle="modal" data-target="#modal-project-add">
+							<span class="glyphicon glyphicon-plus"></span> 新建
+						</a>
+					</span>
+				</div>
+
 				<table class="table table-bordered table-hover">
 					<caption class="caption-border">
 						<span>项目</span>
@@ -121,37 +123,75 @@
 			</div>
 
 			<div style="width:49%; height:450px;" class="fright">
-				<div>
-					<table class="table table-bordered table-hover">
-						<thead>
-						<tr>
-							<th>
-								<span class="form-inline fright">
-									<form>
-										<input id="module-name" class="form-control" type="text" placeholder="添加新模块"/>
-										<button id="module-add" type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="添加" style="height:32px; background:#1CCACC; color:white;">
+				<ul class="nav nav-tabs">
+					<li class="active">
+						<a href="#project-module-manage" data-toggle="tab" class="cr-blue">模块管理</a>
+					</li>
+					<li>
+						<a href="#project-member-manage" data-toggle="tab" class="cr-blue">组员管理</a>
+					</li>
+				</ul>
+
+				<div class="tab-content">
+					<div class="tab-pane fade in active" id="project-module-manage">
+						<table class="table table-bordered table-hover">
+							<thead>
+							<tr>
+								<th>
+									<span class="form-inline fright">
+										<input id="module-name" class="form-control" type="text" style="width:300px;" placeholder="添加新模块"/>
+										<a id="module-add" type="button" class="btn cr-yellow" data-toggle="tooltip"
+												data-placement="top" title="添加" style="height:32px;">
+											<span class="glyphicon glyphicon-plus"></span>
+										</a>
+									</span>
+								</th>
+							</tr>
+							<tr>
+								<th>项目模块</th>
+							</tr>
+							</thead>
+						</table>
+						<div style="margin-top:-22px; margin-bottom:20px; overflow-y:auto; max-height:370px;">
+							<table class="table table-bordered table-hover">
+								<tbody class="modules-body" style="background:white;">
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="tab-pane fade" id="project-member-manage">
+						<table class="table table-bordered table-hover">
+							<thead>
+							<tr>
+								<th>
+									<span class="form-inline fright">
+										<span class="form-inline fright">
+										<select id="project-member" class="form-control" style="width:300px;"></select>
+										<button id="project-member-add" type="button" class="btn" data-toggle="tooltip"
+												data-placement="top" title="添加" style="height:28px; background:#1CCACC; color:white;">
 											<span class="glyphicon glyphicon-plus"></span>
 										</button>
-									</form>
-								</span>
-							</th>
-						</tr>
-						<tr>
-							<th>模块</th>
-						</tr>
-						</thead>
-					</table>
-				</div>
-				<div style="margin-top:-22px; margin-bottom:20px; overflow-y:auto; max-height:370px;">
-					<table class="table table-bordered table-hover">
-						<tbody class="modules-body" style="background:white;">
-						</tbody>
-					</table>
+					    			</span>
+									</span>
+								</th>
+							</tr>
+							<tr>
+								<th>项目成员</th>
+							</tr>
+							</thead>
+						</table>
+						<div style="margin-top:-22px; margin-bottom:20px; overflow-y:auto; max-height:370px;">
+							<table class="table table-bordered table-hover">
+								<tbody class="members-body" style="background:white;">
+								</tbody>
+							</table>
+						</div>
+					</div>
 				</div>
 
 			</div>
 
-			<div class="fright page-footer"></div>
+			<div class="fright page-footer" style="margin-top:60px;"></div>
 		</div>
 	</div>
 
@@ -211,6 +251,26 @@
 						</div>
 						<div style="text-align:right; padding-right:50px;">
 							<button id="module-del" type="button" class="btn btn-info" data-dismiss="modal">确定</button>　
+							<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 项目成员删除模态框 -->
+	<div class="modal fade modal-delete" id="modal-member-del" role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="title">项目成员移除</div>
+				<div class="body">
+					<form class="form-horizontal" role="form">
+						<div class="form-group" style="text-align:center">
+							<label>是否确认移除该成员？</label>
+						</div>
+						<div style="text-align:right; padding-right:50px;">
+							<button id="member-del" type="button" class="btn btn-info" data-dismiss="modal">确定</button>　
 							<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
 						</div>
 					</form>

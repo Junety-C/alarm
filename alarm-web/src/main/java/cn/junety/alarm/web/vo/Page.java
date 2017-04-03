@@ -4,7 +4,6 @@ package cn.junety.alarm.web.vo;
  * Created by caijt on 2017/4/3.
  */
 public class Page {
-
     private int pageNo;
     private int pageSize;
 

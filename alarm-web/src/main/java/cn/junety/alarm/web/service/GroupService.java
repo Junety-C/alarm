@@ -143,8 +143,8 @@ public class GroupService {
      * @param gid 接收组id
      * @param rid 接收者id
      */
-    public void deleteReceiverFromGroup(int gid, int rid) {
-        groupDao.deleteReceiverFromGroup(gid, rid);
+    public void removeReceiverFromGroup(int gid, int rid) {
+        groupDao.removeReceiverFromGroup(gid, rid);
     }
 
     /**

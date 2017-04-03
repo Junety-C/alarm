@@ -46,6 +46,7 @@ function getProjects(search) {
         type: "GET",
         success: function(data){
             if(data["code"] == 2000) {
+                // project
                 var html = "";
                 var projects = data["projects"];
                 for(var i = 0; i < projects.length; i++) {
@@ -72,7 +73,7 @@ function getProjects(search) {
                 setPageBtnClick();
                 setTableTotalSize(data["count"]);
 
-                // module modal
+                // module
                 html = "";
                 var modules = data["modules"];
                 for(var i = 0; i < modules.length; i++) {
@@ -87,6 +88,32 @@ function getProjects(search) {
                 $(".module-del").click(function() {
                     $("#module-del").attr("_val", $(this).attr("_val"));
                 });
+
+                // project member
+                html = "";
+                var members = data["project_members"];
+                for(var i = 0; i < members.length; i++) {
+                    var member  = members[i];
+                    html += "<tr class='member' _val='"+member["id"]+"'>"
+                        + "<td><div>"+member["name"]+"("+member["username"]+")"
+                        + "<button class='btn btn-danger member-del' data-toggle='modal' data-target='#modal-member-del' "
+                        + "_val='"+member["id"]+"' style='float:right;margin:0;padding:0;width:26px;'>X</button>"
+                        + "</div></td></tr>";
+                }
+                $(".members-body").html(html);
+                $(".member-del").click(function() {
+                    $("#member-del").attr("_val", $(this).attr("_val"));
+                });
+
+                // all user
+                var all_user = data["all_user"];
+                var userList = [];
+                for (var i = 0; i < all_user.length; i++) {
+                    userList.push({id: all_user[i]["id"], text: all_user[i]["name"]+"("+all_user[i]["username"]+")"});
+                }
+                $("#project-member").select2({
+                    data: userList
+                })
             }
         }
     });
@@ -99,6 +126,7 @@ function setProjectClickEvent() {
         var project_id = $(this).attr("_val");
         $("#module-add").attr("_pid", project_id);
         getModuleByProjectId(project_id);
+        getMemberByProjectId(project_id);
     });
     $(".project-del").click(function() {
         $("#project-del").attr("_val", $(this).attr("_val"));
@@ -122,6 +150,34 @@ function getModuleByProjectId(pid) {
                         + "</div></td></tr>";
                 }
                 $(".modules-body").html(html);
+                $(".module-del").click(function() {
+                    $("#module-del").attr("_val", $(this).attr("_val"));
+                });
+            }
+        }
+    });
+}
+
+function getMemberByProjectId(pid) {
+    $.ajax({
+        url: "/projects/"+pid+"/members",
+        type: "GET",
+        success: function(data){
+            if(data["code"] == 2000) {
+                var html = "";
+                var members = data["members"];
+                for(var i = 0; i < members.length; i++) {
+                    var member  = members[i];
+                    html += "<tr class='member' _val='"+member["id"]+"'>"
+                        + "<td><div>"+member["name"]+"("+member["username"]+")"
+                        + "<button class='btn btn-danger member-del' data-toggle='modal' data-target='#modal-member-del' "
+                        + "_val='"+member["id"]+"' style='float:right;margin:0;padding:0;width:26px;'>X</button>"
+                        + "</div></td></tr>";
+                }
+                $(".members-body").html(html);
+                $(".member-del").click(function() {
+                    $("#member-del").attr("_val", $(this).attr("_val"));
+                });
             }
         }
     });
