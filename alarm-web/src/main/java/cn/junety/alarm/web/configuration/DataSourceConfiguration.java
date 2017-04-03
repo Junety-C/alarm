@@ -24,7 +24,7 @@ import javax.sql.DataSource;
 @MapperScan(basePackages = DataSourceConfiguration.PACKAGE, sqlSessionFactoryRef = "sqlSessionFactory")
 public class DataSourceConfiguration {
 
-    static final String PACKAGE = "cn.junety.alarm.base.dao";
+    static final String PACKAGE = "cn.junety.alarm.web.dao";
 
     @Value("${datasource.url}")
     private String url;

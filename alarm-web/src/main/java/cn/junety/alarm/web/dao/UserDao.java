@@ -10,9 +10,9 @@ import java.util.List;
  */
 public interface UserDao {
 
-    @Select("select id, username, name, identification, type from tb_user where username=#{username}")
+    @Select("select id, username, identification, type from tb_user where username=#{username}")
     User getByUsername(@Param("username") String username);
 
-    @Select("select id, username, name, identification, type from tb_user where identification=#{identification}")
+    @Select("select id, username, identification, type from tb_user where identification=#{identification}")
     User getByIdentification(@Param("identification") String identification);
 }
