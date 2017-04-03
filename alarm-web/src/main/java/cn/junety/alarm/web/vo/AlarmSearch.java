@@ -1,5 +1,6 @@
 package cn.junety.alarm.web.vo;
 
+import cn.junety.alarm.base.entity.User;
 import com.google.common.base.Strings;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -17,19 +18,20 @@ public class AlarmSearch {
     private String projectName;
     private String groupName;
 
-    public AlarmSearch(HttpServletRequest request) {
+    public AlarmSearch(HttpServletRequest request, User user) {
         int pageNo = NumberUtils.toInt(request.getParameter("page_no"), 1);
         int pageSize = NumberUtils.toInt(request.getParameter("page_size"), 10);
         this.page = new Page(pageNo, pageSize);
+        this.userId = user.getId();
 
         if(!Strings.isNullOrEmpty(request.getParameter("code"))) {
             this.code = NumberUtils.toInt(request.getParameter("code"), 0);
-        } else if(!Strings.isNullOrEmpty(request.getParameter("name"))) {
-            this.alarmName = request.getParameter("name").trim();
-        } else if(!Strings.isNullOrEmpty(request.getParameter("group"))) {
-            this.groupName = request.getParameter("group").trim();
-        } else if(!Strings.isNullOrEmpty(request.getParameter("project"))) {
-            this.projectName = request.getParameter("project").trim();
+        } else if(!Strings.isNullOrEmpty(request.getParameter("alarm_name"))) {
+            this.alarmName = request.getParameter("alarm_name");
+        } else if(!Strings.isNullOrEmpty(request.getParameter("group_name"))) {
+            this.groupName = request.getParameter("group_name");
+        } else if(!Strings.isNullOrEmpty(request.getParameter("project_name"))) {
+            this.projectName = request.getParameter("project_name");
         }
     }
 

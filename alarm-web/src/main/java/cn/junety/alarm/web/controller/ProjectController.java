@@ -5,7 +5,7 @@ import cn.junety.alarm.base.entity.Project;
 import cn.junety.alarm.base.entity.User;
 import cn.junety.alarm.web.common.ResponseHelper;
 import cn.junety.alarm.web.service.ProjectService;
-import cn.junety.alarm.web.vo.ProjectForm;
+import cn.junety.alarm.web.vo.ProjectSearch;
 import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -28,17 +28,17 @@ public class ProjectController extends BaseController {
     public String getProjectList(HttpServletRequest request) {
         User user = getUser(request);
         try {
-            ProjectForm projectForm = new ProjectForm(request);
-            logger.info("GET /projects, user:{}, form:{}", JSON.toJSONString(user), JSON.toJSONString(projectForm));
+            ProjectSearch projectSearch = new ProjectSearch(request, user);
+            logger.info("GET /projects, user:{}, search:{}", JSON.toJSONString(user), JSON.toJSONString(projectSearch));
 
-            List<Project> projects = projectService.getProjectList(projectForm);
+            List<Project> projects = projectService.getProjectList(user, projectSearch);
             List<Module> modules;
             if (projects.size() > 0) {
                 modules = projectService.getModuleByProjectId(projects.get(0).getId());
             } else {
                 modules = Collections.emptyList();
             }
-            int count = projectService.getProjectCount(projectForm);
+            int count = projectService.getProjectCount(user, projectSearch);
 
             return ResponseHelper.buildResponse(2000, "projects", projects, "modules", modules,
                     "count", count);

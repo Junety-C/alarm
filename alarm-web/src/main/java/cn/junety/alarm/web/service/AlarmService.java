@@ -44,11 +44,11 @@ public class AlarmService {
 
         // 管理员获取所有告警, 普通用户获取自己能接收到的告警
         if (user.getType() == UserTypeEnum.ADMIN_USER.value()) {
-            alarms = getAllAlarm(alarmSearch);
             logger.debug("get all alarm info, user:{}", JSON.toJSONString(user));
+            alarms = getAllAlarm(alarmSearch);
         } else {
-            alarms = getUserAlarm(alarmSearch);
             logger.debug("get user alarm info, user:{}", JSON.toJSONString(user));
+            alarms = getUserAlarm(alarmSearch);
         }
 
         List<AlarmVO> results = new ArrayList<>();

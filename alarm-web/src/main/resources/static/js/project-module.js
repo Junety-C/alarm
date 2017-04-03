@@ -42,7 +42,7 @@ $(function() {
 
 function getProjects(search) {
     $.ajax({
-        url: "/projects?page="+current_page+"&length="+page_length+"&"+search,
+        url: "/projects?page_no="+current_page+"&page_size="+page_length+"&"+search,
         type: "GET",
         success: function(data){
             if(data["code"] == 2000) {

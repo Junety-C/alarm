@@ -102,7 +102,7 @@ $(function() {
 
 function getAlarms(search) {
     $.ajax({
-        url: "/alarms?page="+current_page+"&length="+page_length+"&"+search,
+        url: "/alarms?page_no="+current_page+"&page_size="+page_length+"&"+search,
         type: "GET",
         success: function(data){
             var html = "";

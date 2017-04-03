@@ -33,10 +33,9 @@ public class AlarmController extends BaseController {
     public String getAlarmList(HttpServletRequest request) {
         User user = getUser(request);
         try {
-            AlarmSearch alarmSearch = new AlarmSearch(request);
+            AlarmSearch alarmSearch = new AlarmSearch(request, user);
             logger.info("GET /alarms, user:{}, search:{}", JSON.toJSONString(user), JSON.toJSONString(alarmSearch));
 
-            alarmSearch.setUserId(user.getId());
             List<AlarmVO> alarms = alarmService.getAlarmInfo(user, alarmSearch);
             int count = alarmService.getAlarmInfoCount(user, alarmSearch);
 

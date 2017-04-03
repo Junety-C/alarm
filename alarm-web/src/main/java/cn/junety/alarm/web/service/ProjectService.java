@@ -2,9 +2,12 @@ package cn.junety.alarm.web.service;
 
 import cn.junety.alarm.base.entity.Module;
 import cn.junety.alarm.base.entity.Project;
+import cn.junety.alarm.base.entity.User;
+import cn.junety.alarm.base.entity.UserTypeEnum;
 import cn.junety.alarm.web.dao.ModuleDao;
 import cn.junety.alarm.web.dao.ProjectDao;
-import cn.junety.alarm.web.vo.ProjectForm;
+import cn.junety.alarm.web.vo.ProjectSearch;
+import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,33 +47,69 @@ public class ProjectService {
 
     /**
      * 获取项目列表
-     * @param projectForm
+     * @param user
+     * @param projectSearch
      * @return
      */
-    public List<Project> getProjectList(ProjectForm projectForm) {
-        int length = projectForm.getLength();
-        int begin =  (projectForm.getPage() - 1) * length;
+    public List<Project> getProjectList(User user, ProjectSearch projectSearch) {
         List<Project> projects;
-
-        if(projectForm.getName() != null) {
-            projects = projectDao.getProjectByName(projectForm.getName()+"%", begin, length);
+        // 管理员获取所有项目, 普通用户获取自己所属的项目
+        if (user.getType() == UserTypeEnum.ADMIN_USER.value()) {
+            logger.debug("get all project info, user:{}", JSON.toJSONString(user));
+            projects = getAllProject(projectSearch);
         } else {
-            projects = projectDao.getProject(begin, length);
+            logger.debug("get user project info, user:{}", JSON.toJSONString(user));
+            projects = getUserProject(projectSearch);
         }
-
         return projects;
+    }
+
+    private List<Project> getAllProject(ProjectSearch projectSearch) {
+        if(projectSearch.getProjectName() != null) {
+            return projectDao.getProjectByName(projectSearch);
+        } else {
+            return projectDao.getProject(projectSearch);
+        }
+    }
+
+    private List<Project> getUserProject(ProjectSearch projectSearch) {
+        if(projectSearch.getProjectName() != null) {
+            return projectDao.getUserProjectByName(projectSearch);
+        } else {
+            return projectDao.getUserProject(projectSearch);
+        }
     }
 
     /**
      * 获取项目列表的长度，用于分页
-     * @param projectForm
+     * @param user
+     * @param projectSearch
      * @return
      */
-    public int getProjectCount(ProjectForm projectForm) {
-        if(projectForm.getName() != null) {
-            return projectDao.getProjectCountByName(projectForm.getName()+"%");
+    public int getProjectCount(User user, ProjectSearch projectSearch) {
+        // 管理员获取所有项目, 普通用户获取自己所属的项目
+        if (user.getType() == UserTypeEnum.ADMIN_USER.value()) {
+            logger.debug("get all project count, user:{}", JSON.toJSONString(user));
+            return getAllProjectCount(projectSearch);
+        } else {
+            logger.debug("get user project count, user:{}", JSON.toJSONString(user));
+            return getUserProjectCount(projectSearch);
+        }
+    }
+
+    private int getAllProjectCount(ProjectSearch projectSearch) {
+        if(projectSearch.getProjectName() != null) {
+            return projectDao.getProjectCountByName(projectSearch);
         } else {
             return projectDao.getProjectCount();
+        }
+    }
+
+    private int getUserProjectCount(ProjectSearch projectSearch) {
+        if(projectSearch.getProjectName() != null) {
+            return projectDao.getUserProjectCountByName(projectSearch);
+        } else {
+            return projectDao.getUserProjectCount();
         }
     }
 
