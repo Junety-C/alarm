@@ -74,7 +74,7 @@ public class AlarmService {
                 // 接收人去重,防止一条告警信息多次发送给同一个接收人
                 receivers = removeDuplicatedReceiver(receivers, sent);
                 if(receivers.size() != 0) {
-                    Group group = groupDao.getById(alarm.getGroupId());
+                    Group group = groupDao.getGroupById(alarm.getGroupId());
                     AlarmMessage alarmMessage = buildAlarmMessage(alarm, alarmForm, receivers, reportId, group);
                     if (alarmForm.isTest()) {
                         saveAlarmLog(alarmMessage, AlarmStatus.TEST);
@@ -227,8 +227,8 @@ public class AlarmService {
     }
 
     private AlarmMessage buildAlarmMessage(Alarm alarm, AlarmForm alarmForm, List<Receiver> receivers, long reportId, Group group) {
-        Module module = moduleDao.getById(alarm.getModuleId());
-        Project project = projectDao.getById(module.getProjectId());
+        Module module = moduleDao.getModuleById(alarm.getModuleId());
+        Project project = projectDao.getProjectById(module.getProjectId());
 
         AlarmMessage alarmMessage = new AlarmMessage();
         alarmMessage.addAlarm(alarm)
