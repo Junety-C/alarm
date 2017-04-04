@@ -8,7 +8,7 @@ import cn.junety.alarm.base.util.properties.PropertiesLoader;
  * Created by caijt on 2017/3/4.
  */
 @Config("alarm-config.properties")
-public class Configure {
+public class Configuration {
 
     public static final String MAIL_QUEUE = "mail.queue";
     public static final String QQ_QUEUE = "qq.queue";
@@ -26,8 +26,12 @@ public class Configure {
     public static Integer MAIL_SENDER_SMTP_PORT;
     @Key("mail.sender.name")
     public static String MAIL_SENDER_NAME;
+    @Key("qq.qrcode.path")
+    public static String QQ_QRCODE_PATH;
+    @Key("wechat.qrcode.path")
+    public static String WECHAT_QRCODE_PATH;
 
     static {
-        PropertiesLoader.init(Configure.class);
+        PropertiesLoader.init(Configuration.class);
     }
 }

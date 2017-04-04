@@ -1,6 +1,7 @@
 package cn.junety.alarm.sender.smartqq;
 
 import cn.junety.alarm.sender.client.impl.QQClient;
+import cn.junety.alarm.sender.common.Configuration;
 import cn.junety.alarm.sender.smartqq.entity.*;
 import cn.junety.alarm.sender.smartqq.entity.Font;
 import com.alibaba.fastjson.JSON;
@@ -80,7 +81,7 @@ public class SmartqqClient implements Closeable {
         //本地存储二维码图片
         String filePath;
         try {
-            filePath = new File("/Users/caijt/Desktop/qq-qrcode.png").getCanonicalPath();
+            filePath = new File(Configuration.QQ_QRCODE_PATH).getCanonicalPath();
         } catch (IOException e) {
             throw new IllegalStateException("二维码保存失败");
         }

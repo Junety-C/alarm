@@ -2,18 +2,14 @@ package cn.junety.alarm.sender.client.impl;
 
 import cn.junety.alarm.base.entity.QueueMessage;
 import cn.junety.alarm.sender.client.Client;
-import cn.junety.alarm.sender.common.Configure;
+import cn.junety.alarm.sender.common.Configuration;
 import cn.junety.alarm.sender.smartqq.SmartqqClientProxy;
 import com.alibaba.fastjson.JSON;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Created by caijt on 2017/3/28.
  */
 public class QQClient extends Client {
-
-    private static final Logger logger = LoggerFactory.getLogger(QQClient.class);
 
     private SmartqqClientProxy client;
 
@@ -37,7 +33,7 @@ public class QQClient extends Client {
     }
 
     public static void main(String[] args) {
-        QQClient qqClient = new QQClient("qq", Configure.QQ_QUEUE);
+        QQClient qqClient = new QQClient("qq", Configuration.QQ_QUEUE);
         qqClient.start();
     }
 }

@@ -2,11 +2,9 @@ package cn.junety.alarm.sender.client.impl;
 
 import cn.junety.alarm.base.entity.QueueMessage;
 import cn.junety.alarm.sender.client.Client;
-import cn.junety.alarm.sender.common.Configure;
+import cn.junety.alarm.sender.common.Configuration;
 import com.alibaba.fastjson.JSON;
 import org.apache.commons.mail.HtmlEmail;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -14,8 +12,6 @@ import java.util.List;
  * Created by caijt on 2017/3/4.
  */
 public class MailClient extends Client {
-
-    private static final Logger logger = LoggerFactory.getLogger(MailClient.class);
 
     public MailClient(String name, String queueName) {
         super(name, queueName, "mail");
@@ -40,11 +36,11 @@ public class MailClient extends Client {
     private boolean send(String title, String content, List<String> receivers) {
         try {
             HtmlEmail email = new HtmlEmail();
-            System.out.println(Configure.MAIL_SENDER_USERNAME);
-            email.setAuthentication(Configure.MAIL_SENDER_USERNAME, Configure.MAIL_SENDER_PASSWORD);
-            email.setHostName(Configure.MAIL_SENDER_SMTP_HOST);
-            email.setSmtpPort(Configure.MAIL_SENDER_SMTP_PORT);
-            email.setFrom(Configure.MAIL_SENDER_USERNAME, Configure.MAIL_SENDER_NAME);
+            System.out.println(Configuration.MAIL_SENDER_USERNAME);
+            email.setAuthentication(Configuration.MAIL_SENDER_USERNAME, Configuration.MAIL_SENDER_PASSWORD);
+            email.setHostName(Configuration.MAIL_SENDER_SMTP_HOST);
+            email.setSmtpPort(Configuration.MAIL_SENDER_SMTP_PORT);
+            email.setFrom(Configuration.MAIL_SENDER_USERNAME, Configuration.MAIL_SENDER_NAME);
             email.setSubject(title);
             email.setHtmlMsg(content);
             email.addTo(receivers.stream().toArray(String[]::new));

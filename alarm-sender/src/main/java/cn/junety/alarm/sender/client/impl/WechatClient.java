@@ -2,18 +2,14 @@ package cn.junety.alarm.sender.client.impl;
 
 import cn.junety.alarm.base.entity.QueueMessage;
 import cn.junety.alarm.sender.client.Client;
-import cn.junety.alarm.sender.common.Configure;
+import cn.junety.alarm.sender.common.Configuration;
 import cn.junety.alarm.sender.wechat.WechatClientProxy;
 import com.alibaba.fastjson.JSON;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Created by caijt on 2017/3/29.
  */
 public class WechatClient extends Client {
-
-    private static final Logger logger = LoggerFactory.getLogger(WechatClient.class);
 
     private WechatClientProxy client;
 
@@ -37,7 +33,7 @@ public class WechatClient extends Client {
     }
 
     public static void main(String[] args) {
-        WechatClient wechatClient = new WechatClient("wechat", Configure.WECHAT_QUEUE);
+        WechatClient wechatClient = new WechatClient("wechat", Configuration.WECHAT_QUEUE);
         wechatClient.start();
     }
 }
