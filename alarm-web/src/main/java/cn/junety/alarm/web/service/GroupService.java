@@ -135,7 +135,7 @@ public class GroupService {
      * @param rid 接收者id
      */
     public void addReceiverToGroup(int gid, int rid) {
-        groupDao.saveReceiverToGroup(gid, rid);
+        groupDao.addReceiverToGroup(gid, rid);
     }
 
     /**

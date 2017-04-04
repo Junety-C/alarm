@@ -15,6 +15,10 @@ $(function() {
     // project delete modal
     $("#project-del").click(function() {
         var project_id = $(this).attr("_val");
+        if(project_id == undefined) {
+            console.log("del project fail, project_id=" + project_id);
+            return;
+        }
         deleteProject(project_id);
     });
 
@@ -26,13 +30,43 @@ $(function() {
             return;
         }
         var project_id = $("#module-add").attr("_pid");
+        if(project_id == undefined) {
+            console.log("add module fail, project_id=" + project_id);
+            return;
+        }
         addModule(project_id, module_name);
     });
 
     // module delete modal
     $("#module-del").click(function() {
         var module_id = $(this).attr("_val");
+        if(module_id == undefined) {
+            console.log("del module fail, module_id=" + module_id);
+            return;
+        }
         deleteModule(module_id);
+    });
+
+    // project member add
+    $("#project-member-add").click(function () {
+        var user_id = $("#project-member").val();
+        var project_id = $("#project-member-add").attr("_pid");
+        if (project_id == undefined || user_id == undefined) {
+            console.log("add project member fail, project_id=" + project_id + ", user_id=" + user_id);
+            return;
+        }
+        addUserToProject(user_id, project_id);
+    });
+
+    // project member delete
+    $("#project-member-del").click(function () {
+        var user_id = $(this).attr("_val");
+        var project_id = $("#project-member-add").attr("_pid");
+        if (project_id == undefined || user_id == undefined) {
+            console.log("del project member fail, project_id=" + project_id + ", user_id=" + user_id);
+            return;
+        }
+        removeUserFromProject(user_id, project_id);
     });
 
     // init data table
@@ -53,6 +87,7 @@ function getProjects(search) {
                     var project  = projects[i];
                     if (i == 0) {
                         $("#module-add").attr("_pid", project["id"]);
+                        $("#project-member-add").attr("_pid", project["id"]);
                         html += "<tr class='project' _val='"+project["id"]+"' style='background-color:#eee'>"
                             + "<td><div>"+project["name"]+""
                             + "<button class='btn btn-danger project-del' data-toggle='modal' data-target='#modal-project-del' "
@@ -102,7 +137,7 @@ function getProjects(search) {
                 }
                 $(".members-body").html(html);
                 $(".member-del").click(function() {
-                    $("#member-del").attr("_val", $(this).attr("_val"));
+                    $("#project-member-del").attr("_val", $(this).attr("_val"));
                 });
 
                 // all user
@@ -125,6 +160,7 @@ function setProjectClickEvent() {
         $(this).css("background-color", "#eee");
         var project_id = $(this).attr("_val");
         $("#module-add").attr("_pid", project_id);
+        $("#project-member-add").attr("_pid", project_id);
         getModuleByProjectId(project_id);
         getMemberByProjectId(project_id);
     });
@@ -176,7 +212,7 @@ function getMemberByProjectId(pid) {
                 }
                 $(".members-body").html(html);
                 $(".member-del").click(function() {
-                    $("#member-del").attr("_val", $(this).attr("_val"));
+                    $("#project-member-del").attr("_val", $(this).attr("_val"));
                 });
             }
         }
@@ -243,6 +279,40 @@ function deleteModule(mid) {
                 alert("删除失败");
             }
             location.replace(location.href);
+        }
+    });
+}
+
+function addUserToProject(uid, pid) {
+    $.ajax({
+        url: "/users/"+uid+"/to/projects/"+pid,
+        type: "POST",
+        data: JSON.stringify({}),
+        dataType: "json",
+        contentType: "application/json;charset=utf-8",
+        success: function(data){
+            if (data["code"] != 2000) {
+                alert("创建失败");
+            }
+            getProjects();
+            //location.replace(location.href);
+        }
+    });
+}
+
+function removeUserFromProject(uid, pid) {
+    $.ajax({
+        url: "/users/"+uid+"/from/projects/"+pid,
+        type: "DELETE",
+        data: JSON.stringify({}),
+        dataType: "json",
+        contentType: "application/json;charset=utf-8",
+        success: function(data){
+            if(data["code"] != 2000) {
+                alert("删除失败");
+            }
+            getProjects();
+            //location.replace(location.href);
         }
     });
 }

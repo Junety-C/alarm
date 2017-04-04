@@ -3,10 +3,7 @@ package cn.junety.alarm.web.dao;
 import cn.junety.alarm.base.entity.Project;
 import cn.junety.alarm.web.vo.ProjectSearch;
 import cn.junety.alarm.web.vo.UserVO;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -22,7 +19,8 @@ public interface ProjectDao {
     List<Project> getAllProject();
 
     @Insert("insert into tb_project(name) values(#{name})")
-    int save(@Param("name") String name);
+    @Options(useGeneratedKeys = true, keyProperty = "id")
+    void save(Project project);
 
     @Delete("delete from tb_project where id=#{id}")
     int deleteById(@Param("id") int id);
@@ -32,7 +30,8 @@ public interface ProjectDao {
             "where tpu.project_id=#{id} and tpu.user_id=tu.id and tur.user_id=tu.id and tur.receiver_id=tr.id")
     List<UserVO> getProjectMemberBytId(@Param("id") int id);
 
-    @Insert("insert into tb_project_to_user(project_id, user_id) values(#{pid}, #{uid})")
+    @Insert("insert into tb_project_to_user(project_id, user_id) values(#{pid}, #{uid}) " +
+            "on duplicate key update project_id=#{pid}, user_id=#{uid}")
     int addUserToProject(@Param("uid") int uid, @Param("pid") int pid);
 
     @Delete("delete from tb_project_to_user where project_id=#{pid} and user_id=#{uid}")

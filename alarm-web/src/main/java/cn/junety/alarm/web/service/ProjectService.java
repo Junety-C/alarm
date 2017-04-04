@@ -115,10 +115,14 @@ public class ProjectService {
 
     /**
      * 新建项目
-     * @param name 项目名称
+     * @param name
+     * @return 项目id
      */
-    public void createProject(String name) {
-        projectDao.save(name);
+    public int createProject(String name) {
+        Project project = new Project();
+        project.setName(name);
+        projectDao.save(project);
+        return project.getId();
     }
 
     /**

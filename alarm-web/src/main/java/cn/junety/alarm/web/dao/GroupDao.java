@@ -21,15 +21,13 @@ public interface GroupDao {
     int deleteReceiverByGroupId(@Param("gid") int gid);
 
     @Insert("insert into tb_group_member(group_id, receiver_id) values(#{gid}, #{rid}) on duplicate key update group_id=#{gid}")
-    int saveReceiverToGroup(@Param("gid") int gid, @Param("rid") int rid);
+    int addReceiverToGroup(@Param("gid") int gid, @Param("rid") int rid);
 
     @Delete("delete from tb_group_member where group_id=#{gid} and receiver_id=#{rid}")
     int removeReceiverFromGroup(@Param("gid") int gid, @Param("rid") int rid);
 
     @Delete("delete from tb_group_member where receiver_id=#{rid}")
     int deleteReceiver(@Param("rid") int rid);
-
-
 
     @Select("select id, name from tb_group where id=#{id}")
     Group getGroupById(@Param("id") int id);

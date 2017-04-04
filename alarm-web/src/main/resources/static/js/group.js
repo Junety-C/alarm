@@ -15,6 +15,10 @@ $(function() {
     // group delete modal
     $("#group-del").click(function() {
         var group_id = $(this).attr("_val");
+        if (group_id == undefined) {
+            console.log("del group fail, group_id=" + group_id);
+            return;
+        }
         deleteGroup(group_id);
     });
 
@@ -22,6 +26,10 @@ $(function() {
     $("#receiver-add").click(function() {
         var receiver_id = $("#receivers").val();
         var group_id = $("#receiver-add").attr("_gid");
+        if (receiver_id == undefined || group_id == undefined) {
+            console.log("add receiver fail, receiver_id=" + receiver_id + ", group_id=" + group_id);
+            return;
+        }
         addReceiverToGroup(group_id, receiver_id);
     });
 
@@ -29,6 +37,10 @@ $(function() {
     $("#receiver-del").click(function() {
         var receiver_id = $(this).attr("_val");
         var group_id = $("#receiver-add").attr("_gid");
+        if (receiver_id == undefined || group_id == undefined) {
+            console.log("del receiver fail, receiver_id=" + receiver_id + ", group_id=" + group_id);
+            return;
+        }
         deleteReceiverFromGroup(group_id, receiver_id);
     });
 

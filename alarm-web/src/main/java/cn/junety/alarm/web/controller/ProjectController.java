@@ -63,7 +63,8 @@ public class ProjectController extends BaseController {
         User user = getUser(request);
         logger.info("POST /projects/{}, user:{}, name:{}", JSON.toJSONString(user), name);
 
-        projectService.createProject(name);
+        int pid = projectService.createProject(name);
+        projectService.addUserToProject(user.getId(), pid);
 
         return ResponseHelper.buildResponse(2000);
     }
