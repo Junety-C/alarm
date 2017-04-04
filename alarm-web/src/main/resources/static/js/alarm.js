@@ -146,6 +146,22 @@ function setAlarmClickEvent() {
     });
 }
 
+function addAlarm(alarm_data) {
+    $.ajax({
+        url: "/alarms",
+        type: "POST",
+        data: JSON.stringify(alarm_data),
+        dataType: "json",
+        contentType: "application/json;charset=utf-8",
+        success: function(data){
+            if (data["code"] != 2000) {
+                alert("创建失败");
+            }
+            location.replace(location.href);
+        }
+    });
+}
+
 function deleteAlarm(aid) {
     $.ajax({
         url: "/alarms/"+aid,
@@ -157,7 +173,8 @@ function deleteAlarm(aid) {
             if(data["code"] != 2000) {
                 alert("删除失败");
             }
-            location.replace(location.href);
+            getAlarms(search_select + "=" + search_input);
+            //location.replace(location.href);
         }
     });
 }
@@ -171,9 +188,10 @@ function updateAlarm(alarm_data) {
         contentType: "application/json;charset=utf-8",
         success: function(data){
             if (data["code"] != 2000) {
-                alert("创建失败");
+                alert("更新失败");
             }
-            location.replace(location.href);
+            getAlarms(search_select + "=" + search_input);
+            //location.replace(location.href);
         }
     });
 }
@@ -324,22 +342,6 @@ function getModuleByProjectId(pid, target) {
             } else {
                 alert("获取项目模块失败...");
             }
-        }
-    });
-}
-
-function addAlarm(alarm_data) {
-    $.ajax({
-        url: "/alarms",
-        type: "POST",
-        data: JSON.stringify(alarm_data),
-        dataType: "json",
-        contentType: "application/json;charset=utf-8",
-        success: function(data){
-            if (data["code"] != 2000) {
-                alert("创建失败");
-            }
-            location.replace(location.href);
         }
     });
 }

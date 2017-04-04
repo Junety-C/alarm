@@ -246,7 +246,8 @@ function deleteProject(pid) {
             if(data["code"] != 2000) {
                 alert("删除失败");
             }
-            location.replace(location.href);
+            getProjects(search_select + "=" + search_input);
+            //location.replace(location.href);
         }
     });
 }
@@ -260,9 +261,10 @@ function addModule(pid, name) {
         contentType: "application/json;charset=utf-8",
         success: function(data){
             if (data["code"] != 2000) {
-                alert("创建失败");
+                alert("添加失败");
             }
-            location.replace(location.href);
+            getProjects(search_select + "=" + search_input);
+            //location.replace(location.href);
         }
     });
 }
@@ -278,7 +280,8 @@ function deleteModule(mid) {
             if(data["code"] != 2000) {
                 alert("删除失败");
             }
-            location.replace(location.href);
+            getProjects(search_select + "=" + search_input);
+            //location.replace(location.href);
         }
     });
 }
@@ -292,9 +295,9 @@ function addUserToProject(uid, pid) {
         contentType: "application/json;charset=utf-8",
         success: function(data){
             if (data["code"] != 2000) {
-                alert("创建失败");
+                alert("添加失败");
             }
-            getProjects();
+            getProjects(search_select + "=" + search_input);
             //location.replace(location.href);
         }
     });
@@ -311,7 +314,7 @@ function removeUserFromProject(uid, pid) {
             if(data["code"] != 2000) {
                 alert("删除失败");
             }
-            getProjects();
+            getProjects(search_select + "=" + search_input);
             //location.replace(location.href);
         }
     });

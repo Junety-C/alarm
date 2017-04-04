@@ -179,7 +179,8 @@ function deleteGroup(gid) {
             if(data["code"] != 2000) {
                 alert("删除失败");
             }
-            location.replace(location.href);
+            getGroups(search_select + "=" + search_input);
+            //location.replace(location.href);
         }
     });
 }
@@ -193,9 +194,10 @@ function addReceiverToGroup(gid, rid) {
         contentType: "application/json;charset=utf-8",
         success: function(data){
             if (data["code"] != 2000) {
-                alert("创建失败");
+                alert("添加失败");
             }
-            location.replace(location.href);
+            getGroups(search_select + "=" + search_input);
+            //location.replace(location.href);
         }
     });
 }
@@ -211,7 +213,8 @@ function deleteReceiverFromGroup(gid, rid) {
             if(data["code"] != 2000) {
                 alert("删除失败");
             }
-            location.replace(location.href);
+            getGroups(search_select + "=" + search_input);
+            //location.replace(location.href);
         }
     });
 }

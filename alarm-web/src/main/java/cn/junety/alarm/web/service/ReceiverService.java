@@ -96,4 +96,8 @@ public class ReceiverService {
     public Receiver getReceiverById(int id) {
         return receiverDao.getReceiverById(id);
     }
+
+    public int getReceiverIdByUserId(int uid) {
+        return receiverDao.getReceiverIdByUserId(uid);
+    }
 }

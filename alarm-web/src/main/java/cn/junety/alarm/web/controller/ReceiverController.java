@@ -34,12 +34,15 @@ public class ReceiverController extends BaseController {
             logger.info("GET /receivers, user:{}, search:{}", JSON.toJSONString(user), JSON.toJSONString(receiverSearch));
 
             List<Receiver> receivers = receiverService.getReceiverList(receiverSearch);
+            int receiverId = receiverService.getReceiverIdByUserId(user.getId());
             int count = receiverService.getReceiverCount(receiverSearch);
 
-            return ResponseHelper.buildResponse(2000, "receivers", receivers, "count", count);
+            return ResponseHelper.buildResponse(2000, "user", user, "receivers", receivers,
+                    "receiver_id", receiverId, "count", count);
         } catch (Exception e) {
             logger.error("get receiver list error, caused by", e);
-            return ResponseHelper.buildResponse(5000, "receivers", Collections.emptyList(), "count", 0);
+            return ResponseHelper.buildResponse(5000, "user", user, "receivers", Collections.emptyList(),
+                    "receiver_id", 0, "count", 0);
         }
     }
 

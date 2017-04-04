@@ -21,6 +21,9 @@ public interface ReceiverDao {
     @Select("select id, name, phone, mail, wechat, qq from tb_receiver where id=#{id}")
     Receiver getReceiverById(@Param("id") int id);
 
+    @Select("select receiver_id from tb_user_to_receiver where user_id=#{uid}")
+    int getReceiverIdByUserId(@Param("uid") int uid);
+
     @Insert("insert into tb_receiver(name, phone, mail, wechat, qq) values(#{name}, #{phone}, #{mail}, #{wechat}, #{qq})")
     int save(Receiver receiver);
 

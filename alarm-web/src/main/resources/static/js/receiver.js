@@ -22,13 +22,17 @@ $(function() {
             phone: $("#receiver-phone").val(),
             wechat: $("#receiver-wechat").val(),
             qq: $("#receiver-qq").val()
-        }
+        };
         addReceiver(receiver_data);
     });
 
     // receiver delete modal
     $("#receiver-del").click(function() {
         var receiver_id = $(this).attr("_val");
+        if (receiver_id == undefined) {
+            console.log("del receiver fail, receiver_id="+receiver_id);
+            return;
+        }
         deleteReceiver(receiver_id);
     });
 
@@ -61,21 +65,42 @@ function getReceivers(search) {
         type: "GET",
         success: function(data){
             if(data["code"] == 2000) {
+                console.log(data);
                 var html = "";
                 var receivers = data["receivers"];
-                for(var i = 0; i < receivers.length; i++) {
-                    var receiver  = receivers[i];
-                    html += "<tr><td>"+receiver["name"]+"</td>"
-                        + "<td>"+receiver["mail"]+"</td>"
-                        + "<td>"+receiver["phone"]+"</td>"
-                        + "<td>"+receiver["wechat"]+"</td>"
-                        + "<td>"+receiver["qq"]+"</td>"
-                        + "<td><button class='btn btn-info receiver-update' _val='"+receiver["id"]+"' "
-                        + "data-toggle='modal' data-target='#modal-receiver-update' "
-                        + "style='padding:0;margin:0;width:40px;height:26px;'>编辑</button>"
-                        + "&nbsp;&nbsp; <button class='btn btn-danger receiver-del' _val='"+receiver["id"]+"' "
-                        + "data-toggle='modal' data-target='#modal-receiver-del' "
-                        + "style='padding:0;margin:0;width:40px;height:26px;'>删除</button></td></tr>";
+                if (data["user"]["type"] == 0) {
+                    // admin
+                    for (var i = 0; i < receivers.length; i++) {
+                        var receiver = receivers[i];
+                        html += "<tr><td>" + receiver["name"] + "</td>"
+                            + "<td>" + receiver["mail"] + "</td>"
+                            + "<td>" + receiver["phone"] + "</td>"
+                            + "<td>" + receiver["wechat"] + "</td>"
+                            + "<td>" + receiver["qq"] + "</td>"
+                            + "<td><button class='btn btn-info receiver-update' _val='" + receiver["id"] + "' "
+                            + "data-toggle='modal' data-target='#modal-receiver-update' "
+                            + "style='padding:0;margin:0;width:40px;height:26px;'>编辑</button>"
+                            + "&nbsp;&nbsp; <button class='btn btn-danger receiver-del' _val='" + receiver["id"] + "' "
+                            + "data-toggle='modal' data-target='#modal-receiver-del' "
+                            + "style='padding:0;margin:0;width:40px;height:26px;'>删除</button></td></tr>";
+                    }
+                } else {
+                    // normal user
+                    for (var i = 0; i < receivers.length; i++) {
+                        var receiver = receivers[i];
+                        html += "<tr><td>" + receiver["name"] + "</td>"
+                            + "<td>" + receiver["mail"] + "</td>"
+                            + "<td>" + receiver["phone"] + "</td>"
+                            + "<td>" + receiver["wechat"] + "</td>"
+                            + "<td>" + receiver["qq"] + "</td>";
+                        if (receiver["id"] == data["receiver_id"]) {
+                            html += "<td><button class='btn btn-info receiver-update' _val='" + receiver["id"] + "' "
+                                + "data-toggle='modal' data-target='#modal-receiver-update' "
+                                + "style='padding:0;margin:0;width:40px;height:26px;'>编辑</button></td></tr>";
+                        } else {
+                            html += "<td></td></tr>";
+                        }
+                    }
                 }
                 $(".receivers-body").html(html);
                 setReceiverClickEvent();
@@ -145,7 +170,8 @@ function deleteReceiver(rid) {
             if(data["code"] != 2000) {
                 alert("删除失败");
             }
-            location.replace(location.href);
+            getReceivers(search_select + "=" + search_input);
+            //location.replace(location.href);
         }
     });
 }
@@ -159,9 +185,10 @@ function updateReceiver(receiver_data) {
         contentType: "application/json;charset=utf-8",
         success: function(data){
             if(data["code"] != 2000) {
-                alert("删除失败");
+                alert("更新失败");
             }
-            location.replace(location.href);
+            getReceivers(search_select + "=" + search_input);
+            //location.replace(location.href);
         }
     });
 }
