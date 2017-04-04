@@ -1,7 +1,7 @@
 package cn.junety.alarm.server.service;
 
 import cn.junety.alarm.api.AlarmClient;
-import cn.junety.alarm.base.dao.*;
+import cn.junety.alarm.server.dao.*;
 import cn.junety.alarm.base.entity.*;
 import cn.junety.alarm.base.exception.AlarmNotFoundException;
 import cn.junety.alarm.base.redis.JedisFactory;
@@ -70,7 +70,7 @@ public class AlarmService {
             // 遍历告警列表
             for (Alarm alarm : alarms) {
                 // 获取该告警接收人
-                List<Receiver> receivers = receiverDao.getByGroupId(alarm.getGroupId());
+                List<Receiver> receivers = receiverDao.getReceiverByGroupId(alarm.getGroupId());
                 // 接收人去重,防止一条告警信息多次发送给同一个接收人
                 receivers = removeDuplicatedReceiver(receivers, sent);
                 if(receivers.size() != 0) {
