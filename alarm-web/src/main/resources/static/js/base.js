@@ -11,6 +11,10 @@ $(function() {
         window.location = "/" + location;
     });
 
+	$("#logout").click(function () {
+		logout();
+    });
+
 });
 
 // 分页按钮
@@ -36,4 +40,19 @@ function setPageButton(page_count, current_page) {
 	}
 	src += "<button class='btn btn-default page-btn' _val='"+page_count+"'>>></button></div>";
 	return src;
+}
+
+function logout() {
+    $.ajax({
+        url: "/logout",
+        type: "POST",
+        data: JSON.stringify({}),
+        dataType: "json",
+        contentType: "application/json;charset=utf-8",
+        success: function(data){
+            if (data["code"] == 2000) {
+                window.location = "/login";
+            }
+        }
+    });
 }

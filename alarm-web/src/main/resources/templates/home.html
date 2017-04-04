@@ -36,12 +36,12 @@
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 							<span class="fa glyphicon glyphicon-user"></span>
-							caijt@jpush.cn
+							<span th:text="${user.username}">none</span>
 							<span class="caret"></span>
 						</a>
 						<ul class="dropdown-menu" role="menu">
 							<li><a href="#">个人信息</a></li>
-							<li><a href="#">注销</a></li>
+							<li><a id="logout" href="#">注销</a></li>
 						</ul>
 					</li>
 				</ul>

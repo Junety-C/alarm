@@ -115,7 +115,7 @@ public class ProjectService {
 
     /**
      * 新建项目
-     * @param name
+     * @param name 项目名称
      * @return 项目id
      */
     public int createProject(String name) {

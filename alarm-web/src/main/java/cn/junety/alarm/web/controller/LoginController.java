@@ -15,16 +15,21 @@ import javax.servlet.http.HttpServletRequest;
 public class LoginController extends BaseController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String loginIn(HttpServletRequest request, @RequestBody LoginForm loginForm) {
+    public String login(HttpServletRequest request, @RequestBody LoginForm loginForm) {
         logger.info("POST /login, loginForm:{}", JSON.toJSONString(loginForm));
 
         User user = userService.getByUsername(loginForm.getUsername());
         if (user != null) {
-            //if ("caijt".equals(loginForm.getUsername()) && "38526".equals(loginForm.getPassword())) {
-                userLoginStatusService.addLoginStatus(request, user.getIdentification());
-                return ResponseHelper.buildResponse(2000, "status", "success");
-            //}
+            userLoginStatusService.addLoginStatus(request, user.getIdentification());
+            return ResponseHelper.buildResponse(2000, "status", "success");
         }
         return ResponseHelper.buildResponse(4004, "reason", "invalid username or password");
+    }
+
+    @RequestMapping(value = "/logout", method = RequestMethod.POST)
+    public String logout(HttpServletRequest request) {
+        logger.info("POST /logout");
+        userLoginStatusService.removeLoginStatus(request);
+        return ResponseHelper.buildResponse(2000);
     }
 }
