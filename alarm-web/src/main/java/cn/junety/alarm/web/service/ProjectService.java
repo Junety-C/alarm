@@ -132,6 +132,7 @@ public class ProjectService {
     public void deleteProjectById(int id) {
         moduleDao.deleteByProjectId(id);
         projectDao.deleteById(id);
+        projectDao.deleteProjectMemberById(id);
     }
 
     /**

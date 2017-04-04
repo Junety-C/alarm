@@ -111,11 +111,23 @@ function getAlarms(search) {
                 var alarm  = alarms[i];
                 html += "<tr>"
                     + "<td>"+alarm["alarm"]["code"]+"</td>"
-                    + "<td>"+alarm["alarm"]["name"]+"</td>"
-                    + "<td>"+alarm["project"]["name"]+"</td>"
-                    + "<td>"+alarm["module"]["name"]+"</td>"
-                    + "<td>"+alarm["group"]["name"]+"</td>"
-                    + "<td>"+alarm["alarm"]["routeKey"]+"</td>"
+                    + "<td>"+alarm["alarm"]["name"]+"</td>";
+                if (alarm["project"] != undefined) {
+                    html += "<td>"+alarm["project"]["name"]+"</td>";
+                } else {
+                    html += "<td></td>";
+                }
+                if (alarm["module"] != undefined) {
+                    html += "<td>"+alarm["module"]["name"]+"</td>";
+                } else {
+                    html += "<td></td>";
+                }
+                if (alarm["group"] != undefined) {
+                    html += "<td></td>";
+                } else {
+                    html += "<td></td>";
+                }
+                html += "<td>"+alarm["alarm"]["routeKey"]+"</td>"
                     + "<td>"+alarm["config"]+"</td>"
                     + "<td><button class='btn btn-info alarm-update' _val='"+alarm["alarm"]["id"]+"' "
                     + "data-toggle='modal' data-target='#modal-alarm-update' "

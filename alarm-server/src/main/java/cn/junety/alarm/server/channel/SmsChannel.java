@@ -14,19 +14,20 @@ public class SmsChannel extends Channel {
 
     @Override
     public void send(AlarmMessage alarmMessage) {
-        String content = "告警名称:" + alarmMessage.getAlarmName()
-                + ",上报编号:" + alarmMessage.getReportId()
-                + ",时间:" + alarmMessage.getCreatetimeFormat()
-                + ",内容:" + alarmMessage.getContent();
-
-        if(content.length() > 500) {
-            content = content.substring(0, 480) + "(完整内容见告警日志)";
-        }
-
-        QueueMessage queueMessage = new QueueMessage(null, content, alarmMessage.getPhoneList(),
-                alarmMessage.getLogId(), alarmMessage.getLevel());
         // 不支持啊！没钱啊！
-        //this.save(JSON.toJSONString(queueMessage));
+
+//        String content = "告警名称:" + alarmMessage.getAlarmName()
+//                + ",上报编号:" + alarmMessage.getReportId()
+//                + ",时间:" + alarmMessage.getCreatetimeFormat()
+//                + ",内容:" + alarmMessage.getContent();
+//
+//        if(content.length() > 500) {
+//            content = content.substring(0, 480) + "(完整内容见告警日志)";
+//        }
+//
+//        QueueMessage queueMessage = new QueueMessage(null, content, alarmMessage.getPhoneList(),
+//                alarmMessage.getLogId(), alarmMessage.getLevel());
+//        this.save(JSON.toJSONString(queueMessage));
     }
 
     @Override

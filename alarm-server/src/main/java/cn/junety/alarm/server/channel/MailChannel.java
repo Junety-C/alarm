@@ -14,8 +14,6 @@ import org.springframework.stereotype.Service;
 @Service("mailChannel")
 public class MailChannel extends Channel {
 
-    private static final Logger logger = LoggerFactory.getLogger(MailChannel.class);
-
     private static final String NEW_LINE = "<br/>";
 
     @Override

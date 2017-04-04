@@ -1,7 +1,6 @@
 package cn.junety.alarm.server.common;
 
 import cn.junety.alarm.base.util.properties.Config;
-import cn.junety.alarm.base.util.properties.Key;
 import cn.junety.alarm.base.util.properties.PropertiesLoader;
 
 /**

@@ -11,7 +11,7 @@ import redis.clients.jedis.Jedis;
  */
 public abstract class Channel {
 
-    private static Logger logger = LoggerFactory.getLogger(Channel.class);
+    protected Logger logger = LoggerFactory.getLogger(getClass());
 
     private static final int MAX_RETRY_TIMES = 3;
 

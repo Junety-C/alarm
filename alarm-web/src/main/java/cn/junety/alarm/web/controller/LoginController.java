@@ -20,6 +20,8 @@ public class LoginController extends BaseController {
 
         User user = userService.getByUsername(loginForm.getUsername());
         if (user != null) {
+            // TODO 校验密码，接入自己的运维系统
+
             userLoginStatusService.addLoginStatus(request, user.getIdentification());
             return ResponseHelper.buildResponse(2000, "status", "success");
         }
