@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +27,7 @@ public class AlarmController {
     private AlarmService alarmService;
 
     @RequestMapping(value = "/alarm", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> report(HttpServletRequest request, @RequestBody AlarmForm alarmForm) {
+    public String report(HttpServletRequest request, @RequestBody AlarmForm alarmForm) {
         alarmForm.setIp(HttpHelper.getRemoteIp(request));
         logger.info("POST /v1/alarm, body:{}.", JSON.toJSONString(alarmForm));
 
@@ -37,21 +36,21 @@ public class AlarmController {
                 return alarmService.handle(alarmForm);
             }
             logger.debug("invalid params, body:{}.", JSON.toJSONString(alarmForm));
-            return HttpHelper.buildResponse(400, 4000, "invalid params");
+            return HttpHelper.buildResponse(4000, "invalid params");
         } catch (Exception e) {
             logger.error("bad service", e);
             AlarmClient.error(1, "alarm.server.bad-service", "告警处理异常,error:" + e.getMessage());
-            return HttpHelper.buildResponse(500, 5000, "bad service");
+            return HttpHelper.buildResponse(5000, "bad service");
         }
     }
 
     @ExceptionHandler(HttpMessageConversionException.class)
-    public ResponseEntity<?> invalidParameterHandler(HttpServletRequest req, Exception e) {
-        return HttpHelper.buildResponse(400, 4000, "invalid params");
+    public String invalidParameterHandler(HttpServletRequest req, Exception e) {
+        return HttpHelper.buildResponse(4000, "invalid params");
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> badService(Exception e) {
-        return HttpHelper.buildResponse(500, 5000, "bad service");
+    public String badService(Exception e) {
+        return HttpHelper.buildResponse(5000, "bad service");
     }
 }

@@ -3,10 +3,7 @@ package cn.junety.alarm.api.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -26,7 +23,7 @@ public class AlarmSender {
     public AlarmSender(int queueSize) {
         queue = new ArrayBlockingQueue<>(queueSize);
         new Thread(() -> {
-            logger.info("start alarm sender success");
+            logger.info("start alarm api success");
             while(true) {
                 try {
                     sendPost(queue.take());
@@ -45,9 +42,13 @@ public class AlarmSender {
 
     private boolean sendPost(String body) {
         StringBuilder buffer = new StringBuilder();
+        HttpURLConnection httpUrlConn = null;
+        InputStream inputStream = null;
+        InputStreamReader inputStreamReader = null;
+        BufferedReader bufferedReader = null;
         try {
             URL e = new URL(ALARM_API);
-            HttpURLConnection httpUrlConn = (HttpURLConnection)e.openConnection();
+            httpUrlConn = (HttpURLConnection)e.openConnection();
             httpUrlConn.setDoOutput(true);
             httpUrlConn.setDoInput(true);
             httpUrlConn.setUseCaches(false);
@@ -57,30 +58,36 @@ public class AlarmSender {
             statusCode.write(body.getBytes("UTF-8"));
             statusCode.close();
 
-            int statusCode1 = httpUrlConn.getResponseCode();
-            if(statusCode1 == 200) {
-                logger.debug("send alarm success, body:{}", body);
-                httpUrlConn.disconnect();
-                return true;
-            }
-
-            InputStream inputStream = httpUrlConn.getInputStream();
-            InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "utf-8");
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            inputStream = httpUrlConn.getInputStream();
+            inputStreamReader = new InputStreamReader(inputStream, "utf-8");
+            bufferedReader = new BufferedReader(inputStreamReader);
 
             String str;
             while((str = bufferedReader.readLine()) != null) {
                 buffer.append(str);
             }
+            logger.debug("send alarm success, request:{}, response:{}", body, buffer.toString());
 
-            bufferedReader.close();
-            inputStreamReader.close();
-            inputStream.close();
-            logger.error("send alarm fail, body:{}, error:{}", body, buffer.toString());
             httpUrlConn.disconnect();
         } catch (Exception e) {
             logger.error("send alarm error, body:{}", body, e);
+        } finally {
+            close(bufferedReader, inputStreamReader, inputStream);
+            if (httpUrlConn != null) {
+                httpUrlConn.disconnect();
+            }
         }
         return false;
+    }
+
+    private void close(Closeable... closeables) {
+        for (Closeable closeable : closeables) {
+            if (closeable != null) {
+                try {
+                    closeable.close();
+                } catch (Exception ignore) {
+                }
+            }
+        }
     }
 }

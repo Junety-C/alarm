@@ -18,7 +18,6 @@ import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 
@@ -59,7 +58,7 @@ public class AlarmService {
     @Autowired
     private Channel qqChannel;
 
-    public ResponseEntity<?> handle(AlarmForm alarmForm) {
+    public String handle(AlarmForm alarmForm) {
         try {
             // 已发送的接收人id
             Set<Integer> sent = new HashSet<>();
@@ -89,12 +88,12 @@ public class AlarmService {
             // 告警信息无接收人, 发送告警信息给管理员
             if(sent.size() == 0) {
                 AlarmClient.info(1, "alarm.server.noreceiver", String.format("接收到无接收者的告警,reportId:%s", reportId));
-                return HttpHelper.buildResponse(404, 4004, "receivers is empty");
+                return HttpHelper.buildResponse(4004, "receivers is empty");
             }
-            return HttpHelper.buildResponse(200, 2000, "success");
+            return HttpHelper.buildResponse(2000, "success");
         } catch (AlarmNotFoundException e) {
             logger.error("alarm not found by code:{}", alarmForm.getCode());
-            return HttpHelper.buildResponse(404, 4004, "alarm not found.");
+            return HttpHelper.buildResponse(4004, "alarm not found.");
         }
     }
 
