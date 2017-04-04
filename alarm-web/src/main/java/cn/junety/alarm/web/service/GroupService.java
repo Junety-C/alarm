@@ -116,8 +116,11 @@ public class GroupService {
      * 创建接收组
      * @param groupName 接收组名称
      */
-    public void createGroup(String groupName) {
-        groupDao.save(groupName);
+    public int createGroup(String groupName) {
+        Group group = new Group();
+        group.setName(groupName);
+        groupDao.save(group);
+        return group.getId();
     }
 
     /**

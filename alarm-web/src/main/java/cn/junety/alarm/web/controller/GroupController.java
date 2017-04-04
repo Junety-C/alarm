@@ -5,6 +5,7 @@ import cn.junety.alarm.base.entity.Receiver;
 import cn.junety.alarm.base.entity.User;
 import cn.junety.alarm.web.common.ResponseHelper;
 import cn.junety.alarm.web.service.GroupService;
+import cn.junety.alarm.web.service.ReceiverService;
 import cn.junety.alarm.web.vo.GroupSearch;
 import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,8 @@ public class GroupController extends BaseController {
 
     @Autowired
     private GroupService groupService;
+    @Autowired
+    private ReceiverService receiverService;
 
     @RequestMapping(value = "/groups", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public String getGroups(HttpServletRequest request) {
@@ -61,7 +64,9 @@ public class GroupController extends BaseController {
         User user = getUser(request);
         logger.info("POST /groups/{}, user:{}", name, JSON.toJSONString(user));
 
-        groupService.createGroup(name);
+        int gid = groupService.createGroup(name);
+        int rid = receiverService.getReceiverIdByUserId(user.getId());
+        groupService.addReceiverToGroup(gid, rid);
 
         return ResponseHelper.buildResponse(2000);
     }

@@ -169,6 +169,7 @@ function deleteReceiver(rid) {
         success: function(data){
             if(data["code"] != 2000) {
                 alert("删除失败");
+                return;
             }
             getReceivers(search_select + "=" + search_input);
             //location.replace(location.href);
@@ -186,6 +187,7 @@ function updateReceiver(receiver_data) {
         success: function(data){
             if(data["code"] != 2000) {
                 alert("更新失败");
+                return;
             }
             getReceivers(search_select + "=" + search_input);
             //location.replace(location.href);

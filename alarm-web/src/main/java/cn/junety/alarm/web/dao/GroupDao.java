@@ -12,7 +12,8 @@ import java.util.List;
 public interface GroupDao {
 
     @Insert("insert into tb_group(name) values(#{name})")
-    int save(@Param("name") String name);
+    @Options(useGeneratedKeys = true, keyProperty = "id")
+    void save(Group group);
 
     @Delete("delete from tb_group where id=#{id}")
     int deleteById(@Param("id") int id);
@@ -32,7 +33,7 @@ public interface GroupDao {
     @Select("select id, name from tb_group where id=#{id}")
     Group getGroupById(@Param("id") int id);
 
-    @Select("select id, name from tb_group")
+    @Select("select id, name from tb_group order by id desc")
     List<Group> getAllGroup();
 
 

@@ -178,6 +178,7 @@ function deleteGroup(gid) {
         success: function(data){
             if(data["code"] != 2000) {
                 alert("删除失败");
+                return;
             }
             getGroups(search_select + "=" + search_input);
             //location.replace(location.href);
@@ -195,6 +196,7 @@ function addReceiverToGroup(gid, rid) {
         success: function(data){
             if (data["code"] != 2000) {
                 alert("添加失败");
+                return;
             }
             getGroups(search_select + "=" + search_input);
             //location.replace(location.href);
@@ -212,6 +214,7 @@ function deleteReceiverFromGroup(gid, rid) {
         success: function(data){
             if(data["code"] != 2000) {
                 alert("删除失败");
+                return;
             }
             getGroups(search_select + "=" + search_input);
             //location.replace(location.href);

@@ -172,6 +172,7 @@ function deleteAlarm(aid) {
         success: function(data){
             if(data["code"] != 2000) {
                 alert("删除失败");
+                return;
             }
             getAlarms(search_select + "=" + search_input);
             //location.replace(location.href);
@@ -189,6 +190,7 @@ function updateAlarm(alarm_data) {
         success: function(data){
             if (data["code"] != 2000) {
                 alert("更新失败");
+                return;
             }
             getAlarms(search_select + "=" + search_input);
             //location.replace(location.href);

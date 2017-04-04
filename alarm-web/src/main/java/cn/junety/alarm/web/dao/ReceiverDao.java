@@ -15,7 +15,7 @@ public interface ReceiverDao {
             "where tgm.group_id=#{groupId} and tgm.receiver_id=tr.id")
     List<Receiver> getReceiverByGroupId(int groupId);
 
-    @Select("select id, name, phone, mail, wechat, qq from tb_receiver")
+    @Select("select id, name, phone, mail, wechat, qq from tb_receiver order by id desc")
     List<Receiver> getAllReceiver();
 
     @Select("select id, name, phone, mail, wechat, qq from tb_receiver where id=#{id}")
