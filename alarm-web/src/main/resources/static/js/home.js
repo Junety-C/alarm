@@ -1,12 +1,19 @@
+var DEFAULT_INTERVAL = 2000;
+
 $(function () {
-    var DEFAULT_INTERVAL = 2000;
 
     Highcharts.setOptions({
         global: {
             useUTC: false
         }
     });
+    
+    createChannelStatusChart();
+    createRequestQuantityChart();
+    createSendingQuantityChart();
+});
 
+function createChannelStatusChart() {
     // 队列状态
     $.getJSON("/monitor/queues/status", function (initData) {
         $('#channel-status').highcharts({
@@ -55,8 +62,9 @@ $(function () {
             }]
         });
     });
+}
 
-
+function createRequestQuantityChart() {
     // 系统吞吐量
     var prev_quantity, current_quantity;
     $.getJSON("/monitor/request/quantity", function (initData) {
@@ -124,4 +132,31 @@ $(function () {
         }, function(c) {
         });
     });
-});
+}
+
+function createSendingQuantityChart() {
+    $.getJSON("/monitor/sending/quantity", function (initData) {
+        var tbody = "<tr>"
+                    + "<td>今天</td>"
+                    + "<td>"+(initData["mail_today"] == undefined ? 0 : initData["mail_today"])+"</td>"
+                    + "<td>"+(initData["sms_today"] == undefined ? 0 : initData["sms_today"])+"</td>"
+                    + "<td>"+(initData["qq_today"] == undefined ? 0 : initData["qq_today"])+"</td>"
+                    + "<td>"+(initData["wechat_today"] == undefined ? 0 : initData["wechat_today"])+"</td>"
+                    + "</tr>"
+                    + "<tr>"
+                    + "<td>昨天</td>"
+                    + "<td>"+(initData["mail_yesterday"] == undefined ? 0 : initData["mail_yesterday"])+"</td>"
+                    + "<td>"+(initData["sms_yesterday"] == undefined ? 0 : initData["sms_yesterday"])+"</td>"
+                    + "<td>"+(initData["qq_yesterday"] == undefined ? 0 : initData["qq_yesterday"])+"</td>"
+                    + "<td>"+(initData["wechat_yesterday"] == undefined ? 0 : initData["wechat_yesterday"])+"</td>"
+                    + "</tr>"
+                    + "<tr>"
+                    + "<td>历史</td>"
+                    + "<td>"+(initData["mail_total"] == undefined ? 0 : initData["mail_total"])+"</td>"
+                    + "<td>"+(initData["sms_total"] == undefined ? 0 : initData["sms_total"])+"</td>"
+                    + "<td>"+(initData["qq_total"] == undefined ? 0 : initData["qq_total"])+"</td>"
+                    + "<td>"+(initData["wechat_total"] == undefined ? 0 : initData["wechat_total"])+"</td>"
+                    + "</tr>";
+        $(".sending-quantity").html(tbody);
+    });
+}

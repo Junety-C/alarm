@@ -28,25 +28,38 @@ public class MonitorController {
     @Autowired
     private MonitorService monitorService;
 
+    // test code
     private static AtomicInteger atomicInteger = new AtomicInteger(0);
 
     @RequestMapping(value = "/queues/status", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public String getQueueStatus(HttpServletRequest request) {
         //Map<String, Long> queueStatus = monitorService.getQueueStatus();
+
+        // test code
         Map<String, Long> queueStatus = new HashMap<>();
         Random random = new Random();
         queueStatus.put("mail", (long)random.nextInt(100));
         queueStatus.put("sms", (long)random.nextInt(100));
         queueStatus.put("qq", (long)random.nextInt(100));
         queueStatus.put("wechat", (long)random.nextInt(100));
+
         return JSON.toJSONString(queueStatus);
     }
 
     @RequestMapping(value = "/request/quantity", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public String getServerThroughput(HttpServletRequest request) {
         //int quantity = monitorService.getTotalRequestQuantity();
+
+        // test code
         Random random = new Random();
         int quantity = random.nextInt(100);
+
         return "{\"quantity\":" + atomicInteger.addAndGet(quantity) + "}";
+    }
+
+    @RequestMapping(value = "/sending/quantity", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String getPushQuantity(HttpServletRequest request) {
+        Map<String, String> sendingQuantity = monitorService.getPushQuantity();
+        return JSON.toJSONString(sendingQuantity);
     }
 }
