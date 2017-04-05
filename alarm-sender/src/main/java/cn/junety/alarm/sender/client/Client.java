@@ -2,11 +2,14 @@ package cn.junety.alarm.sender.client;
 
 import cn.junety.alarm.base.entity.DeliveryStatus;
 import cn.junety.alarm.base.redis.JedisFactory;
+import cn.junety.alarm.base.util.DateUtil;
 import cn.junety.alarm.sender.configuration.Configuration;
 import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
+
+import java.util.Date;
 
 /**
  * Created by caijt on 2017/3/5.
@@ -22,6 +25,8 @@ public abstract class Client {
     protected String channel;
 
     protected abstract boolean send(String message);
+    protected abstract String getPushQuantityKey();
+    protected abstract String getPushDailyKey();
 
     public Client(String name, String queueName, String channel) {
         this.name = name;
@@ -35,11 +40,27 @@ public abstract class Client {
             try (Jedis jedis = JedisFactory.getJedisInstance(queueName)) {
                 String message = jedis.blpop(0, queueName).get(1);
                 if (sendWithRetry(message)) {
-                    // 记录推送数量
+                    recordPushNumber();
                 }
             } catch (Exception e) {
                 logger.error("consume queue {} error, caused by", queueName, e);
             }
+        }
+    }
+
+    private void recordPushNumber() {
+        try (Jedis jedis = JedisFactory.getJedisInstance("monitor")) {
+            String pushQuantityKey = getPushQuantityKey();
+            if (pushQuantityKey != null) {
+                jedis.incr(pushQuantityKey);
+            }
+            String pushDailyKey = getPushDailyKey();
+            if (pushDailyKey != null) {
+                String date = DateUtil.formatDate(DateUtil.YYYYMMDD, new Date());
+                jedis.incr(pushDailyKey.replace("{date}", date));
+            }
+        } catch (Exception e) {
+            logger.error("record push number error, key:{}, caused by", getPushQuantityKey(), e);
         }
     }
 

@@ -32,6 +32,16 @@ public class WechatClient extends Client {
         }
     }
 
+    @Override
+    protected String getPushQuantityKey() {
+        return Configuration.WECHAT_PUSH_QUANTITY;
+    }
+
+    @Override
+    protected String getPushDailyKey() {
+        return Configuration.WECHAT_PUSH_DAILY;
+    }
+
     public static void main(String[] args) {
         WechatClient wechatClient = new WechatClient("wechat", Configuration.WECHAT_QUEUE);
         wechatClient.start();

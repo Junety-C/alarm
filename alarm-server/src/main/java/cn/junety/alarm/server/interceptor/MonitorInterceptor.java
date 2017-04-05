@@ -22,7 +22,7 @@ public class MonitorInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        try (Jedis jedis = JedisFactory.getJedisInstance()) {
+        try (Jedis jedis = JedisFactory.getJedisInstance("monitor")) {
             jedis.incr(ALARM_TOTAL_REQUEST_QUANTITY);
         } catch (Exception e) {
             logger.error("do monitor interceptor error, caused by", e);

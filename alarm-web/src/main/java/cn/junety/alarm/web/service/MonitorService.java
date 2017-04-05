@@ -26,7 +26,7 @@ public class MonitorService {
      * @return 各个队列的大小
      */
     public Map<String, Long> getQueueStatus() {
-        try(Jedis jedis = JedisFactory.getJedisInstance()) {
+        try(Jedis jedis = JedisFactory.getJedisInstance("monitor")) {
             Map<String, Long> queueStatus = new HashMap<>();
             queueStatus.put("mail", jedis.llen(Configuration.MAIL_REDIS_QUEUE));
             queueStatus.put("sms", jedis.llen(Configuration.SMS_REDIS_QUEUE));
@@ -44,7 +44,7 @@ public class MonitorService {
      * @return 请求总量
      */
     public int getTotalRequestQuantity() {
-        try(Jedis jedis = JedisFactory.getJedisInstance()) {
+        try(Jedis jedis = JedisFactory.getJedisInstance("monitor")) {
             String quantity = jedis.get(ALARM_TOTAL_REQUEST_QUANTITY);
             if (quantity == null) {
                 return 0;

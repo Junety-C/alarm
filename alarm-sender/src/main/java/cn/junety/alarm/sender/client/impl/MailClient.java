@@ -33,6 +33,16 @@ public class MailClient extends Client {
         }
     }
 
+    @Override
+    protected String getPushQuantityKey() {
+        return Configuration.MAIL_PUSH_QUANTITY;
+    }
+
+    @Override
+    protected String getPushDailyKey() {
+        return Configuration.MAIL_PUSH_DAILY;
+    }
+
     private boolean send(String title, String content, List<String> receivers) {
         try {
             HtmlEmail email = new HtmlEmail();

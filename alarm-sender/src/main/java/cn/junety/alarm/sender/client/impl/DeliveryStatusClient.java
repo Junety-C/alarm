@@ -31,4 +31,14 @@ public class DeliveryStatusClient extends Client {
         }
         return false;
     }
+
+    @Override
+    protected String getPushQuantityKey() {
+        return null;
+    }
+
+    @Override
+    protected String getPushDailyKey() {
+        return null;
+    }
 }
