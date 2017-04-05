@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by caijt on 2017/4/5.
@@ -26,6 +27,8 @@ public class MonitorController {
 
     @Autowired
     private MonitorService monitorService;
+
+    private static AtomicInteger atomicInteger = new AtomicInteger(0);
 
     @RequestMapping(value = "/queues/status", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public String getQueueStatus(HttpServletRequest request) {
@@ -44,6 +47,6 @@ public class MonitorController {
         //int quantity = monitorService.getTotalRequestQuantity();
         Random random = new Random();
         int quantity = random.nextInt(100);
-        return "{\"quantity\":" + quantity + "}";
+        return "{\"quantity\":" + atomicInteger.addAndGet(quantity) + "}";
     }
 }
