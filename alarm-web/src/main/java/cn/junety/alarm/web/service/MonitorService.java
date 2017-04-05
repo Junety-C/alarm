@@ -19,8 +19,6 @@ public class MonitorService {
 
     private static final Logger logger = LoggerFactory.getLogger(MonitorService.class);
 
-    private static final String ALARM_TOTAL_REQUEST_QUANTITY = "alarm.request.quantity";
-
     /**
      * 获取发送队列状态
      * @return 各个队列的大小
@@ -45,7 +43,7 @@ public class MonitorService {
      */
     public int getTotalRequestQuantity() {
         try(Jedis jedis = JedisFactory.getJedisInstance("monitor")) {
-            String quantity = jedis.get(ALARM_TOTAL_REQUEST_QUANTITY);
+            String quantity = jedis.get(Configuration.TOTAL_REQUEST_QUANTITY);
             if (quantity == null) {
                 return 0;
             } else {

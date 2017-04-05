@@ -9,6 +9,8 @@ public class Configuration {
     public static final String WECHAT_REDIS_QUEUE = "wechat.queue";
     public static final String QQ_REDIS_QUEUE = "qq.queue";
 
+    public static final String TOTAL_REQUEST_QUANTITY = "monitor.request.quantity";
+
     public static final String MAIL_PUSH_QUANTITY = "monitor.mail.push.quantity";
     public static final String SMS_PUSH_QUANTITY = "monitor.sms.push.quantity";
     public static final String QQ_PUSH_QUANTITY = "monitor.qq.push.quantity";
