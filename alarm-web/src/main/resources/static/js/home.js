@@ -90,7 +90,7 @@ $(function () {
             },
             yAxis: {
                 title: {
-                    text: '值'
+                    text: '吞吐量'
                 },
                 plotLines: [{
                     value: 0,
