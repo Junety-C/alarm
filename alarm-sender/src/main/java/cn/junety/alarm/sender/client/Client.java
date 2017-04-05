@@ -48,6 +48,9 @@ public abstract class Client {
         }
     }
 
+    /**
+     * 各个渠道的推送数量统计(每日和总量)
+     */
     private void recordPushNumber() {
         try (Jedis jedis = JedisFactory.getJedisInstance("monitor")) {
             String pushQuantityKey = getPushQuantityKey();
