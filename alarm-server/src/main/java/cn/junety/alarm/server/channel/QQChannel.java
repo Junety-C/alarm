@@ -1,7 +1,7 @@
 package cn.junety.alarm.server.channel;
 
 import cn.junety.alarm.base.entity.QueueMessage;
-import cn.junety.alarm.server.common.Configuration;
+import cn.junety.alarm.server.configuration.Configuration;
 import cn.junety.alarm.server.vo.AlarmMessage;
 import com.alibaba.fastjson.JSON;
 import org.springframework.stereotype.Service;

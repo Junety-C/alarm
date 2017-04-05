@@ -1,6 +1,6 @@
 package cn.junety.alarm.server.channel;
 
-import cn.junety.alarm.server.common.Configuration;
+import cn.junety.alarm.server.configuration.Configuration;
 import cn.junety.alarm.server.vo.AlarmMessage;
 import cn.junety.alarm.base.entity.QueueMessage;
 import com.alibaba.fastjson.JSON;

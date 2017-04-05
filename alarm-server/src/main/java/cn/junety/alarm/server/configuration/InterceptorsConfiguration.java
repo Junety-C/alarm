@@ -1,6 +1,6 @@
-package cn.junety.alarm.web.configuration;
+package cn.junety.alarm.server.configuration;
 
-import cn.junety.alarm.web.interceptor.UserLoginInterceptor;
+import cn.junety.alarm.server.interceptor.MonitorInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -13,15 +13,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 public class InterceptorsConfiguration extends WebMvcConfigurerAdapter {
 
     @Bean
-    UserLoginInterceptor userLoginInterceptor() {
-        return new UserLoginInterceptor();
+    MonitorInterceptor monitorInterceptor() {
+        return new MonitorInterceptor();
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(userLoginInterceptor()).addPathPatterns("/**")
-                .excludePathPatterns("/login")
-                .excludePathPatterns("/monitor/**");
+        registry.addInterceptor(monitorInterceptor()).addPathPatterns("/v1/alarm");
         super.addInterceptors(registry);
     }
 }

@@ -6,7 +6,7 @@ import cn.junety.alarm.base.entity.*;
 import cn.junety.alarm.base.exception.AlarmNotFoundException;
 import cn.junety.alarm.base.redis.JedisFactory;
 import cn.junety.alarm.server.channel.Channel;
-import cn.junety.alarm.server.common.Configuration;
+import cn.junety.alarm.server.configuration.Configuration;
 import cn.junety.alarm.server.common.HttpHelper;
 import cn.junety.alarm.server.common.IdGenerator;
 import cn.junety.alarm.server.vo.AlarmForm;

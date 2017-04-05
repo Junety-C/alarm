@@ -6,12 +6,12 @@
 
 	<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}"/>
 	<link rel="stylesheet" type="text/css" th:href="@{/css/base.css}"/>
-	<link rel="stylesheet" type="text/css" th:href="@{/css/select2.min.css}"/>
 	
 	<script th:src="@{/js/jquery.min.js}" type="text/javascript"></script>
 	<script th:src="@{/js/bootstrap.min.js}" type="text/javascript"></script>
-	<script th:src="@{/js/select2.min.js}" type="text/javascript"></script>
 	<script th:src="@{/js/base.js}" type="text/javascript"></script>
+	<script th:src="@{/js/highcharts.js}" type="text/javascript"></script>
+	<script th:src="@{/js/home.js}" type="text/javascript"></script>
 </head>
 <body>
 
@@ -102,7 +102,44 @@
 		</div>
 
 		<div class="panel-content">
-			一脸懵逼
+			<div id="channel-status" style="width:48%; height:350px;" class="fleft"></div>
+			<div id="throughput-status" style="width:48%; height:350px;" class="fright"></div>
+
+			<table class="table table-bordered">
+				<caption style="text-align:center; font-size:16px; font-weight:bold; color:black; margin-top:30px;">发送端推送量</caption>
+				<thead style="background-color:#fafafa;">
+					<tr>
+						<th>#</th>
+						<th>mail</th>
+						<th>sms</th>
+						<th>qq</th>
+						<th>wechat</th>
+					</tr>
+				</thead>
+				<tbody style="background-color:white;">
+					<tr>
+						<td>今天</td>
+						<td>132</td>
+						<td>8</td>
+						<td>34</td>
+						<td>1</td>
+					</tr>
+					<tr>
+						<td>昨天</td>
+						<td>0</td>
+						<td>43</td>
+						<td>12</td>
+						<td>55</td>
+					</tr>
+					<tr>
+						<td>历史</td>
+						<td>3141</td>
+						<td>322</td>
+						<td>532</td>
+						<td>6565</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 	</div>
 </body>
