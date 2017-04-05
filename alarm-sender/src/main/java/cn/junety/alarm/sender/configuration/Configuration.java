@@ -1,4 +1,4 @@
-package cn.junety.alarm.sender.common;
+package cn.junety.alarm.sender.configuration;
 
 import cn.junety.alarm.base.util.properties.Config;
 import cn.junety.alarm.base.util.properties.Key;
@@ -15,6 +15,16 @@ public class Configuration {
     public static final String SMS_QUEUE = "sms.queue";
     public static final String WECHAT_QUEUE = "wechat.queue";
     public static final String DELIVERY_QUEUE = "delivery.queue";
+
+    public static final String MONITOR_MAIL_TOTAL = "monitor.mail.total";
+    public static final String MONITOR_SMS_TOTAL = "monitor.sms.total";
+    public static final String MONITOR_QQ_TOTAL = "monitor.qq.total";
+    public static final String MONITOR_WECHAT_TOTAL = "monitor.wechat.total";
+
+    public static final String MONITOR_MAIL_DAILY = "monitor.mail.{day}";
+    public static final String MONITOR_SMS_DAILY = "monitor.sms.{day}";
+    public static final String MONITOR_QQ_DAILY = "monitor.qq.{day}";
+    public static final String MONITOR_WECHAT_DAILY = "monitor.wechat.{day}";
 
     @Key("mail.sender.username")
     public static String MAIL_SENDER_USERNAME;

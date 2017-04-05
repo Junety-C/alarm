@@ -1,7 +1,7 @@
 package cn.junety.alarm.sender.smartqq;
 
 import cn.junety.alarm.sender.client.impl.QQClient;
-import cn.junety.alarm.sender.common.Configuration;
+import cn.junety.alarm.sender.configuration.Configuration;
 import cn.junety.alarm.sender.smartqq.entity.*;
 import cn.junety.alarm.sender.smartqq.entity.Font;
 import com.alibaba.fastjson.JSON;

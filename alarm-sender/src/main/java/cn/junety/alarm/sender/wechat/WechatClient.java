@@ -1,6 +1,6 @@
 package cn.junety.alarm.sender.wechat;
 
-import cn.junety.alarm.sender.common.Configuration;
+import cn.junety.alarm.sender.configuration.Configuration;
 import cn.junety.alarm.sender.wechat.entity.ApiURL;
 import cn.junety.alarm.sender.wechat.entity.WechatApiParams;
 import com.alibaba.fastjson.JSON;

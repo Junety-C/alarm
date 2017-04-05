@@ -1,12 +1,8 @@
 package cn.junety.alarm.server.configuration;
 
-import cn.junety.alarm.base.util.properties.Config;
-import cn.junety.alarm.base.util.properties.PropertiesLoader;
-
 /**
  * Created by caijt on 2017/1/28.
  */
-@Config("alarm.properties")
 public class Configuration {
 
     public static final String MAIL_REDIS_QUEUE = "mail.queue";
@@ -15,7 +11,14 @@ public class Configuration {
     public static final String QQ_REDIS_QUEUE = "qq.queue";
     public static final String ALARM_REPORT_ID_POOL = "alarm.report.id.pool";
 
-    static {
-        PropertiesLoader.init(Configuration.class);
-    }
+    public static final String MONITOR_MAIL_TOTAL = "monitor.mail.total";
+    public static final String MONITOR_SMS_TOTAL = "monitor.sms.total";
+    public static final String MONITOR_QQ_TOTAL = "monitor.qq.total";
+    public static final String MONITOR_WECHAT_TOTAL = "monitor.wechat.total";
+
+    public static final String MONITOR_MAIL_DAILY = "monitor.mail.{day}";
+    public static final String MONITOR_SMS_DAILY = "monitor.sms.{day}";
+    public static final String MONITOR_QQ_DAILY = "monitor.qq.{day}";
+    public static final String MONITOR_WECHAT_DAILY = "monitor.wechat.{day}";
+
 }

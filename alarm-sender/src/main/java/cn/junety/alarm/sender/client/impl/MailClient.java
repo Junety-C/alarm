@@ -2,7 +2,7 @@ package cn.junety.alarm.sender.client.impl;
 
 import cn.junety.alarm.base.entity.QueueMessage;
 import cn.junety.alarm.sender.client.Client;
-import cn.junety.alarm.sender.common.Configuration;
+import cn.junety.alarm.sender.configuration.Configuration;
 import com.alibaba.fastjson.JSON;
 import org.apache.commons.mail.HtmlEmail;
 

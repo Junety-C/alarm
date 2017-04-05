@@ -4,7 +4,7 @@ import cn.junety.alarm.sender.client.impl.DeliveryStatusClient;
 import cn.junety.alarm.sender.client.impl.MailClient;
 import cn.junety.alarm.sender.client.impl.QQClient;
 import cn.junety.alarm.sender.client.impl.WechatClient;
-import cn.junety.alarm.sender.common.Configuration;
+import cn.junety.alarm.sender.configuration.Configuration;
 import org.springframework.context.ApplicationContext;
 
 /**

@@ -2,7 +2,7 @@ package cn.junety.alarm.sender.client;
 
 import cn.junety.alarm.base.entity.DeliveryStatus;
 import cn.junety.alarm.base.redis.JedisFactory;
-import cn.junety.alarm.sender.common.Configuration;
+import cn.junety.alarm.sender.configuration.Configuration;
 import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,9 +34,8 @@ public abstract class Client {
         while (true) {
             try (Jedis jedis = JedisFactory.getJedisInstance(queueName)) {
                 String message = jedis.blpop(0, queueName).get(1);
-                if (!send(message)) {
-                    // 消费失败，进行重试
-                    resend(message);
+                if (sendWithRetry(message)) {
+                    // 记录推送数量
                 }
             } catch (Exception e) {
                 logger.error("consume queue {} error, caused by", queueName, e);
@@ -44,13 +43,17 @@ public abstract class Client {
         }
     }
 
-    private void resend(String message) {
+    private boolean sendWithRetry(String message) {
         boolean success = false;
         for(int i = 1; i <= MAX_RETRY_TIMES && !success; i++) {
             logger.info("send alarm fail, retry times:{}, data:{}", i, message);
             success = send(message);
         }
+        if (success) {
+            return true;
+        }
         logger.info("send alarm always fail, content:{}", message);
+        return false;
     }
 
     protected void markDeliveryStatus(long logId, String channel) {
