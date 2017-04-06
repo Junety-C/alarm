@@ -11,10 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by caijt on 2017/4/5.
@@ -28,33 +25,16 @@ public class MonitorController {
     @Autowired
     private MonitorService monitorService;
 
-    // test code
-    private static AtomicInteger atomicInteger = new AtomicInteger(0);
-
     @RequestMapping(value = "/queues/status", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public String getQueueStatus(HttpServletRequest request) {
-        //Map<String, Long> queueStatus = monitorService.getQueueStatus();
-
-        // test code
-        Map<String, Long> queueStatus = new HashMap<>();
-        Random random = new Random();
-        queueStatus.put("mail", (long)random.nextInt(100));
-        queueStatus.put("sms", (long)random.nextInt(100));
-        queueStatus.put("qq", (long)random.nextInt(100));
-        queueStatus.put("wechat", (long)random.nextInt(100));
-
+        Map<String, Long> queueStatus = monitorService.getQueueStatus();
         return JSON.toJSONString(queueStatus);
     }
 
     @RequestMapping(value = "/request/quantity", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public String getServerThroughput(HttpServletRequest request) {
-        //int quantity = monitorService.getTotalRequestQuantity();
-
-        // test code
-        Random random = new Random();
-        int quantity = random.nextInt(100);
-
-        return "{\"quantity\":" + atomicInteger.addAndGet(quantity) + "}";
+        int quantity = monitorService.getTotalRequestQuantity();
+        return "{\"quantity\":" + quantity + "}";
     }
 
     @RequestMapping(value = "/sending/quantity", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
