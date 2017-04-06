@@ -20,16 +20,16 @@ public class DeliveryStatusClient extends Client {
     }
 
     @Override
-    protected boolean send(String message) {
+    protected int send(String message) {
         try {
             DeliveryStatus deliveryStatus = JSON.parseObject(message, DeliveryStatus.class);
             logger.debug("update delivery status, body:{}", JSON.toJSONString(deliveryStatus));
             return alarmLogDao.updateDeliveryStatus(AlarmStatus.SEND.getNumber(),
-                    deliveryStatus.getChannel(), deliveryStatus.getLogId()) > 0;
+                    deliveryStatus.getChannel(), deliveryStatus.getLogId());
         } catch (Exception e) {
             logger.error("send delivery status error, message:{}, caused by", message, e);
         }
-        return false;
+        return 0;
     }
 
     @Override

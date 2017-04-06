@@ -24,7 +24,7 @@ public abstract class Client {
     private String queueName;
     protected String channel;
 
-    protected abstract boolean send(String message);
+    protected abstract int send(String message);
     protected abstract String getPushQuantityKey();
     protected abstract String getPushDailyKey();
 
@@ -39,8 +39,9 @@ public abstract class Client {
         while (true) {
             try (Jedis jedis = JedisFactory.getJedisInstance(queueName)) {
                 String message = jedis.blpop(0, queueName).get(1);
-                if (sendWithRetry(message)) {
-                    recordPushNumber();
+                int sendNumber = sendWithRetry(message);
+                if (sendNumber > 0) {
+                    recordPushNumber(sendNumber);
                 }
             } catch (Exception e) {
                 logger.error("consume queue {} error, caused by", queueName, e);
@@ -51,33 +52,33 @@ public abstract class Client {
     /**
      * 各个渠道的推送数量统计(每日和总量)
      */
-    private void recordPushNumber() {
+    private void recordPushNumber(int number) {
         try (Jedis jedis = JedisFactory.getJedisInstance("monitor")) {
             String pushQuantityKey = getPushQuantityKey();
             if (pushQuantityKey != null) {
-                jedis.incr(pushQuantityKey);
+                jedis.incrBy(pushQuantityKey, number);
             }
             String pushDailyKey = getPushDailyKey();
             if (pushDailyKey != null) {
                 String date = DateUtil.formatDate(DateUtil.YYYYMMDD, new Date());
-                jedis.incr(pushDailyKey.replace("{date}", date));
+                jedis.incrBy(pushDailyKey.replace("{date}", date), number);
             }
         } catch (Exception e) {
             logger.error("record push number error, key:{}, caused by", getPushQuantityKey(), e);
         }
     }
 
-    private boolean sendWithRetry(String message) {
-        boolean success = false;
-        for(int i = 1; i <= MAX_RETRY_TIMES && !success; i++) {
+    private int sendWithRetry(String message) {
+        int sendNumber = 0;
+        for(int i = 1; i <= MAX_RETRY_TIMES && sendNumber > 0; i++) {
             logger.info("send alarm fail, retry times:{}, data:{}", i, message);
-            success = send(message);
+            sendNumber = send(message);
         }
-        if (success) {
-            return true;
+        if (sendNumber > 0) {
+            return sendNumber;
         }
         logger.info("send alarm always fail, content:{}", message);
-        return false;
+        return sendNumber;
     }
 
     protected void markDeliveryStatus(long logId, String channel) {
