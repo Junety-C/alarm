@@ -123,7 +123,7 @@ function getAlarms(search) {
                     html += "<td></td>";
                 }
                 if (alarm["group"] != undefined) {
-                    html += "<td></td>";
+                    html += "<td>"+alarm["group"]["name"]+"</td>";
                 } else {
                     html += "<td></td>";
                 }
