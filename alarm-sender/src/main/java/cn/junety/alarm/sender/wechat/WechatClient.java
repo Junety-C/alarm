@@ -94,8 +94,8 @@ public class WechatClient implements Closeable {
         logger.info("二维码已保存在 " + filePath + " 文件中，请打开微信并扫描二维码");
 
         //使用默认软件打开二维码
-        Desktop desk = Desktop.getDesktop();
         try {
+            Desktop desk = Desktop.getDesktop();
             File file = new File(filePath);
             desk.open(file);
         } catch (Exception e) {
