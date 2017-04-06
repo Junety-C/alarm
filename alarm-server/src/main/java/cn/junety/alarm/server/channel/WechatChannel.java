@@ -1,6 +1,6 @@
 package cn.junety.alarm.server.channel;
 
-import cn.junety.alarm.server.configuration.Configuration;
+import cn.junety.alarm.base.common.ConfigKey;
 import cn.junety.alarm.server.vo.AlarmMessage;
 import cn.junety.alarm.base.entity.QueueMessage;
 import com.alibaba.fastjson.JSON;
@@ -35,6 +35,6 @@ public class WechatChannel extends Channel {
 
     @Override
     protected String getPreSendingQueue() {
-        return Configuration.WECHAT_REDIS_QUEUE;
+        return ConfigKey.WECHAT_QUEUE.value();
     }
 }

@@ -1,10 +1,10 @@
 package cn.junety.alarm.sender.client;
 
+import cn.junety.alarm.base.common.ConfigKey;
 import cn.junety.alarm.sender.client.impl.DeliveryStatusClient;
 import cn.junety.alarm.sender.client.impl.MailClient;
 import cn.junety.alarm.sender.client.impl.QQClient;
 import cn.junety.alarm.sender.client.impl.WechatClient;
-import cn.junety.alarm.sender.configuration.Configuration;
 import org.springframework.context.ApplicationContext;
 
 /**
@@ -14,21 +14,21 @@ public class ClientFactory {
 
     public static MailClient buildMailClient(String name) {
         System.setProperty("log.home", name);
-        return new MailClient(name, Configuration.MAIL_QUEUE);
+        return new MailClient(name, ConfigKey.MAIL_QUEUE.value());
     }
 
     public static QQClient buildQQClient(String name) {
         System.setProperty("log.home", name);
-        return new QQClient(name, Configuration.QQ_QUEUE);
+        return new QQClient(name, ConfigKey.QQ_QUEUE.value());
     }
 
     public static WechatClient buildWechatClient(String name) {
         System.setProperty("log.home", name);
-        return new WechatClient(name, Configuration.WECHAT_QUEUE);
+        return new WechatClient(name, ConfigKey.WECHAT_QUEUE.value());
     }
 
     public static DeliveryStatusClient buildDeliveryStatusClient(String name, ApplicationContext context) {
         System.setProperty("log.home", name);
-        return new DeliveryStatusClient(name, Configuration.DELIVERY_QUEUE, context);
+        return new DeliveryStatusClient(name, ConfigKey.DELIVERY_QUEUE.value(), context);
     }
 }

@@ -1,12 +1,12 @@
 package cn.junety.alarm.server.service;
 
 import cn.junety.alarm.api.AlarmClient;
+import cn.junety.alarm.base.common.ConfigKey;
 import cn.junety.alarm.server.dao.*;
 import cn.junety.alarm.base.entity.*;
 import cn.junety.alarm.base.exception.AlarmNotFoundException;
 import cn.junety.alarm.base.redis.JedisFactory;
 import cn.junety.alarm.server.channel.Channel;
-import cn.junety.alarm.server.configuration.Configuration;
 import cn.junety.alarm.server.common.HttpHelper;
 import cn.junety.alarm.server.common.IdGenerator;
 import cn.junety.alarm.server.vo.AlarmForm;
@@ -65,7 +65,7 @@ public class AlarmService {
             // 根据表单配置获取告警列表
             List<Alarm> alarms = getAlarms(alarmForm);
             // 一个告警信息共用一个上报id
-            long reportId = IdGenerator.generate(Configuration.ALARM_REPORT_ID_POOL);
+            long reportId = IdGenerator.generate(ConfigKey.ALARM_REPORT_ID_POOL.value());
             // 遍历告警列表
             for (Alarm alarm : alarms) {
                 // 获取该告警接收人

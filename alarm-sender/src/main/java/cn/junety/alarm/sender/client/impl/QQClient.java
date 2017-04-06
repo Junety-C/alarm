@@ -1,8 +1,8 @@
 package cn.junety.alarm.sender.client.impl;
 
+import cn.junety.alarm.base.common.ConfigKey;
 import cn.junety.alarm.base.entity.QueueMessage;
 import cn.junety.alarm.sender.client.Client;
-import cn.junety.alarm.sender.configuration.Configuration;
 import cn.junety.alarm.sender.smartqq.SmartqqClientProxy;
 import com.alibaba.fastjson.JSON;
 
@@ -34,16 +34,16 @@ public class QQClient extends Client {
 
     @Override
     protected String getPushQuantityKey() {
-        return Configuration.QQ_PUSH_QUANTITY;
+        return ConfigKey.QQ_PUSH_QUANTITY.value();
     }
 
     @Override
     protected String getPushDailyKey() {
-        return Configuration.QQ_PUSH_DAILY;
+        return ConfigKey.QQ_PUSH_DAILY.value();
     }
 
     public static void main(String[] args) {
-        QQClient qqClient = new QQClient("qq", Configuration.QQ_QUEUE);
+        QQClient qqClient = new QQClient("qq", ConfigKey.QQ_QUEUE.value());
         qqClient.start();
     }
 }

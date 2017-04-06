@@ -1,8 +1,8 @@
 package cn.junety.alarm.web.service;
 
+import cn.junety.alarm.base.common.ConfigKey;
 import cn.junety.alarm.base.redis.JedisFactory;
 import cn.junety.alarm.base.util.DateUtil;
-import cn.junety.alarm.web.configuration.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -28,10 +28,10 @@ public class MonitorService {
     public Map<String, Long> getQueueStatus() {
         try(Jedis jedis = JedisFactory.getJedisInstance("monitor")) {
             Map<String, Long> queueStatus = new HashMap<>();
-            queueStatus.put("mail", jedis.llen(Configuration.MAIL_REDIS_QUEUE));
-            queueStatus.put("sms", jedis.llen(Configuration.SMS_REDIS_QUEUE));
-            queueStatus.put("qq", jedis.llen(Configuration.QQ_REDIS_QUEUE));
-            queueStatus.put("wechat", jedis.llen(Configuration.WECHAT_REDIS_QUEUE));
+            queueStatus.put("mail", jedis.llen(ConfigKey.MAIL_QUEUE.value()));
+            queueStatus.put("sms", jedis.llen(ConfigKey.SMS_QUEUE.value()));
+            queueStatus.put("qq", jedis.llen(ConfigKey.QQ_QUEUE.value()));
+            queueStatus.put("wechat", jedis.llen(ConfigKey.WECHAT_QUEUE.value()));
             return queueStatus;
         } catch (Exception e) {
             logger.error("get queue status error, caused by", e);
@@ -45,7 +45,7 @@ public class MonitorService {
      */
     public int getTotalRequestQuantity() {
         try(Jedis jedis = JedisFactory.getJedisInstance("monitor")) {
-            String quantity = jedis.get(Configuration.TOTAL_REQUEST_QUANTITY);
+            String quantity = jedis.get(ConfigKey.TOTAL_REQUEST_QUANTITY.value());
             if (quantity == null) {
                 return 0;
             } else {
@@ -68,20 +68,20 @@ public class MonitorService {
         String yesterday = DateUtil.formatDate(DateUtil.YYYYMMDD, calendar.getTime());
 
         try(Jedis jedis = JedisFactory.getJedisInstance("monitor")) {
-            sendingQuantity.put("mail_today", jedis.get(Configuration.MAIL_PUSH_DAILY.replace("{date}", today)));
-            sendingQuantity.put("sms_today", jedis.get(Configuration.SMS_PUSH_DAILY.replace("{date}", today)));
-            sendingQuantity.put("qq_today", jedis.get(Configuration.QQ_PUSH_DAILY.replace("{date}", today)));
-            sendingQuantity.put("wechat_today", jedis.get(Configuration.WECHAT_PUSH_DAILY.replace("{date}", today)));
+            sendingQuantity.put("mail_today", jedis.get(ConfigKey.MAIL_PUSH_DAILY.value().replace("{date}", today)));
+            sendingQuantity.put("sms_today", jedis.get(ConfigKey.SMS_PUSH_DAILY.value().replace("{date}", today)));
+            sendingQuantity.put("qq_today", jedis.get(ConfigKey.QQ_PUSH_DAILY.value().replace("{date}", today)));
+            sendingQuantity.put("wechat_today", jedis.get(ConfigKey.WECHAT_PUSH_DAILY.value().replace("{date}", today)));
 
-            sendingQuantity.put("mail_yesterday", jedis.get(Configuration.MAIL_PUSH_DAILY.replace("{date}", yesterday)));
-            sendingQuantity.put("sms_yesterday", jedis.get(Configuration.SMS_PUSH_DAILY.replace("{date}", yesterday)));
-            sendingQuantity.put("qq_yesterday", jedis.get(Configuration.QQ_PUSH_DAILY.replace("{date}", yesterday)));
-            sendingQuantity.put("wechat_yesterday", jedis.get(Configuration.WECHAT_PUSH_DAILY.replace("{date}", yesterday)));
+            sendingQuantity.put("mail_yesterday", jedis.get(ConfigKey.MAIL_PUSH_DAILY.value().replace("{date}", yesterday)));
+            sendingQuantity.put("sms_yesterday", jedis.get(ConfigKey.SMS_PUSH_DAILY.value().replace("{date}", yesterday)));
+            sendingQuantity.put("qq_yesterday", jedis.get(ConfigKey.QQ_PUSH_DAILY.value().replace("{date}", yesterday)));
+            sendingQuantity.put("wechat_yesterday", jedis.get(ConfigKey.WECHAT_PUSH_DAILY.value().replace("{date}", yesterday)));
 
-            sendingQuantity.put("mail_total", jedis.get(Configuration.MAIL_PUSH_QUANTITY));
-            sendingQuantity.put("sms_total", jedis.get(Configuration.SMS_PUSH_QUANTITY));
-            sendingQuantity.put("qq_total", jedis.get(Configuration.QQ_PUSH_QUANTITY));
-            sendingQuantity.put("wechat_total", jedis.get(Configuration.WECHAT_PUSH_QUANTITY));
+            sendingQuantity.put("mail_total", jedis.get(ConfigKey.MAIL_PUSH_QUANTITY.value()));
+            sendingQuantity.put("sms_total", jedis.get(ConfigKey.SMS_PUSH_QUANTITY.value()));
+            sendingQuantity.put("qq_total", jedis.get(ConfigKey.QQ_PUSH_QUANTITY.value()));
+            sendingQuantity.put("wechat_total", jedis.get(ConfigKey.WECHAT_PUSH_QUANTITY.value()));
 
             return sendingQuantity;
         } catch (Exception e) {

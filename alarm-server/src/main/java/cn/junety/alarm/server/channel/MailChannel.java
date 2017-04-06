@@ -1,6 +1,6 @@
 package cn.junety.alarm.server.channel;
 
-import cn.junety.alarm.server.configuration.Configuration;
+import cn.junety.alarm.base.common.ConfigKey;
 import cn.junety.alarm.server.vo.AlarmMessage;
 import cn.junety.alarm.base.entity.QueueMessage;
 import com.alibaba.fastjson.JSON;
@@ -34,6 +34,6 @@ public class MailChannel extends Channel {
 
     @Override
     protected String getPreSendingQueue() {
-        return Configuration.MAIL_REDIS_QUEUE;
+        return ConfigKey.MAIL_QUEUE.value();
     }
 }

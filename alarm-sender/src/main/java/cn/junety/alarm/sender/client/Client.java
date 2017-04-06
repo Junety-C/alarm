@@ -1,9 +1,9 @@
 package cn.junety.alarm.sender.client;
 
+import cn.junety.alarm.base.common.ConfigKey;
 import cn.junety.alarm.base.entity.DeliveryStatus;
 import cn.junety.alarm.base.redis.JedisFactory;
 import cn.junety.alarm.base.util.DateUtil;
-import cn.junety.alarm.sender.configuration.Configuration;
 import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,8 +82,8 @@ public abstract class Client {
 
     protected void markDeliveryStatus(long logId, String channel) {
         String data = JSON.toJSONString(new DeliveryStatus(logId, channel));
-        try (Jedis jedis = JedisFactory.getJedisInstance(Configuration.DELIVERY_QUEUE)) {
-            jedis.rpush(Configuration.DELIVERY_QUEUE, data);
+        try (Jedis jedis = JedisFactory.getJedisInstance(ConfigKey.DELIVERY_QUEUE.value())) {
+            jedis.rpush(ConfigKey.DELIVERY_QUEUE.value(), data);
             logger.debug("write redis delivery queue success, data:{}", data);
         } catch (Exception e) {
             logger.error("write redis delivery queue error, data:{}, caused by", data, e);

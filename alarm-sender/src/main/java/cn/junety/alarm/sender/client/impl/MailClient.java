@@ -1,5 +1,6 @@
 package cn.junety.alarm.sender.client.impl;
 
+import cn.junety.alarm.base.common.ConfigKey;
 import cn.junety.alarm.base.entity.QueueMessage;
 import cn.junety.alarm.sender.client.Client;
 import cn.junety.alarm.sender.configuration.Configuration;
@@ -35,12 +36,12 @@ public class MailClient extends Client {
 
     @Override
     protected String getPushQuantityKey() {
-        return Configuration.MAIL_PUSH_QUANTITY;
+        return ConfigKey.MAIL_PUSH_QUANTITY.value();
     }
 
     @Override
     protected String getPushDailyKey() {
-        return Configuration.MAIL_PUSH_DAILY;
+        return ConfigKey.MAIL_PUSH_DAILY.value();
     }
 
     private boolean send(String title, String content, List<String> receivers) {

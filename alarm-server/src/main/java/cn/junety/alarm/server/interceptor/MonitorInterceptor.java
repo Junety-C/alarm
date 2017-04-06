@@ -1,7 +1,7 @@
 package cn.junety.alarm.server.interceptor;
 
+import cn.junety.alarm.base.common.ConfigKey;
 import cn.junety.alarm.base.redis.JedisFactory;
-import cn.junety.alarm.server.configuration.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -22,7 +22,7 @@ public class MonitorInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         try (Jedis jedis = JedisFactory.getJedisInstance("monitor")) {
-            jedis.incr(Configuration.TOTAL_REQUEST_QUANTITY);
+            jedis.incr(ConfigKey.TOTAL_REQUEST_QUANTITY.value());
         } catch (Exception e) {
             logger.error("do monitor interceptor error, caused by", e);
         }

@@ -1,7 +1,7 @@
 package cn.junety.alarm.server.channel;
 
+import cn.junety.alarm.base.common.ConfigKey;
 import cn.junety.alarm.base.entity.QueueMessage;
-import cn.junety.alarm.server.configuration.Configuration;
 import cn.junety.alarm.server.vo.AlarmMessage;
 import com.alibaba.fastjson.JSON;
 import org.springframework.stereotype.Service;
@@ -35,6 +35,6 @@ public class QQChannel extends Channel {
 
     @Override
     protected String getPreSendingQueue() {
-        return Configuration.QQ_REDIS_QUEUE;
+        return ConfigKey.QQ_QUEUE.value();
     }
 }
