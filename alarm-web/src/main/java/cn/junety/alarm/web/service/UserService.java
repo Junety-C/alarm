@@ -22,16 +22,16 @@ public class UserService {
     @Autowired
     private UserDao userDao;
 
-    public User getByUsername(String username) {
+    public User getUserByAccount(String account) {
         try {
-            return userDao.getUserByUsername(username);
+            return userDao.getUserByAccount(account);
         } catch (Exception e) {
-            logger.error("get by username error, username:{}, caused by", username, e);
+            logger.error("get by account error, account:{}, caused by", account, e);
             return null;
         }
     }
 
-    public User getByIdentification(String identification) {
+    public User getUserByIdentification(String identification) {
         try {
             return userDao.getUserByIdentification(identification);
         } catch (Exception e) {

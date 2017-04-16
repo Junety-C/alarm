@@ -18,7 +18,7 @@ public class LoginController extends BaseController {
     public String login(HttpServletRequest request, @RequestBody LoginForm loginForm) {
         logger.info("POST /login, loginForm:{}", JSON.toJSONString(loginForm));
 
-        User user = userService.getByUsername(loginForm.getUsername());
+        User user = userService.getUserByAccount(loginForm.getUsername());
         if (user != null) {
             // TODO 接入到运维系统，进行密码校验
             userLoginStatusService.addLoginStatus(request, user.getIdentification());

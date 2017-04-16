@@ -31,7 +31,7 @@ public class UserLoginInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
         String identification = userLoginStatusService.getIdentificationFromLoginStatus(request);
-        User user = userService.getByIdentification(identification);
+        User user = userService.getUserByIdentification(identification);
 
         if (user == null) {
             logger.debug("login status check fail, identification:{}", identification);

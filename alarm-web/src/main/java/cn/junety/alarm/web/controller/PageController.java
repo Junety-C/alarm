@@ -25,12 +25,26 @@ public class PageController extends BaseController {
     @RequestMapping(value = "/home", method = RequestMethod.GET)
     public ModelAndView getAlarms(HttpServletRequest request, Model model) {
         User user = getUser(request);
-        logger.info("GET /index, user:{}", JSON.toJSONString(user));
+        logger.info("GET /home, user:{}", user);
 
         model.addAttribute("user", user);
 
         return new ModelAndView("home");
     }
+
+    @RequestMapping(value = "/user", method = RequestMethod.GET)
+    public ModelAndView toUserPage(HttpServletRequest request, Model model) {
+        User user = getUser(request);
+        logger.info("GET /user, user:{}", user);
+
+        model.addAttribute("user", user);
+
+        return new ModelAndView("user");
+    }
+
+
+    // =========================
+
 
     @RequestMapping(value = "/alarm", method = RequestMethod.GET)
     public ModelAndView toAlarmPage(HttpServletRequest request, Model model) {

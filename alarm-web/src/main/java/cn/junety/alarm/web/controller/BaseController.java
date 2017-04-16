@@ -27,6 +27,6 @@ public class BaseController {
             return (User) user;
         }
         String identification = userLoginStatusService.getIdentificationFromLoginStatus(request);
-        return userService.getByIdentification(identification);
+        return userService.getUserByIdentification(identification);
     }
 }
