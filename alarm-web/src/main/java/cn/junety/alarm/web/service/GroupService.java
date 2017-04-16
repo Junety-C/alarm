@@ -1,13 +1,9 @@
 package cn.junety.alarm.web.service;
 
 import cn.junety.alarm.base.entity.Group;
-import cn.junety.alarm.base.entity.Receiver;
 import cn.junety.alarm.base.entity.User;
-import cn.junety.alarm.base.entity.UserTypeEnum;
 import cn.junety.alarm.web.dao.GroupDao;
-import cn.junety.alarm.web.dao.ReceiverDao;
-import cn.junety.alarm.web.vo.GroupSearch;
-import com.alibaba.fastjson.JSON;
+import cn.junety.alarm.web.dao.UserDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,133 +24,75 @@ public class GroupService {
     @Autowired
     private GroupDao groupDao;
     @Autowired
-    private ReceiverDao receiverDao;
+    private UserDao userDao;
 
     public List<Group> getAllGroup() {
         return groupDao.getAllGroup();
     }
 
     /**
-     * 获取接收组列表
-     * @param user 用户信息
-     * @param groupSearch 查询参数
+     * 根据项目id获取接收组列表
+     * @param projectId 项目id
      * @return 接收组列表
      */
-    public List<Group> getGroupList(User user, GroupSearch groupSearch) {
-        // 管理员获取所有接收组, 普通用户获取自己所属的接收组
-        if (user.getType() == UserTypeEnum.ADMIN_USER.value()) {
-            logger.debug("get all group list, user:{}", JSON.toJSONString(user));
-            return getAllGroup(groupSearch);
-        } else {
-            logger.debug("get user group list, user:{}", JSON.toJSONString(user));
-            return getUserGroup(groupSearch);
-        }
-    }
-
-    private List<Group> getAllGroup(GroupSearch groupSearch) {
-        if(groupSearch.getGroupName() != null) {
-            return groupDao.getGroupByName(groupSearch);
-        } else {
-            return groupDao.getGroup(groupSearch);
-        }
-    }
-
-    private List<Group> getUserGroup(GroupSearch groupSearch) {
-        if(groupSearch.getGroupName() != null) {
-            return groupDao.getUserGroupByName(groupSearch);
-        } else {
-            return groupDao.getUserGroup(groupSearch);
-        }
+    public List<Group> getGroupList(int projectId) {
+        return groupDao.getGroupByProjectId(projectId);
     }
 
     /**
-     * 获取接收组列表的长度，用于分页
-     * @param user 用户信息
-     * @param groupSearch 查询参数
-     * @return 接收组列表大小
+     * 根据接收组id获取接收组成员
+     * @param groupId 接收组id
+     * @return 成员列表
      */
-    public int getGroupCount(User user, GroupSearch groupSearch) {
-        // 管理员获取所有项目, 普通用户获取自己所属的项目
-        if (user.getType() == UserTypeEnum.ADMIN_USER.value()) {
-            logger.debug("get all group count, user:{}", JSON.toJSONString(user));
-            return getAllGroupCount(groupSearch);
-        } else {
-            logger.debug("get user group count, user:{}", JSON.toJSONString(user));
-            return getUserGroupCount(groupSearch);
-        }
-    }
-
-    private int getAllGroupCount(GroupSearch groupSearch) {
-        if(groupSearch.getGroupName() != null) {
-            return groupDao.getGroupCountByName(groupSearch);
-        } else {
-            return groupDao.getGroupCount();
-        }
-    }
-
-    private int getUserGroupCount(GroupSearch groupSearch) {
-        if(groupSearch.getGroupName() != null) {
-            return groupDao.getUserGroupCountByName(groupSearch);
-        } else {
-            return groupDao.getUserGroupCount();
-        }
+    public List<User> getMemberList(int groupId) {
+        return groupDao.getMemberListByGroupId(groupId);
     }
 
     /**
-     * 获取所有接收者信息
-     * @return 接收者列表
-     */
-    public List<Receiver> getReceiverList() {
-        return receiverDao.getAllReceiver();
-    }
-
-    public List<Receiver> getReceiverByGroupId(Integer gid) {
-        return receiverDao.getReceiverByGroupId(gid);
-    }
-
-    /**
-     * 创建接收组
+     * 新建接收组
+     * @param projectId 项目id
      * @param groupName 接收组名称
+     * @return 接收组id
      */
-    public int createGroup(String groupName) {
+    public int createGroup(int projectId, String groupName) {
         Group group = new Group();
         group.setName(groupName);
+        group.setProjectId(projectId);
         groupDao.save(group);
         return group.getId();
     }
 
     /**
+     * 添加接收组成员
+     * @param groupId 接收组id
+     * @param userId 用户id
+     */
+    public void addGroupMember(int groupId, int userId) {
+        groupDao.addGroupMember(groupId, userId);
+    }
+
+    /**
      * 删除接收组
-     * @param id 接收组id
+     * @param groupId 接收组id
      */
-    public void deleteGroup(int id) {
-        groupDao.deleteReceiverByGroupId(id);
-        groupDao.deleteById(id);
+    public void deleteGroup(int groupId) {
+        groupDao.deleteGroupById(groupId);
     }
 
     /**
-     * 添加接收者到接收组里
-     * @param gid 接收组id
-     * @param rid 接收者id
+     * 移除指定接收组的所有成员
+     * @param groupId 接收组id
      */
-    public void addReceiverToGroup(int gid, int rid) {
-        groupDao.addReceiverToGroup(gid, rid);
+    public void removeGroupMember(int groupId) {
+        groupDao.removeGroupMemberByGroupId(groupId);
     }
 
     /**
-     * 从接收组里删除接收者
-     * @param gid 接收组id
-     * @param rid 接收者id
+     * 移除指定接收组的指定成员
+     * @param groupId 接收组id
+     * @param userId 用户id
      */
-    public void removeReceiverFromGroup(int gid, int rid) {
-        groupDao.removeReceiverFromGroup(gid, rid);
-    }
-
-    /**
-     * 把该接收者从所有接收组中移除
-     * @param rid 接收者id
-     */
-    public void deleteReceiver(int rid) {
-        groupDao.deleteReceiver(rid);
+    public void removeGroupMember(int groupId, int userId) {
+        groupDao.removeGroupMember(groupId, userId);
     }
 }

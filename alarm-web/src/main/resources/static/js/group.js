@@ -1,223 +1,292 @@
-var search_select="";
-var search_input="";
+
+var group_mapper = {};
 
 $(function() {
-    // group add modal
-    $("#group-add").click(function () {
+
+    // group create modal
+    $("#group-create").click(function () {
         var group_name = $("#group-name").val();
-        if (group_name.trim().length == 0) {
+        if(group_name.trim().length == 0) {
             alert("请输入接收组名称");
             return;
         }
-        createGroup(group_name);
+        var project_id = $("#current-id").attr("_pid");
+        if(project_id == undefined) {
+            console.log("create group fail, project_id=" + project_id + ", group_name=" + group_name);
+            return;
+        }
+        createGroup(project_id, group_name);
     });
 
     // group delete modal
-    $("#group-del").click(function() {
-        var group_id = $(this).attr("_val");
-        if (group_id == undefined) {
-            console.log("del group fail, group_id=" + group_id);
+    $("#group-del").click(function () {
+        var project_id = $("#current-id").attr("_pid");
+        var group_id = $("#current-id").attr("_gid");
+        if(project_id == undefined || group_id == undefined) {
+            console.log("delete group fail, project_id=" + project_id + ", group_id=" + group_id);
             return;
         }
-        deleteGroup(group_id);
+        deleteGroup(project_id, group_id);
     });
 
-    // receiver add
-    $("#receiver-add").click(function() {
-        var receiver_id = $("#receivers").val();
-        var group_id = $("#receiver-add").attr("_gid");
-        if (receiver_id == undefined || group_id == undefined) {
-            console.log("add receiver fail, receiver_id=" + receiver_id + ", group_id=" + group_id);
+    // member add
+    $("#member-add").click(function() {
+        var member_account = $("#member-account").val();
+        if(member_account.trim().length == 0) {
+            alert("请输入用户账号");
             return;
         }
-        addReceiverToGroup(group_id, receiver_id);
+        var project_id = $("#current-id").attr("_pid");
+        var group_id = $("#current-id").attr("_gid");
+        if(project_id == undefined || group_id == undefined) {
+            console.log("add group member fail, project_id=" + project_id + ", group_id=" + group_id);
+            return;
+        }
+        addGroupMember(project_id, group_id, member_account);
     });
 
-    // receiver delete
-    $("#receiver-del").click(function() {
-        var receiver_id = $(this).attr("_val");
-        var group_id = $("#receiver-add").attr("_gid");
-        if (receiver_id == undefined || group_id == undefined) {
-            console.log("del receiver fail, receiver_id=" + receiver_id + ", group_id=" + group_id);
+    // member delete modal
+    $("#member-del").click(function() {
+        var project_id = $("#current-id").attr("_pid");
+        var group_id = $("#current-id").attr("_gid");
+        var user_id = $("#current-id").attr("_uid");
+        if(project_id == undefined || group_id == undefined || user_id == undefined) {
+            console.log("remove group member fail, project_id=" + project_id + ", group_id" + group_id + ", user_id=" + user_id);
             return;
         }
-        deleteReceiverFromGroup(group_id, receiver_id);
+        removeGroupMember(project_id, group_id, user_id);
+    });
+
+    // get group member
+    $("#group-member").click(function () {
+        var project_id = $("#current-id").attr("_pid");
+        var group_id = $("#group-list").val();
+        $("#current-id").attr("_gid", group_id);
+        $("#member-list-title").text("接收人列表（"+group_mapper[group_id]+"）");
+        if (project_id == undefined || group_id == undefined) {
+            console.log("get group member fail, project_id=" + project_id + ", group_id=" + group_id);
+            return;
+        }
+        getGroupMemberByGroupId(project_id, group_id);
     });
 
     // init data table
-    getGroups();
+    initGroupTable();
 
 });
 
-function getGroups(search) {
+function initGroupTable() {
     $.ajax({
-        url: "/groups?page_no="+current_page+"&page_size="+page_length+"&"+search,
+        url: "/groups?page_no="+current_page+"&page_size="+page_length,
         type: "GET",
         success: function(data){
             if(data["code"] == 2000) {
-                var html = "";
-                var groups = data["groups"];
-                for(var i = 0; i < groups.length; i++) {
-                    var group  = groups[i];
+                // project list
+                var i, html = "";
+                var project_list = data["project_list"];
+                for(i = 0; i < project_list.length; i++) {
+                    var project  = project_list[i];
                     if (i == 0) {
-                        $("#receiver-add").attr("_gid", group["id"]);
-                        html += "<tr class='group' _val='"+group["id"]+"' style='background-color:#eee'>"
-                            + "<td><div>"+group["name"]+""
-                            + "<button class='btn btn-danger group-del' data-toggle='modal' data-target='#modal-group-del' "
-                            + "_val='"+group["id"]+"' style='float:right;margin:0;padding:0;width:26px;'>X</button>"
-                            + "</div></td></tr>";
+                        $("#current-id").attr("_pid", project["id"]);
+                        html += "<tr class='project' _pid='"+project["id"]+"' style='background-color:#eee'>"
+                            + "<td>"+project["name"]+"</td></tr>";
                     } else {
-                        html += "<tr class='group' _val='"+group["id"]+"'>"
-                            + "<td><div>"+group["name"]+""
-                            + "<button class='btn btn-danger group-del' data-toggle='modal' data-target='#modal-group-del' "
-                            + "_val='"+group["id"]+"' style='float:right;margin:0;padding:0;width:26px;'>X</button>"
-                            + "</div></td></tr>";
+                        html += "<tr class='project' _pid='"+project["id"]+"'>"
+                            + "<td>"+project["name"]+"</td></tr>";
                     }
                 }
-                $(".groups-body").html(html);
-                setGroupClickEvent();
-                var page_count = parseInt((data["count"] + page_length - 1)/page_length);
+                $(".project-list").html(html);
+                setProjectClickEvent();
+                var page_count = parseInt((data["project_count"] + page_length - 1)/page_length);
                 $(".page-footer").html(setPageButton(page_count, current_page));
                 setPageBtnClick();
-                setTableTotalSize(data["count"]);
+                setTableTotalSize(data["project_count"]);
 
-                // receiver
+                // group list
+                $("#member-list-title").text("接收人列表（）");
+                var group_list = data["group_list"];
+                var groupList = [];
+                for (i = 0; i < group_list.length; i++) {
+                    var group = group_list[i];
+                    group_mapper[group["id"]] = group["name"];
+                    if (i == 0) {
+                        $("#member-list-title").text("接收人列表（"+group["name"]+"）");
+                        $("#current-id").attr("_gid", group["id"]);
+                    }
+                    groupList.push({id: group["id"], text: group["name"]});
+                }
+                $("#group-list").html("").select2({
+                    data: groupList
+                }).val($("#current-id").attr("_gid")).trigger("change");
+
+                // default member list
                 html = "";
-                var receivers = data["receivers"];
-                for(var i = 0; i < receivers.length; i++) {
-                    var receiver  = receivers[i];
-                    html += "<tr class='receiver' _val='"+receiver["id"]+"'>"
-                        + "<td><div>"+receiver["name"]+""
-                        + "<button class='btn btn-danger receiver-del' data-toggle='modal' data-target='#modal-receiver-del' "
-                        + "_val='"+receiver["id"]+"' style='float:right;margin:0;padding:0;width:26px;'>X</button>"
-                        + "</div></td></tr>";
+                var member_list = data["member_list"];
+                for(i = 0; i < member_list.length; i++) {
+                    var member  = member_list[i];
+                    html += "<tr><td><div>"+member["name"];
+                    if (data["permission_type"] == 0) {
+                        html += "<button class='btn btn-danger member-del' data-toggle='modal' data-target='#modal-member-del' "
+                            + "_uid='"+member["id"]+"' style='float:right;margin:0;padding:0;width:26px;'>X</button>";
+                    }
+                    html += "</div></td></tr>";
                 }
-                $(".receivers-body").html(html);
-                $(".receiver-del").click(function() {
-                    $("#receiver-del").attr("_val", $(this).attr("_val"));
+                $(".member-list").html(html);
+                $(".member-del").click(function() {
+                    $("#current-id").attr("_uid", $(this).attr("_uid"));
                 });
-
-                // all receiver
-                var all_receiver = data["all_receiver"];
-                var receiverList = [];
-                for (var i = 0; i < all_receiver.length; i++) {
-                    receiverList.push({id: all_receiver[i]["id"], text: all_receiver[i]["name"]+"("+all_receiver[i]["mail"]
-                        + ","+all_receiver[i]["phone"]+","+all_receiver[i]["wechat"]+","+all_receiver[i]["qq"]+")"});
-                }
-                $("#receivers").select2({
-                    data: receiverList
-                })
             }
         }
     });
 }
 
-function setGroupClickEvent() {
-    $(".group").click(function () {
-        $(".group").css("background-color", "#fff");
+function setProjectClickEvent() {
+    $(".project").click(function () {
+        $(".project").css("background-color", "#fff");
         $(this).css("background-color", "#eee");
-        var group_id = $(this).attr("_val");
-        $("#receiver-add").attr("_gid", group_id);
-        getReceiverByGroupId(group_id);
-    });
-    $(".group-del").click(function() {
-        $("#group-del").attr("_val", $(this).attr("_val"));
-    });
-    $(".receiver-del").click(function() {
-        $("#receiver-del").attr("_val", $(this).attr("_val"));
+        var project_id = $(this).attr("_pid");
+        $("#current-id").attr("_pid", project_id);
+        getGroupByProjectId(project_id);
     });
 }
 
-function getReceiverByGroupId(gid) {
+function getGroupByProjectId(project_id) {
     $.ajax({
-        url: "/groups/"+gid+"/receivers",
+        url: "/projects/"+project_id+"/groups",
         type: "GET",
         success: function(data){
             if(data["code"] == 2000) {
-                var html = "";
-                var receivers = data["receivers"];
-                for(var i = 0; i < receivers.length; i++) {
-                    var receiver  = receivers[i];
-                    html += "<tr class='receiver' _val='"+receiver["id"]+"'>"
-                        + "<td><div>"+receiver["name"]+""
-                        + "<button class='btn btn-danger receiver-del' data-toggle='modal' data-target='#modal-receiver-del' "
-                        + "_val='"+receiver["id"]+"' style='float:right;margin:0;padding:0;width:26px;'>X</button>"
-                        + "</div></td></tr>";
+                var i, html = "";
+                // group list
+                $("#member-list-title").text("接收人列表（）");
+                var group_list = data["group_list"];
+                var groupList = [];
+                for (i = 0; i < group_list.length; i++) {
+                    var group = group_list[i];
+                    group_mapper[group["id"]] = group["name"];
+                    if (i == 0) {
+                        $("#member-list-title").text("接收人列表（"+group["name"]+"）");
+                        $("#current-id").attr("_gid", group["id"]);
+                    }
+                    groupList.push({id: group["id"], text: group["name"]});
                 }
-                $(".receivers-body").html(html);
-            } else {
-                alert("获取接收者失败...");
+                $("#group-list").html("").select2({
+                    data: groupList
+                }).val($("#current-id").attr("_gid")).trigger("change");
+
+                // default member list
+                var member_list = data["member_list"];
+                for(i = 0; i < member_list.length; i++) {
+                    var member  = member_list[i];
+                    html += "<tr><td><div>"+member["name"];
+                    if (data["permission_type"] == 0) {
+                        html += "<button class='btn btn-danger member-del' data-toggle='modal' data-target='#modal-member-del' "
+                            + "_uid='"+member["id"]+"' style='float:right;margin:0;padding:0;width:26px;'>X</button>";
+                    }
+                    html += "</div></td></tr>";
+                }
+                $(".member-list").html(html);
+                $(".member-del").click(function() {
+                    $("#current-id").attr("_uid", $(this).attr("_uid"));
+                });
             }
         }
     });
 }
 
-function createGroup(name) {
+function createGroup(project_id, group_name) {
     $.ajax({
-        url: "/groups/"+name,
+        url: "/projects/"+project_id+"/groups/"+group_name,
         type: "POST",
         data: JSON.stringify({}),
         dataType: "json",
         contentType: "application/json;charset=utf-8",
         success: function(data){
             if (data["code"] != 2000) {
-                alert("创建失败");
+                alert("创建接收组失败");
+                return;
             }
-            location.replace(location.href);
+            $("#group-name").val("");
+            initGroupTable();
         }
     });
 }
 
-function deleteGroup(gid) {
+function deleteGroup(project_id, group_id) {
     $.ajax({
-        url: "/groups/"+gid,
+        url: "/projects/"+project_id+"/groups/"+group_id,
         type: "DELETE",
         data: JSON.stringify({}),
         dataType: "json",
         contentType: "application/json;charset=utf-8",
         success: function(data){
             if(data["code"] != 2000) {
-                alert("删除失败");
+                alert("删除接收组失败");
                 return;
             }
-            getGroups(search_select + "=" + search_input);
-            //location.replace(location.href);
+            initGroupTable();
         }
     });
 }
 
-function addReceiverToGroup(gid, rid) {
+function addGroupMember(project_id, group_id, member_account) {
     $.ajax({
-        url: "/receivers/"+rid+"/to/groups/"+gid,
+        url: "/projects/"+project_id+"/groups/"+group_id+"/members/"+member_account,
         type: "POST",
         data: JSON.stringify({}),
         dataType: "json",
         contentType: "application/json;charset=utf-8",
         success: function(data){
             if (data["code"] != 2000) {
-                alert("添加失败");
+                alert("添加项目成员失败，原因:" + data["reason"]);
                 return;
             }
-            getGroups(search_select + "=" + search_input);
-            //location.replace(location.href);
+            $("#member-account").val("");
+            initGroupTable();
         }
     });
 }
 
-function deleteReceiverFromGroup(gid, rid) {
+function removeGroupMember(project_id, group_id, user_id) {
     $.ajax({
-        url: "/receivers/"+rid+"/from/groups/"+gid,
+        url: "/projects/"+project_id+"/groups/"+group_id+"/members/"+user_id,
         type: "DELETE",
         data: JSON.stringify({}),
         dataType: "json",
         contentType: "application/json;charset=utf-8",
         success: function(data){
             if(data["code"] != 2000) {
-                alert("删除失败");
+                alert("移除项目成员失败");
                 return;
             }
-            getGroups(search_select + "=" + search_input);
-            //location.replace(location.href);
+            initGroupTable();
+        }
+    });
+}
+
+function getGroupMemberByGroupId(project_id, group_id) {
+    $.ajax({
+        url: "/projects/"+project_id+"/groups/"+group_id+"/members",
+        type: "GET",
+        success: function(data){
+            if(data["code"] == 2000) {
+                var i, html = "";
+                // member list
+                var member_list = data["member_list"];
+                for(i = 0; i < member_list.length; i++) {
+                    var member  = member_list[i];
+                    html += "<tr><td><div>"+member["name"];
+                    if (data["permission_type"] == 0) {
+                        html += "<button class='btn btn-danger member-del' data-toggle='modal' data-target='#modal-member-del' "
+                            + "_uid='"+member["id"]+"' style='float:right;margin:0;padding:0;width:26px;'>X</button>";
+                    }
+                    html += "</div></td></tr>";
+                }
+                $(".member-list").html(html);
+                $(".member-del").click(function() {
+                    $("#current-id").attr("_uid", $(this).attr("_uid"));
+                });
+            }
         }
     });
 }
@@ -225,7 +294,7 @@ function deleteReceiverFromGroup(gid, rid) {
 function setPageBtnClick() {
     $(".page-btn").click(function () {
         current_page = $(this).attr("_val");
-        getGroups(search_select + "=" + search_input);
+        initGroupTable();
     });
 }
 

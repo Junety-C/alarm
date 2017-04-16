@@ -1,6 +1,7 @@
 package cn.junety.alarm.web.dao;
 
 import cn.junety.alarm.base.entity.Group;
+import cn.junety.alarm.base.entity.User;
 import cn.junety.alarm.web.vo.GroupSearch;
 import org.apache.ibatis.annotations.*;
 
@@ -11,25 +12,6 @@ import java.util.List;
  */
 public interface GroupDao {
 
-    @Insert("insert into tb_group(name) values(#{name})")
-    @Options(useGeneratedKeys = true, keyProperty = "id")
-    void save(Group group);
-
-    @Delete("delete from tb_group where id=#{id}")
-    int deleteById(@Param("id") int id);
-
-    @Delete("delete from tb_group_member where group_id=#{gid}")
-    int deleteReceiverByGroupId(@Param("gid") int gid);
-
-    @Insert("insert into tb_group_member(group_id, receiver_id) values(#{gid}, #{rid}) on duplicate key update group_id=#{gid}")
-    int addReceiverToGroup(@Param("gid") int gid, @Param("rid") int rid);
-
-    @Delete("delete from tb_group_member where group_id=#{gid} and receiver_id=#{rid}")
-    int removeReceiverFromGroup(@Param("gid") int gid, @Param("rid") int rid);
-
-    @Delete("delete from tb_group_member where receiver_id=#{rid}")
-    int deleteReceiver(@Param("rid") int rid);
-
     @Select("select id, name from tb_group where id=#{id}")
     Group getGroupById(@Param("id") int id);
 
@@ -37,48 +19,29 @@ public interface GroupDao {
     List<Group> getAllGroup();
 
 
-    /* ===============管理员查询================== */
-
-    @Select("select id, name from tb_group " +
-            "order by id desc " +
-            "limit #{page.start}, #{page.pageSize}")
-    List<Group> getGroup(GroupSearch groupSearch);
-
-    @Select("select count(id) from tb_group")
-    int getGroupCount();
-
-    @Select("select id, name from tb_group where name like '${groupName}%' " +
-            "order by id desc " +
-            "limit #{page.start}, #{page.pageSize}")
-    List<Group> getGroupByName(GroupSearch groupSearch);
-
-    @Select("select count(id) from tb_group where name like '${groupName}%'")
-    int getGroupCountByName(GroupSearch groupSearch);
 
 
-    /* ===============用户查询================== */
+    @Insert("insert into tb_group(project_id, name) values(#{projectId}, #{name})")
+    @Options(useGeneratedKeys = true, keyProperty = "id")
+    void save(Group group);
 
-    @Select("select tg.id, tg.name from tb_group tg, tb_group_member tgm " +
-            "where tg.id=tgm.group_id and tgm.receiver_id in" +
-            "(select receiver_id from tb_user tu, tb_user_to_receiver tur where tu.id=tur.user_id and tu.id=#{userId}) " +
-            "order by tg.id desc " +
-            "limit #{page.start}, #{page.pageSize}")
-    List<Group> getUserGroup(GroupSearch groupSearch);
+    @Select("select * from tb_group where project_id=#{projectId} order by id desc")
+    List<Group> getGroupByProjectId(@Param("projectId") int projectId);
 
-    @Select("select count(tg.id) from tb_group tg, tb_group_member tgm " +
-            "where tg.id=tgm.group_id and tgm.receiver_id in" +
-            "(select receiver_id from tb_user tu, tb_user_to_receiver tur where tu.id=tur.user_id and tu.id=#{userId})")
-    int getUserGroupCount();
+    @Select("select id, account, name, mail, phone, wechat, qq from tb_user " +
+            "where id in (select user_id from tb_group_member where group_id=#{groupId}) " +
+            "order by id desc")
+    List<User> getMemberListByGroupId(@Param("groupId") int groupId);
 
-    @Select("select tg.id, tg.name from tb_group tg, tb_group_member tgm " +
-            "where tg.name like '${groupName}%' and tg.id=tgm.group_id and tgm.receiver_id in" +
-            "(select receiver_id from tb_user tu, tb_user_to_receiver tur where tu.id=tur.user_id and tu.id=#{userId}) " +
-            "order by tg.id desc " +
-            "limit #{page.start}, #{page.pageSize}")
-    List<Group> getUserGroupByName(GroupSearch groupSearch);
+    @Insert("insert into tb_group_member(group_id, user_id) values(#{groupId}, #{userId})")
+    void addGroupMember(@Param("groupId") int groupId, @Param("userId") int userId);
 
-    @Select("select count(tg.id) from tb_group tg, tb_group_member tgm " +
-            "where tg.name like '${groupName}%' and tg.id=tgm.group_id and tgm.receiver_id in" +
-            "(select receiver_id from tb_user tu, tb_user_to_receiver tur where tu.id=tur.user_id and tu.id=#{userId})")
-    int getUserGroupCountByName(GroupSearch groupSearch);
+    @Delete("delete from tb_group where id=#{groupId}")
+    int deleteGroupById(@Param("groupId") int groupId);
+
+    @Delete("delete from tb_group_member where group_id=#{groupId}")
+    void removeGroupMemberByGroupId(@Param("groupId") int groupId);
+
+    @Delete("delete from tb_group_member where group_id=#{groupId} and user_id=#{userId}")
+    void removeGroupMember(@Param("groupId") int groupId, @Param("userId") int userId);
 }

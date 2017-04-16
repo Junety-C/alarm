@@ -1,13 +1,11 @@
 package cn.junety.alarm.web.controller;
 
-import cn.junety.alarm.base.entity.Group;
-import cn.junety.alarm.base.entity.Receiver;
-import cn.junety.alarm.base.entity.User;
+import cn.junety.alarm.base.entity.*;
 import cn.junety.alarm.web.common.ResponseHelper;
 import cn.junety.alarm.web.service.GroupService;
-import cn.junety.alarm.web.service.ReceiverService;
-import cn.junety.alarm.web.vo.GroupSearch;
-import com.alibaba.fastjson.JSON;
+import cn.junety.alarm.web.service.ProjectMemberService;
+import cn.junety.alarm.web.service.ProjectService;
+import cn.junety.alarm.web.vo.ProjectSearch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,85 +24,127 @@ import java.util.List;
 public class GroupController extends BaseController {
 
     @Autowired
+    private ProjectService projectService;
+    @Autowired
     private GroupService groupService;
     @Autowired
-    private ReceiverService receiverService;
+    private ProjectMemberService projectMemberService;
 
     @RequestMapping(value = "/groups", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String getGroups(HttpServletRequest request) {
-        User user = getUser(request);
-
+    public String initGroup(HttpServletRequest request) {
+        User currentUser = getUser(request);
         try {
-            GroupSearch groupSearch = new GroupSearch(request, user);
-            logger.info("GET /groups, user:{}, search:{}", JSON.toJSONString(user), JSON.toJSONString(groupSearch));
+            ProjectSearch projectSearch = new ProjectSearch(request, currentUser);
+            logger.info("GET /groups, current_user:{}, search:{}", currentUser, projectSearch);
 
-            List<Group> groups = groupService.getGroupList(user, groupSearch);
-            List<Receiver> allReceiver = groupService.getReceiverList();
-            List<Receiver> receivers;
-            if (groups.size() > 0) {
-                receivers = groupService.getReceiverByGroupId(groups.get(0).getId());
-            } else {
-                receivers = Collections.emptyList();
+            List<Project> projectList = projectService.getProjectList(projectSearch);
+            int projectCount = projectService.getProjectCount(projectSearch);
+            List<Group> groupList = Collections.emptyList();
+            List<User> memberList = Collections.emptyList();
+            int permissionType = ProjectMemberTypeEnum.NORMAL_MEMBER.value();
+            if (projectList.size() > 0) {
+                int projectId = projectList.get(0).getId();
+                groupList = groupService.getGroupList(projectId);
+                permissionType = projectService.getProjectMemberType(currentUser.getId(), projectId);
+                if (groupList.size() > 0) {
+                    int groupId = groupList.get(0).getId();
+                    memberList = groupService.getMemberList(groupId);
+                }
             }
-            int count = groupService.getGroupCount(user, groupSearch);
 
-            return ResponseHelper.buildResponse(2000, "groups", groups, "all_receiver", allReceiver,
-                    "receivers", receivers, "count", count);
+            return ResponseHelper.buildResponse(2000, "project_list", projectList, "project_count", projectCount,
+                    "group_list", groupList, "member_list", memberList, "permission_type", permissionType);
         } catch (Exception e) {
             logger.error("get group list error, caused by", e);
-            return ResponseHelper.buildResponse(5000, "groups", Collections.emptyList(),
-                    "all_receiver", Collections.emptyList(), "receivers", Collections.emptyList(), "count", 0);
+            return ResponseHelper.buildResponse(5000, "project_list", Collections.emptyList(),
+                    "project_count", 0, "group_list", Collections.emptyList(), "member_list", Collections.emptyList(),
+                    "permission_type", ProjectMemberTypeEnum.NORMAL_MEMBER.value());
         }
     }
 
-    @RequestMapping(value = "/groups/{name}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String createGroup(HttpServletRequest request, @PathVariable String name) {
-        User user = getUser(request);
-        logger.info("POST /groups/{}, user:{}", name, JSON.toJSONString(user));
+    @RequestMapping(value = "/projects/{pid}/groups", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String getGroupList(HttpServletRequest request, @PathVariable Integer pid) {
+        User currentUser = getUser(request);
+        try {
+            logger.info("GET /projects/{}/groups, current_user:{}", pid, currentUser);
 
-        int gid = groupService.createGroup(name);
-        int rid = receiverService.getReceiverIdByUserId(user.getId());
-        groupService.addReceiverToGroup(gid, rid);
+            List<Group> groupList = groupService.getGroupList(pid);
+            List<User> memberList = Collections.emptyList();
+            int permissionType = projectService.getProjectMemberType(currentUser.getId(), pid);
+            if (groupList.size() > 0) {
+                int groupId = groupList.get(0).getId();
+                memberList = groupService.getMemberList(groupId);
+            }
+
+            return ResponseHelper.buildResponse(2000, "group_list", groupList, "member_list", memberList,
+                    "permission_type", permissionType);
+        } catch (Exception e) {
+            logger.error("init module error, caused by", e);
+            return ResponseHelper.buildResponse(5000, "group_list", Collections.emptyList(),
+                    "member_list", Collections.emptyList(), "permission_type", ProjectMemberTypeEnum.NORMAL_MEMBER.value());
+        }
+    }
+
+    @RequestMapping(value = "/projects/{pid}/groups/{name}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String createGroup(HttpServletRequest request, @PathVariable Integer pid, @PathVariable String name) {
+        User currentUser = getUser(request);
+        logger.info("POST /projects/{}/groups/{}, current_user:{}", pid, name, currentUser);
+
+        int groupId = groupService.createGroup(pid, name);
+        groupService.addGroupMember(groupId, currentUser.getId());
 
         return ResponseHelper.buildResponse(2000);
     }
 
-    @RequestMapping(value = "/groups/{gid}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String deleteGroup(HttpServletRequest request, @PathVariable Integer gid) {
-        User user = getUser(request);
-        logger.info("DELETE /groups/{}, user:{}", gid, JSON.toJSONString(user));
+    @RequestMapping(value = "/projects/{pid}/groups/{gid}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String deleteGroup(HttpServletRequest request, @PathVariable Integer pid, @PathVariable Integer gid) {
+        User currentUser = getUser(request);
+        logger.info("DELETE /projects/{}/groups/{}, current_user:{}", pid, gid, currentUser);
 
         groupService.deleteGroup(gid);
+        groupService.removeGroupMember(gid);
 
         return ResponseHelper.buildResponse(2000);
     }
 
-    @RequestMapping(value = "/groups/{gid}/receivers", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String getReceiversFromGroup(HttpServletRequest request, @PathVariable Integer gid) {
-        User user = getUser(request);
-        logger.info("GET /groups/{}/receivers, user:{}", gid, JSON.toJSONString(user));
+    @RequestMapping(value = "/projects/{pid}/groups/{gid}/members", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String getGroupMemberList(HttpServletRequest request, @PathVariable Integer pid, @PathVariable Integer gid) {
+        User currentUser = getUser(request);
+        try {
+            logger.info("GET /projects/{}/groups/{}/members, current_user:{}", pid, gid, currentUser);
 
-        List<Receiver> receivers = groupService.getReceiverByGroupId(gid);
+            List<User> memberList = groupService.getMemberList(gid);
+            int permissionType = projectService.getProjectMemberType(currentUser.getId(), pid);
 
-        return ResponseHelper.buildResponse(2000, "receivers", receivers);
+            return ResponseHelper.buildResponse(2000, "member_list", memberList, "permission_type", permissionType);
+        } catch (Exception e) {
+            logger.error("init module error, caused by", e);
+            return ResponseHelper.buildResponse(5000, "member_list", Collections.emptyList(),
+                    "permission_type", ProjectMemberTypeEnum.NORMAL_MEMBER.value());
+        }
     }
 
-    @RequestMapping(value = "/receivers/{rid}/to/groups/{gid}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String addReceiverToGroup(HttpServletRequest request, @PathVariable Integer gid, @PathVariable Integer rid) {
-        User user = getUser(request);
-        logger.info("POST /receivers/{}/to/groups/{}, user:{}", rid, gid, JSON.toJSONString(user));
+    @RequestMapping(value = "/projects/{pid}/groups/{gid}/members/{account}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String addGroupMember(HttpServletRequest request, @PathVariable Integer pid, @PathVariable Integer gid, @PathVariable String account) {
+        User currentUser = getUser(request);
+        logger.info("POST /projects/{}/groups/{}/members/{}, current_user:{}", pid, gid, account, currentUser);
 
-        groupService.addReceiverToGroup(gid, rid);
-
-        return ResponseHelper.buildResponse(2000);
+        User user = projectMemberService.getProjectMemberByAccount(pid, account);
+        if (user != null) {
+            groupService.addGroupMember(gid, user.getId());
+            return ResponseHelper.buildResponse(2000);
+        } else {
+            logger.info("add group member fail, pid:{}, account:{}", pid, account);
+            return ResponseHelper.buildResponse(4000, "reason", "项目成员中不存在该账号");
+        }
     }
 
-    @RequestMapping(value = "/receivers/{rid}/from/groups/{gid}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String removeReceiverFromGroup(HttpServletRequest request, @PathVariable Integer gid, @PathVariable Integer rid) {
-        User user = getUser(request);
-        logger.info("DELETE /receivers/{}/from/groups/{}, user:{}", rid, gid, JSON.toJSONString(user));
+    @RequestMapping(value = "/projects/{pid}/groups/{gid}/members/{uid}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String removeGroupMember(HttpServletRequest request, @PathVariable Integer pid, @PathVariable Integer gid, @PathVariable Integer uid) {
+        User currentUser = getUser(request);
+        logger.info("DELETE /projects/{}/groups/{}/members/{}, current_user:{}", pid, gid, uid, currentUser);
 
-        groupService.removeReceiverFromGroup(gid, rid);
+        groupService.removeGroupMember(gid, uid);
 
         return ResponseHelper.buildResponse(2000);
     }

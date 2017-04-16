@@ -4,10 +4,11 @@
 	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 	<title>接收组</title>
 
-	<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}"/>
-	<link rel="stylesheet" type="text/css" th:href="@{/css/base.css}"/>
-	<link rel="stylesheet" type="text/css" th:href="@{/css/select2.min.css}"/>
-	
+	<link rel="stylesheet" type="text/css" th:href="@{css/bootstrap.min.css}"/>
+	<link rel="stylesheet" type="text/css" th:href="@{css/select2.min.css}"/>
+	<link rel="stylesheet" type="text/css" th:href="@{css/font-awesome.min.css}"/>
+	<link rel="stylesheet" type="text/css" th:href="@{css/base.css}"/>
+
 	<script th:src="@{/js/jquery.min.js}" type="text/javascript"></script>
 	<script th:src="@{/js/bootstrap.min.js}" type="text/javascript"></script>
 	<script th:src="@{/js/select2.min.js}" type="text/javascript"></script>
@@ -27,7 +28,7 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">Logo</a>
+				<!--<a class="navbar-brand" href="#">Logo</a>-->
 				<a class="navbar-brand" href="#">Alarm Center</a>
 			</div>
 
@@ -36,8 +37,8 @@
 				<ul class="nav navbar-nav navbar-right">
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-							<span class="fa glyphicon glyphicon-user"></span>
-							<span th:text="${user.username}">none</span>
+							<span class="fa fa-user fa-fw" style="font-size:16px;"></span>
+							<span th:text="${current_user.account}">none</span>
 							<span class="caret"></span>
 						</a>
 						<ul class="dropdown-menu" role="menu">
@@ -50,43 +51,55 @@
 		</div>
 	</nav>
 	<nav class="navbar mg0"></nav>
-	
+
 	<!-- 菜单栏 -->
 	<nav class="menu navbar navbar-vertical-left mg0">
 		<ul class="nav navbar-nav">
 			<li>
 				<a class="page-item" _val="home" href="#">
-					<i class="fa glyphicon glyphicon-home icon"></i>
+					<i class="fa fa-home fa-fw icon-size"></i>
 					<span class="icon-desc">首页</span>
 				</a>
 			</li>
 			<li>
-				<a class="page-item" _val="alarm" href="#">
-					<i class="fa glyphicon glyphicon-bell icon"></i>
-					<span class="icon-desc">告警配置</span>
+				<a class="page-item" _val="user" href="#">
+					<i class="fa fa-user fa-fw icon-size"></i>
+					<span class="icon-desc">用户</span>
 				</a>
 			</li>
 			<li>
 				<a class="page-item" _val="project" href="#">
-					<i class="fa glyphicon glyphicon-tasks icon"></i>
-					<span class="icon-desc">项目/模块</span>
+					<i class="fa fa-tasks fa-fw icon-size"></i>
+					<span class="icon-desc">项目</span>
 				</a>
 			</li>
 			<li>
-				<a class="page-item" _val="receiver" href="#">
-					<i class="fa glyphicon glyphicon-user icon"></i>
-					<span class="icon-desc">接收人</span>
+				<a class="page-item" _val="module" href="#">
+					<i class="fa fa-cubes fa-fw icon-size"></i>
+					<span class="icon-desc">项目模块</span>
+				</a>
+			</li>
+			<li>
+				<a class="page-item" _val="member" href="#">
+					<i class="fa fa-group fa-fw icon-size"></i>
+					<span class="icon-desc">项目成员</span>
 				</a>
 			</li>
 			<li>
 				<a class="page-item" _val="group" href="#">
-					<i class="fa glyphicon glyphicon-user icon"></i>
+					<i class="fa fa-send fa-fw icon-size"></i>
 					<span class="icon-desc">接收组</span>
 				</a>
 			</li>
 			<li>
+				<a class="page-item" _val="alarm" href="#">
+					<i class="fa fa-bell fa-fw icon-size"></i>
+					<span class="icon-desc">告警</span>
+				</a>
+			</li>
+			<li>
 				<a class="page-item" _val="log" href="#">
-					<i class="fa glyphicon glyphicon-list-alt icon"></i>
+					<i class="fa fa-book fa-fw icon-size"></i>
 					<span class="icon-desc">告警日志</span>
 				</a>
 			</li>
@@ -98,79 +111,85 @@
 		<div class="panel-header">
 			<b>告警中心 > 接收组</b>
 			<a class="btn fright cr-blue" href="javascript:location.replace(location.href);" data-toggle="tooltip" data-placement="bottom" title="刷新">
-				<span class="glyphicon glyphicon-refresh"></span>
+				<i class="fa fa-refresh fa-fw"></i>
 			</a>
 		</div>
 
 		<div class="panel-content">
 			<div class="option">
-				<span class="fleft">
-					<a class="btn cr-yellow" data-toggle="modal" data-target="#modal-group-add"><span class="glyphicon glyphicon-plus"></span> 新建</a>
+				<span class="fright">
+					<a class="btn cr-yellow" data-toggle="modal" data-target="#modal-group-create">
+						<i class="fa fa-plus"></i> 新建
+					</a>
+					<a class="btn btn-danger" data-toggle="modal" data-target="#modal-group-del">
+						<i class="fa fa-remove"></i> 删除
+					</a>
 				</span>
 			</div>
 
 			<div style="width:49%; height:450px;" class="fleft">
 				<table class="table table-bordered table-hover">
-				    <caption class="caption-border">
-						<span>接收组</span>
+					<caption class="caption-border">
+						<span>项目列表</span>
 						<span class="fright table-total-size"></span>
 					</caption>
-					<tbody class="groups-body" style="background:white;">
+					<tbody class="project-list" style="background:white;">
 					</tbody>
 				</table>
 			</div>
+
 			<div style="width:49%; height:450px;" class="fright">
 				<div>
 					<table class="table table-bordered table-hover">
-					    <thead>
-					    	<tr>
-					    		<td>
-					    			<span class="form-inline fright">
-										<select id="receivers" class="form-control" style="min-width:200px;"></select>
-										<a id="receiver-add" type="button" class="btn cr-yellow" data-toggle="tooltip"
-												data-placement="top" title="添加" style="height:28px;">
-											<span class="glyphicon glyphicon-plus"></span>
-										</a>
-					    			</span>
-					    		</td>
-					    	</tr>
-							<tr>
-								<th>接收人</th>
-							</tr>
-					    </thead>
+						<thead>
+						<tr>
+							<td>
+								<span class="form-inline fright">
+									<select id="group-list" class="form-control" style="min-width:300px;"></select>
+									<a id="group-member" type="button" class="btn cr-yellow" data-toggle="tooltip" data-placement="top" title="查看接收人">
+										<span class="fa fa-search fa-fw"></span>
+									</a>
+									<a type="button" class="btn cr-yellow" data-toggle="modal" data-target="#modal-member-add">
+										<span class="fa fa-plus fa-fw"></span>
+									</a>
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<th id="member-list-title"></th>
+						</tr>
+						</thead>
 					</table>
 				</div>
 				<div style="margin-top:-22px; margin-bottom:20px; overflow-y:auto; max-height:370px;">
 					<table class="table table-bordered table-hover">
-						<tbody class="receivers-body" style="background:white;">
+						<tbody class="member-list" style="background:white;">
 						</tbody>
 					</table>
 				</div>
 			</div>
-			<div class="fright page-footer" style="margin-top:20px;"></div>
+			<div class="fright page-footer"></div>
 		</div>
 	</div>
 
-
-	<!-- 接收组创建模态框 -->
-	<div class="modal fade modal-create" id="modal-group-add" role="dialog" aria-hidden="true">
-		<div class="modal-dialog modal-sm">
+	<!-- 接收组新建模态框 -->
+	<div class="modal fade modal-create" id="modal-group-create" role="dialog" aria-hidden="true">
+		<div class="modal-dialog" style="width:500px;">
 			<div class="modal-content">
-				<div class="title">接收组创建</div>
+				<div class="title">新建接收组</div>
 				<div class="body">
 					<form class="form-horizontal" role="form">
 						<div class="form-group">
-							<label class="col-md-3 control-label" style="padding-right:0;">接收组:</label>
-							<div class="col-md-8">
+							<label class="col-md-4 control-label"><b style="color:red;">* </b>接收组名称：</label>
+							<div class="col-md-7">
 								<input id="group-name" class="form-control" type="text" placeholder="请输入接收组名称"/>
 							</div>
 						</div>
-
-						<div style="text-align:right; padding-right:50px;">
-							<button id="group-add" type="button" class="btn btn-info" data-dismiss="modal">保存</button>　
-							<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-						</div>
 					</form>
+					<div style="text-align:center; padding-top:20px;">
+						<button id="group-create" type="button" class="btn btn-info" data-dismiss="modal">保存</button>　
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -180,7 +199,7 @@
 	<div class="modal fade modal-delete" id="modal-group-del" role="dialog" aria-hidden="true">
 		<div class="modal-dialog modal-sm">
 			<div class="modal-content">
-				<div class="title">项目删除</div>
+				<div class="title">删除接收组</div>
 				<div class="body">
 					<form class="form-horizontal" role="form">
 						<div class="form-group" style="text-align:center">
@@ -196,8 +215,31 @@
 		</div>
 	</div>
 
+	<!-- 接收组成员添加模态框 -->
+	<div class="modal fade modal-create" id="modal-member-add" role="dialog" aria-hidden="true">
+		<div class="modal-dialog" style="width:500px;">
+			<div class="modal-content">
+				<div class="title">添加接收组成员</div>
+				<div class="body">
+					<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label class="col-md-4 control-label"><b style="color:red;">* </b>用户账号：</label>
+							<div class="col-md-7">
+								<input id="member-account" class="form-control" type="text" placeholder="请输入项目成员的账号"/>
+							</div>
+						</div>
+					</form>
+					<div style="text-align:center; padding-top:20px;">
+						<button id="member-add" type="button" class="btn btn-info" data-dismiss="modal">保存</button>　
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<!-- 接收人删除模态框 -->
-	<div class="modal fade modal-delete" id="modal-receiver-del" role="dialog" aria-hidden="true">
+	<div class="modal fade modal-delete" id="modal-member-del" role="dialog" aria-hidden="true">
 		<div class="modal-dialog modal-sm">
 			<div class="modal-content">
 				<div class="title">移除接收人</div>
@@ -207,7 +249,7 @@
 							<label>是否确认移除该接收人？</label>
 						</div>
 						<div style="text-align:right; padding-right:50px;">
-							<button id="receiver-del" type="button" class="btn btn-info" data-dismiss="modal">确定</button>　
+							<button id="member-del" type="button" class="btn btn-info" data-dismiss="modal">确定</button>　
 							<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
 						</div>
 					</form>
@@ -215,5 +257,7 @@
 			</div>
 		</div>
 	</div>
+
+	<div id="current-id"></div>
 </body>
 </html>

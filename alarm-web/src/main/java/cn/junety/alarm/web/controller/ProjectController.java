@@ -2,6 +2,7 @@ package cn.junety.alarm.web.controller;
 
 import cn.junety.alarm.base.entity.Module;
 import cn.junety.alarm.base.entity.Project;
+import cn.junety.alarm.base.entity.ProjectMemberTypeEnum;
 import cn.junety.alarm.base.entity.User;
 import cn.junety.alarm.web.common.ResponseHelper;
 import cn.junety.alarm.web.service.ModuleService;
@@ -72,13 +73,13 @@ public class ProjectController extends BaseController {
         logger.info("POST /projects, current_user:{}, project:{}", currentUser, project);
 
         int projectId = projectService.createProject(currentUser, project);
-        projectMemberService.addProjectMember(projectId, currentUser.getId(), ProjectMemberService.ADMIN_MEMBER);
+        projectMemberService.addProjectMember(projectId, currentUser.getId(), ProjectMemberTypeEnum.ADMIN_MEMBER.value());
 
         return ResponseHelper.buildResponse(2000);
     }
 
     @RequestMapping(value = "/projects", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String updateProjectById(HttpServletRequest request, @RequestBody Project project) {
+    public String updateProject(HttpServletRequest request, @RequestBody Project project) {
         User currentUser = getUser(request);
         logger.info("PUT /projects, current_user:{}", currentUser, project);
 
@@ -88,7 +89,7 @@ public class ProjectController extends BaseController {
     }
 
     @RequestMapping(value = "/projects/{pid}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String deleteProjectById(HttpServletRequest request, @PathVariable Integer pid) {
+    public String deleteProject(HttpServletRequest request, @PathVariable Integer pid) {
         User currentUser = getUser(request);
         logger.info("DELETE /projects/{}, current_user:{}", pid, currentUser);
 
@@ -108,7 +109,7 @@ public class ProjectController extends BaseController {
             List<Project> projectList = projectService.getProjectList(projectSearch);
             int projectCount = projectService.getProjectCount(projectSearch);
             List<Module> moduleList = Collections.emptyList();
-            int permissionType = ProjectMemberService.NORMAL_MEMBER;
+            int permissionType = ProjectMemberTypeEnum.NORMAL_MEMBER.value();
             if (projectList.size() > 0) {
                 int projectId = projectList.get(0).getId();
                 moduleList = moduleService.getModuleList(projectId);
@@ -121,7 +122,7 @@ public class ProjectController extends BaseController {
             logger.error("init module error, caused by", e);
             return ResponseHelper.buildResponse(5000, "project_list", Collections.emptyList(),
                     "project_count", 0, "module_list", Collections.emptyList(),
-                    "permission_type", ProjectMemberService.NORMAL_MEMBER);
+                    "permission_type", ProjectMemberTypeEnum.NORMAL_MEMBER.value());
         }
     }
 
@@ -138,7 +139,7 @@ public class ProjectController extends BaseController {
         } catch (Exception e) {
             logger.error("init module error, caused by", e);
             return ResponseHelper.buildResponse(5000, "module_list", Collections.emptyList(),
-                    "permission_type", ProjectMemberService.NORMAL_MEMBER);
+                    "permission_type", ProjectMemberTypeEnum.NORMAL_MEMBER.value());
         }
     }
 
@@ -172,7 +173,7 @@ public class ProjectController extends BaseController {
             List<Project> projectList = projectService.getProjectList(projectSearch);
             int projectCount = projectService.getProjectCount(projectSearch);
             List<User> memberList = Collections.emptyList();
-            int permissionType = ProjectMemberService.NORMAL_MEMBER;
+            int permissionType = ProjectMemberTypeEnum.NORMAL_MEMBER.value();
             if (projectList.size() > 0) {
                 int projectId = projectList.get(0).getId();
                 memberList = projectMemberService.getMemberList(projectId);
@@ -185,7 +186,7 @@ public class ProjectController extends BaseController {
             logger.error("init module error, caused by", e);
             return ResponseHelper.buildResponse(5000, "project_list", Collections.emptyList(),
                     "project_count", 0, "member_list", Collections.emptyList(),
-                    "permission_type", ProjectMemberService.NORMAL_MEMBER);
+                    "permission_type", ProjectMemberTypeEnum.NORMAL_MEMBER.value());
         }
     }
 
@@ -202,7 +203,7 @@ public class ProjectController extends BaseController {
         } catch (Exception e) {
             logger.error("init module error, caused by", e);
             return ResponseHelper.buildResponse(5000, "member_list", Collections.emptyList(),
-                    "permission_type", ProjectMemberService.NORMAL_MEMBER);
+                    "permission_type", ProjectMemberTypeEnum.NORMAL_MEMBER.value());
         }
     }
 
@@ -213,10 +214,10 @@ public class ProjectController extends BaseController {
 
         User user = userService.getUserByAccount(account);
         if (user != null) {
-            projectMemberService.addProjectMember(pid, user.getId(), ProjectMemberService.NORMAL_MEMBER);
+            projectMemberService.addProjectMember(pid, user.getId(), ProjectMemberTypeEnum.NORMAL_MEMBER.value());
             return ResponseHelper.buildResponse(2000);
         } else {
-
+            logger.info("add project member fail, pid:{}, account:{}", pid, account);
             return ResponseHelper.buildResponse(4000, "reason", "用户信息不存在");
         }
     }

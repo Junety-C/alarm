@@ -72,6 +72,16 @@ public class PageController extends BaseController {
         return new ModelAndView("member");
     }
 
+    @RequestMapping(value = "/group", method = RequestMethod.GET)
+    public ModelAndView toGroupPage(HttpServletRequest request, Model model) {
+        User currentUser = getUser(request);
+        logger.info("GET /group, current_user:{}", currentUser);
+
+        model.addAttribute("current_user", currentUser);
+
+        return new ModelAndView("group");
+    }
+
     // =========================
 
 
@@ -93,16 +103,6 @@ public class PageController extends BaseController {
         model.addAttribute("user", user);
 
         return new ModelAndView("receiver");
-    }
-
-    @RequestMapping(value = "/group", method = RequestMethod.GET)
-    public ModelAndView toGroupPage(HttpServletRequest request, Model model) {
-        User user = getUser(request);
-        logger.info("GET /group, user:{}", JSON.toJSONString(user));
-
-        model.addAttribute("user", user);
-
-        return new ModelAndView("group");
     }
 
     @RequestMapping(value = "/log", method = RequestMethod.GET)

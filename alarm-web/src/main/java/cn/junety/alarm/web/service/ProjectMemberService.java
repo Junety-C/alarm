@@ -18,9 +18,6 @@ public class ProjectMemberService {
 
     private static final Logger logger = LoggerFactory.getLogger(ProjectMemberService.class);
 
-    public static final int ADMIN_MEMBER = 0;
-    public static final int NORMAL_MEMBER = 1;
-
     @Autowired
     private ProjectMemberDao projectMemberDao;
 
@@ -50,5 +47,15 @@ public class ProjectMemberService {
      */
     public void removeProjectMember(int projectId, int userId) {
         projectMemberDao.removeProjectMember(projectId, userId);
+    }
+
+    /**
+     * 根据用户账号获取用户信息
+     * @param projectId 项目id
+     * @param account 用户账号
+     * @return 用户信息
+     */
+    public User getProjectMemberByAccount(int projectId, String account) {
+        return projectMemberDao.getProjectMemberByAccount(projectId, account);
     }
 }
