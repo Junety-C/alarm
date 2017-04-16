@@ -51,7 +51,7 @@ public class AlarmController extends BaseController {
         User user = getUser(request);
         logger.info("GET /alarms/info, user:{}", JSON.toJSONString(user));
 
-        List<Integer> codes = alarmService.getAlarmCodeList(user);
+        //List<Integer> codes = alarmService.getAlarmCodeList(user);
         List<Project> projects = projectService.getProjectList();
         List<Module> modules;
         if (projects.size() > 0) {
@@ -61,7 +61,7 @@ public class AlarmController extends BaseController {
         }
         List<Group> groups = groupService.getAllGroup();
 
-        return ResponseHelper.buildResponse(2000, "codes", codes, "projects", projects,
+        return ResponseHelper.buildResponse(2000, "projects", projects,
                 "modules", modules, "groups", groups);
     }
 

@@ -219,15 +219,15 @@ function getAlarmById(aid) {
                 $("#alarm-project-update").unbind("change");
                 var alarm = data["alarm"];
 
-                // code list
-                var codes = data["codes"];
-                var codeList = [{id: 0, text: '自动生成'}];
-                for (var i = 0; i < codes.length; i++) {
-                    codeList.push({id: codes[i], text: codes[i]});
-                }
-                $("#alarm-code-update").html("").select2({
-                    data: codeList
-                }).val(alarm["code"]).trigger("change");
+                // // code list
+                // var codes = data["codes"];
+                // var codeList = [{id: 0, text: '自动生成'}];
+                // for (var i = 0; i < codes.length; i++) {
+                //     codeList.push({id: codes[i], text: codes[i]});
+                // }
+                // $("#alarm-code-update").html("").select2({
+                //     data: codeList
+                // }).val(alarm["code"]).trigger("change");
 
                 // project list
                 var projects = data["projects"];
@@ -259,6 +259,7 @@ function getAlarmById(aid) {
                     data: groupList
                 }).val(alarm["groupId"]).trigger("change");
 
+                $("#alarm-code-update").val(alarm["code"]);
                 $("#alarm-name-update").val(alarm["name"]);
                 $("#alarm-route-key-update").val(alarm["routeKey"]);
                 var config = JSON.parse(alarm["config"]);
@@ -292,15 +293,15 @@ function getCreateInfo() {
         type: "GET",
         success: function(data){
             if(data["code"] == 2000) {
-                // code list
-                var codes = data["codes"];
-                var codeList = [{id: 0, text: '自动生成'}];
-                for (var i = 0; i < codes.length; i++) {
-                    codeList.push({id: codes[i], text: codes[i]});
-                }
-                $("#alarm-code").select2({
-                    data: codeList
-                });
+                // // code list
+                // var codes = data["codes"];
+                // var codeList = [{id: 0, text: '自动生成'}];
+                // for (var i = 0; i < codes.length; i++) {
+                //     codeList.push({id: codes[i], text: codes[i]});
+                // }
+                // $("#alarm-code").select2({
+                //     data: codeList
+                // });
 
                 // project list
                 var projects = data["projects"];
