@@ -20,5 +20,6 @@ public class Bootstrap {
         } catch (Exception e) {
             logger.error("start alarm web error, caused by", e);
         }
+
     }
 }
