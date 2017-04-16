@@ -140,7 +140,7 @@ function getUserById(uid) {
         success: function(data){
             if(data["code"] == 2000) {
                 var user = data["user"];
-                $("#user-account-update").val(user["name"]);
+                $("#user-account-update").val(user["account"]);
                 $("#user-name-update").val(user["name"]);
                 $("#user-mail-update").val(user["mail"]);
                 $("#user-phone-update").val(user["phone"]);

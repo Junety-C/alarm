@@ -13,7 +13,7 @@ import java.util.List;
 public interface UserDao {
 
     @Select("select * from tb_user where account=#{account}")
-    User getUserByAccount(@Param("account") String account);
+    User getUserByExactAccount(@Param("account") String account);
 
     @Select("select * from tb_user where identification=#{identification}")
     User getUserByIdentification(@Param("identification") String identification);
@@ -28,7 +28,7 @@ public interface UserDao {
             "values(#{account}, #{name}, #{identification}, #{type}, #{mail}, #{phone}, #{wechat}, #{qq})")
     int save(User user);
 
-    @Update("update tb_user set name=#{name}, type=#{type}, phone=#{phone}, mail=#{mail}, wechat=#{wechat}, qq=#{qq} " +
+    @Update("update tb_user set name=#{name}, phone=#{phone}, mail=#{mail}, wechat=#{wechat}, qq=#{qq} " +
             "where id=#{id}")
     int update(User user);
 

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by caijt on 2017/4/2.
@@ -31,7 +32,7 @@ public class UserService {
      */
     public User getUserByAccount(String account) {
         try {
-            return userDao.getUserByAccount(account);
+            return userDao.getUserByExactAccount(account);
         } catch (Exception e) {
             logger.error("get by account error, account:{}, caused by", account, e);
             return null;
@@ -101,6 +102,7 @@ public class UserService {
      */
     public void createUser(User user) {
         user.setType(UserTypeEnum.NORMAL_USER.value());
+        user.setIdentification(UUID.randomUUID().toString());
         userDao.save(user);
     }
 
