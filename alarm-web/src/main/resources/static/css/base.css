@@ -74,7 +74,7 @@ body {
 	padding-left: 15px;
 	padding-right: 15px;
 	-moz-border-radius: 4px;
-    -webkit-border-top-left-radius: 4px;
+	-webkit-border-top-left-radius: 4px;
 	-webkit-border-top-right-radius: 4px;
 	border-top-left-radius: 4px;
 	border-top-right-radius: 4px;
@@ -91,6 +91,9 @@ body {
 	color:white;
 }
 
+.icon-size {
+	font-size: 20px;
+}
 
 /* modal */
 .modal-create .title {
