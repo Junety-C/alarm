@@ -62,6 +62,15 @@ public class PageController extends BaseController {
         return new ModelAndView("module");
     }
 
+    @RequestMapping(value = "/member", method = RequestMethod.GET)
+    public ModelAndView toProjectMemberPage(HttpServletRequest request, Model model) {
+        User currentUser = getUser(request);
+        logger.info("GET /member, current_user:{}", currentUser);
+
+        model.addAttribute("current_user", currentUser);
+
+        return new ModelAndView("member");
+    }
 
     // =========================
 

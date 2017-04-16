@@ -5,6 +5,7 @@ import cn.junety.alarm.base.entity.Project;
 import cn.junety.alarm.base.entity.User;
 import cn.junety.alarm.web.common.ResponseHelper;
 import cn.junety.alarm.web.service.ModuleService;
+import cn.junety.alarm.web.service.ProjectMemberService;
 import cn.junety.alarm.web.service.ProjectService;
 import cn.junety.alarm.web.vo.ProjectSearch;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,8 @@ public class ProjectController extends BaseController {
     private ProjectService projectService;
     @Autowired
     private ModuleService moduleService;
+    @Autowired
+    private ProjectMemberService projectMemberService;
 
     @RequestMapping(value = "/projects", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public String getProjectList(HttpServletRequest request) {
@@ -69,7 +72,7 @@ public class ProjectController extends BaseController {
         logger.info("POST /projects, current_user:{}, project:{}", currentUser, project);
 
         int projectId = projectService.createProject(currentUser, project);
-        projectService.addProjectMember(currentUser.getId(), projectId, ProjectService.ADMIN_MEMBER);
+        projectMemberService.addProjectMember(projectId, currentUser.getId(), ProjectMemberService.ADMIN_MEMBER);
 
         return ResponseHelper.buildResponse(2000);
     }
@@ -105,7 +108,7 @@ public class ProjectController extends BaseController {
             List<Project> projectList = projectService.getProjectList(projectSearch);
             int projectCount = projectService.getProjectCount(projectSearch);
             List<Module> moduleList = Collections.emptyList();
-            int permissionType = -1;
+            int permissionType = ProjectMemberService.NORMAL_MEMBER;
             if (projectList.size() > 0) {
                 int projectId = projectList.get(0).getId();
                 moduleList = moduleService.getModuleList(projectId);
@@ -118,7 +121,7 @@ public class ProjectController extends BaseController {
             logger.error("init module error, caused by", e);
             return ResponseHelper.buildResponse(5000, "project_list", Collections.emptyList(),
                     "project_count", 0, "module_list", Collections.emptyList(),
-                    "permission_type", ProjectService.NORMAL_MEMBER);
+                    "permission_type", ProjectMemberService.NORMAL_MEMBER);
         }
     }
 
@@ -135,7 +138,7 @@ public class ProjectController extends BaseController {
         } catch (Exception e) {
             logger.error("init module error, caused by", e);
             return ResponseHelper.buildResponse(5000, "module_list", Collections.emptyList(),
-                    "permission_type", ProjectService.NORMAL_MEMBER);
+                    "permission_type", ProjectMemberService.NORMAL_MEMBER);
         }
     }
 
@@ -155,6 +158,75 @@ public class ProjectController extends BaseController {
         logger.info("DELETE /modules/{}, current_user:{}", mid, currentUser);
 
         moduleService.deleteModule(mid);
+
+        return ResponseHelper.buildResponse(2000);
+    }
+
+    @RequestMapping(value = "/members", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String initMember(HttpServletRequest request) {
+        User currentUser = getUser(request);
+        try {
+            ProjectSearch projectSearch = new ProjectSearch(request, currentUser);
+            logger.info("GET /members, current_user:{}, search:{}", currentUser, projectSearch);
+
+            List<Project> projectList = projectService.getProjectList(projectSearch);
+            int projectCount = projectService.getProjectCount(projectSearch);
+            List<User> memberList = Collections.emptyList();
+            int permissionType = ProjectMemberService.NORMAL_MEMBER;
+            if (projectList.size() > 0) {
+                int projectId = projectList.get(0).getId();
+                memberList = projectMemberService.getMemberList(projectId);
+                permissionType = projectService.getProjectMemberType(currentUser.getId(), projectId);
+            }
+
+            return ResponseHelper.buildResponse(2000, "project_list", projectList,
+                    "project_count", projectCount, "member_list", memberList, "permission_type", permissionType);
+        } catch (Exception e) {
+            logger.error("init module error, caused by", e);
+            return ResponseHelper.buildResponse(5000, "project_list", Collections.emptyList(),
+                    "project_count", 0, "member_list", Collections.emptyList(),
+                    "permission_type", ProjectMemberService.NORMAL_MEMBER);
+        }
+    }
+
+    @RequestMapping(value = "/projects/{pid}/members", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String getMemberList(HttpServletRequest request, @PathVariable Integer pid) {
+        User currentUser = getUser(request);
+        try {
+            logger.info("GET /projects/{}/members, current_user:{}", pid, currentUser);
+
+            List<User> memberList = projectMemberService.getMemberList(pid);
+            int permissionType = projectService.getProjectMemberType(currentUser.getId(), pid);
+
+            return ResponseHelper.buildResponse(2000, "member_list", memberList, "permission_type", permissionType);
+        } catch (Exception e) {
+            logger.error("init module error, caused by", e);
+            return ResponseHelper.buildResponse(5000, "member_list", Collections.emptyList(),
+                    "permission_type", ProjectMemberService.NORMAL_MEMBER);
+        }
+    }
+
+    @RequestMapping(value = "/projects/{pid}/members/{account}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String addProjectMember(HttpServletRequest request, @PathVariable Integer pid, @PathVariable String account) {
+        User currentUser = getUser(request);
+        logger.info("POST /projects/{}/members/{}, current_user:{}", pid, account, currentUser);
+
+        User user = userService.getUserByAccount(account);
+        if (user != null) {
+            projectMemberService.addProjectMember(pid, user.getId(), ProjectMemberService.NORMAL_MEMBER);
+            return ResponseHelper.buildResponse(2000);
+        } else {
+
+            return ResponseHelper.buildResponse(4000, "reason", "用户信息不存在");
+        }
+    }
+
+    @RequestMapping(value = "/project/{pid}/members/{uid}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String removeProjectMember(HttpServletRequest request, @PathVariable Integer pid, @PathVariable Integer uid) {
+        User currentUser = getUser(request);
+        logger.info("DELETE /project/{}/members/{}, current_user:{}", pid, uid, currentUser);
+
+        projectMemberService.removeProjectMember(pid, uid);
 
         return ResponseHelper.buildResponse(2000);
     }

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-    <title>项目模块</title>
+    <title>项目成员</title>
 
     <link rel="stylesheet" type="text/css" th:href="@{css/bootstrap.min.css}"/>
     <link rel="stylesheet" type="text/css" th:href="@{css/select2.min.css}"/>
@@ -13,7 +13,7 @@
     <script th:src="@{/js/bootstrap.min.js}" type="text/javascript"></script>
     <script th:src="@{/js/select2.min.js}" type="text/javascript"></script>
     <script th:src="@{/js/base.js}" type="text/javascript"></script>
-    <script th:src="@{/js/module.js}" type="text/javascript"></script>
+    <script th:src="@{/js/member.js}" type="text/javascript"></script>
 </head>
 <body>
 
@@ -106,10 +106,10 @@
         </ul>
     </nav>
 
-    <!-- 项目模块 -->
+    <!-- 项目成员 -->
     <div class="page">
         <div class="panel-header">
-            <b>告警中心 > 项目模块</b>
+            <b>告警中心 > 项目成员</b>
             <a class="btn fright cr-blue" href="javascript:location.replace(location.href);" data-toggle="tooltip" data-placement="bottom" title="刷新">
                 <i class="fa fa-refresh fa-fw"></i>
             </a>
@@ -135,8 +135,8 @@
                             <th>
                                 <span class="form-inline fright">
                                     <form>
-                                        <input id="module-name" class="form-control" type="text" placeholder="请输入模块名称"/>
-                                        <a id="module-create" type="button" class="btn cr-yellow" data-toggle="tooltip" data-placement="top" title="新建模块">
+                                        <input id="user-account" class="form-control" type="text" placeholder="请输入用户账号"/>
+                                        <a id="member-add" type="button" class="btn cr-yellow" data-toggle="tooltip" data-placement="top" title="添加成员">
                                             <i class="fa fa-plus fa-fw"></i>
                                         </a>
                                     </form>
@@ -144,36 +144,38 @@
                             </th>
                         </tr>
                         <tr>
-                            <th id="module-list-title"></th>
+                            <th id="member-list-title">成员列表</th>
                         </tr>
                         </thead>
                     </table>
                 </div>
                 <div style="margin-top:-22px; margin-bottom:20px; overflow-y:auto; max-height:370px;">
                     <table class="table table-bordered table-hover">
-                        <tbody class="module-list" style="background:white;">
+                        <tbody class="member-list" style="background:white;">
+                        <tr><td>蔡俊涛（管理员）</td></tr>
+                        <tr><td>谭建新（成员）</td></tr>
+                        <tr><td>林增锐（成员）</td></tr>
                         </tbody>
                     </table>
                 </div>
-
             </div>
 
             <div class="fright page-footer"></div>
         </div>
     </div>
 
-    <!-- 模块删除模态框 -->
-    <div class="modal fade modal-delete" id="modal-module-del" role="dialog" aria-hidden="true">
+    <!-- 项目成员移除模态框 -->
+    <div class="modal fade modal-delete" id="modal-member-del" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
-                <div class="title">删除模块</div>
+                <div class="title">移除项目成员</div>
                 <div class="body">
                     <form class="form-horizontal" role="form">
                         <div class="form-group" style="text-align:center">
-                            <label>是否确认删除该模块？</label>
+                            <label>是否确认移除该项目成员？</label>
                         </div>
                         <div style="text-align:center; padding-top:20px;">
-                            <button id="module-del" type="button" class="btn btn-info" data-dismiss="modal">确定</button>　
+                            <button id="member-del" type="button" class="btn btn-info" data-dismiss="modal">确定</button>　
                             <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                         </div>
                     </form>

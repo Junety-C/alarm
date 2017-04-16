@@ -8,8 +8,6 @@ import cn.junety.alarm.web.dao.ModuleDao;
 import cn.junety.alarm.web.dao.ProjectDao;
 import cn.junety.alarm.web.dao.ProjectMemberDao;
 import cn.junety.alarm.web.vo.ProjectSearch;
-import cn.junety.alarm.web.vo.UserVO;
-import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +17,12 @@ import java.util.List;
 
 /**
  * Created by caijt on 2017/3/26.
- * 项目/模块相关
+ * 项目相关
  */
 @Service
 public class ProjectService {
 
     private static final Logger logger = LoggerFactory.getLogger(ProjectService.class);
-
-    public static final int ADMIN_MEMBER = 0;
-    public static final int NORMAL_MEMBER = 1;
 
     @Autowired
     private ProjectDao projectDao;
@@ -148,9 +143,5 @@ public class ProjectService {
     public void deleteProject(int projectId) {
         projectDao.delete(projectId);
         projectMemberDao.deleteProjectMemberByProjectId(projectId);
-    }
-
-    public void addProjectMember(int userId, int projectId, int type) {
-        projectMemberDao.addProjectMember(userId, projectId, type);
     }
 }
