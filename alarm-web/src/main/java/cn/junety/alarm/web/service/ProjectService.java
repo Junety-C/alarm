@@ -153,43 +153,4 @@ public class ProjectService {
     public void addProjectMember(int userId, int projectId, int type) {
         projectMemberDao.addProjectMember(userId, projectId, type);
     }
-
-    /**
-     * 新建模块
-     * @param pid 项目id
-     * @param name 模块名称
-     */
-    public void createModule(Integer pid, String name) {
-        moduleDao.save(pid, name);
-    }
-
-    /**
-     * 删除模块
-     * @param id 模块id
-     */
-    public void deleteModuleById(int id) {
-        moduleDao.deleteById(id);
-    }
-
-    public List<UserVO> getProjectMemberByProjectId(int pid) {
-        return projectDao.getProjectMemberBytId(pid);
-    }
-
-    /**
-     * 把用户从项目中移除
-     * @param uid 用户id
-     * @param pid 项目id
-     */
-    public void removeUserFromProject(int uid, int pid) {
-        projectDao.removeUserFromProject(uid, pid);
-    }
-
-    /**
-     * 添加用户到项目中
-     * @param uid 用户id
-     * @param pid 项目id
-     */
-    public void addUserToProject(int uid, int pid) {
-        projectDao.addUserToProject(uid, pid);
-    }
 }
