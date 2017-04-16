@@ -15,7 +15,7 @@ import java.util.UUID;
 
 /**
  * Created by caijt on 2017/4/2.
- * 用户相关
+ * 用户
  */
 @Service
 public class UserService {
@@ -51,10 +51,6 @@ public class UserService {
             logger.error("get by identification error, identification:{}, caused by", identification, e);
             return null;
         }
-    }
-
-    public List<UserVO> getAllUser() {
-        return userDao.getAllUser();
     }
 
     /**

@@ -7,7 +7,7 @@ import javax.servlet.http.HttpSession;
 
 /**
  * Created by caijt on 2017/4/2.
- * 用户登录状态相关
+ * 用户登录状态
  */
 @Service
 public class UserLoginStatusService {

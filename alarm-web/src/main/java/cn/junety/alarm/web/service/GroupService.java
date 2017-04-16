@@ -23,8 +23,6 @@ public class GroupService {
 
     @Autowired
     private GroupDao groupDao;
-    @Autowired
-    private UserDao userDao;
 
     public List<Group> getAllGroup() {
         return groupDao.getAllGroup();

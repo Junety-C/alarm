@@ -82,35 +82,22 @@ public class PageController extends BaseController {
         return new ModelAndView("group");
     }
 
-    // =========================
-
-
     @RequestMapping(value = "/alarm", method = RequestMethod.GET)
     public ModelAndView toAlarmPage(HttpServletRequest request, Model model) {
-        User user = getUser(request);
-        logger.info("GET /alarm, user:{}", JSON.toJSONString(user));
+        User currentUser = getUser(request);
+        logger.info("GET /alarm, current_user:{}", currentUser);
 
-        model.addAttribute("user", user);
+        model.addAttribute("current_user", currentUser);
 
         return new ModelAndView("alarm");
     }
 
-    @RequestMapping(value = "/receiver", method = RequestMethod.GET)
-    public ModelAndView toReceiverPage(HttpServletRequest request, Model model) {
-        User user = getUser(request);
-        logger.info("GET /receiver, user:{}", JSON.toJSONString(user));
-
-        model.addAttribute("user", user);
-
-        return new ModelAndView("receiver");
-    }
-
     @RequestMapping(value = "/log", method = RequestMethod.GET)
     public ModelAndView toLogPage(HttpServletRequest request, Model model) {
-        User user = getUser(request);
-        logger.info("GET /log, user:{}", JSON.toJSONString(user));
+        User currentUser = getUser(request);
+        logger.info("GET /log, current_user:{}", currentUser);
 
-        model.addAttribute("user", user);
+        model.addAttribute("current_user", currentUser);
 
         return new ModelAndView("log");
     }

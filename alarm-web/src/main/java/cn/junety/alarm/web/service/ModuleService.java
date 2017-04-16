@@ -2,8 +2,6 @@ package cn.junety.alarm.web.service;
 
 import cn.junety.alarm.base.entity.Module;
 import cn.junety.alarm.web.dao.ModuleDao;
-import cn.junety.alarm.web.dao.ProjectDao;
-import cn.junety.alarm.web.dao.ProjectMemberDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +17,6 @@ public class ModuleService {
 
     private static final Logger logger = LoggerFactory.getLogger(ModuleService.class);
 
-    @Autowired
-    private ProjectDao projectDao;
-    @Autowired
-    private ProjectMemberDao projectMemberDao;
     @Autowired
     private ModuleDao moduleDao;
 
