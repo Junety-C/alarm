@@ -24,23 +24,34 @@ public class PageController extends BaseController {
 
     @RequestMapping(value = "/home", method = RequestMethod.GET)
     public ModelAndView getAlarms(HttpServletRequest request, Model model) {
-        User user = getUser(request);
-        logger.info("GET /home, user:{}", user);
+        User currentUser = getUser(request);
+        logger.info("GET /home, current_user:{}", currentUser);
 
-        model.addAttribute("user", user);
+        model.addAttribute("current_user", currentUser);
 
         return new ModelAndView("home");
     }
 
     @RequestMapping(value = "/user", method = RequestMethod.GET)
     public ModelAndView toUserPage(HttpServletRequest request, Model model) {
-        User user = getUser(request);
-        logger.info("GET /user, user:{}", user);
+        User currentUser = getUser(request);
+        logger.info("GET /user, current_user:{}", currentUser);
 
-        model.addAttribute("user", user);
+        model.addAttribute("current_user", currentUser);
 
         return new ModelAndView("user");
     }
+
+    @RequestMapping(value = "/project", method = RequestMethod.GET)
+    public ModelAndView toProjectPage(HttpServletRequest request, Model model) {
+        User currentUser = getUser(request);
+        logger.info("GET /project, current_user:{}", currentUser);
+
+        model.addAttribute("current_user", currentUser);
+
+        return new ModelAndView("project");
+    }
+
 
 
     // =========================
@@ -54,16 +65,6 @@ public class PageController extends BaseController {
         model.addAttribute("user", user);
 
         return new ModelAndView("alarm");
-    }
-
-    @RequestMapping(value = "/project", method = RequestMethod.GET)
-    public ModelAndView toProjectPage(HttpServletRequest request, Model model) {
-        User user = getUser(request);
-        logger.info("GET /project, user:{}", JSON.toJSONString(user));
-
-        model.addAttribute("user", user);
-
-        return new ModelAndView("project-module");
     }
 
     @RequestMapping(value = "/receiver", method = RequestMethod.GET)

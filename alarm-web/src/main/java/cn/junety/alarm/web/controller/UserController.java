@@ -25,7 +25,7 @@ public class UserController extends BaseController {
     public String getUserList(HttpServletRequest request) {
         User currentUser = getUser(request);
         try {
-            UserSearch userSearch = new UserSearch(request);
+            UserSearch userSearch = new UserSearch(request, currentUser);
             logger.info("GET /users, current_user:{}, search:{}", currentUser, userSearch);
 
             List<User> userList = userService.getUserList(userSearch);

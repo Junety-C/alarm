@@ -122,14 +122,14 @@ function getUserList(search) {
 }
 
 function setUserClickEvent() {
-    $(".user-del").click(function() {
-        $("#current-id").attr("_uid", $(this).attr("_uid"));
-    });
-
     $(".user-update").click(function() {
         var user_id = $(this).attr("_uid");
         $("#current-id").attr("_uid", user_id);
         getUserById(user_id);
+    });
+
+    $(".user-del").click(function() {
+        $("#current-id").attr("_uid", $(this).attr("_uid"));
     });
 }
 
@@ -167,23 +167,6 @@ function createUser(user_data) {
     });
 }
 
-function deleteUser(uid) {
-    $.ajax({
-        url: "/users/"+uid,
-        type: "DELETE",
-        data: JSON.stringify({}),
-        dataType: "json",
-        contentType: "application/json;charset=utf-8",
-        success: function(data){
-            if(data["code"] != 2000) {
-                alert("删除用户失败");
-                return;
-            }
-            getUserList(search_select + "=" + search_input);
-        }
-    });
-}
-
 function updateUser(user_data) {
     $.ajax({
         url: "/users",
@@ -194,6 +177,23 @@ function updateUser(user_data) {
         success: function(data){
             if(data["code"] != 2000) {
                 alert("更新用户信息失败");
+                return;
+            }
+            getUserList(search_select + "=" + search_input);
+        }
+    });
+}
+
+function deleteUser(uid) {
+    $.ajax({
+        url: "/users/"+uid,
+        type: "DELETE",
+        data: JSON.stringify({}),
+        dataType: "json",
+        contentType: "application/json;charset=utf-8",
+        success: function(data){
+            if(data["code"] != 2000) {
+                alert("删除用户失败");
                 return;
             }
             getUserList(search_select + "=" + search_input);
