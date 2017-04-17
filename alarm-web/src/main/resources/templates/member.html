@@ -135,8 +135,9 @@
                             <th>
                                 <span class="form-inline fright">
                                     <form>
-                                        <input id="user-account" class="form-control" type="text" placeholder="请输入用户账号"/>
-                                        <a id="member-add" type="button" class="btn cr-yellow" data-toggle="tooltip" data-placement="top" title="添加成员">
+                                        <input id="user-account" class="form-control" type="text" placeholder="请输入用户账号" th:if="${current_user.type} == 0"/>
+                                        <a id="member-add" type="button" class="btn cr-yellow" data-toggle="tooltip"
+                                           data-placement="top" title="添加成员" th:if="${current_user.type} == 0">
                                             <i class="fa fa-plus fa-fw"></i>
                                         </a>
                                     </form>
@@ -152,9 +153,6 @@
                 <div style="margin-top:-22px; margin-bottom:20px; overflow-y:auto; max-height:370px;">
                     <table class="table table-bordered table-hover">
                         <tbody class="member-list" style="background:white;">
-                        <tr><td>蔡俊涛（管理员）</td></tr>
-                        <tr><td>谭建新（成员）</td></tr>
-                        <tr><td>林增锐（成员）</td></tr>
                         </tbody>
                     </table>
                 </div>

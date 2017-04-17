@@ -45,7 +45,7 @@ public class AlarmController extends BaseController {
             return ResponseHelper.buildResponse(2000, "alarm_list", alarmList, "alarm_count", alarmCount);
         } catch (Exception e) {
             logger.error("get alarm list error, caused by", e);
-            return ResponseHelper.buildResponse(5000, "alarms", Collections.emptyList(), "count", 0);
+            return ResponseHelper.buildResponse(5000, "alarm_list", Collections.emptyList(), "alarm_count", 0);
         }
     }
 

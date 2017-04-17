@@ -134,12 +134,11 @@
                         <tr>
                             <th>
                                 <span class="form-inline fright">
-                                    <form>
-                                        <input id="module-name" class="form-control" type="text" placeholder="请输入模块名称"/>
-                                        <a id="module-create" type="button" class="btn cr-yellow" data-toggle="tooltip" data-placement="top" title="新建模块">
-                                            <i class="fa fa-plus fa-fw"></i>
-                                        </a>
-                                    </form>
+                                    <input id="module-name" class="form-control" type="text" placeholder="请输入模块名称" th:if="${current_user.type} == 0"/>
+                                    <a id="module-create" type="button" class="btn cr-yellow" data-toggle="tooltip"
+                                       data-placement="top" title="新建模块" th:if="${current_user.type} == 0">
+                                        <i class="fa fa-plus fa-fw"></i>
+                                    </a>
                                 </span>
                             </th>
                         </tr>

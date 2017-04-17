@@ -46,7 +46,7 @@ public interface ProjectDao {
 
     @Select("select count(id) from tb_project " +
             "where id in (select project_id from tb_project_member where user_id=#{userId})")
-    int getUserProjectCount();
+    int getUserProjectCount(@Param("userId") int userId);
 
     @Select("select * from tb_project " +
             "where id in (select project_id from tb_project_member where user_id=#{userId})")

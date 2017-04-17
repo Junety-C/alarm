@@ -82,7 +82,7 @@ public class ProjectService {
             return getAllProjectCount();
         } else {
             logger.debug("get user project count, search:{}", projectSearch);
-            return getUserProjectCount();
+            return getUserProjectCount(projectSearch);
         }
     }
 
@@ -90,8 +90,8 @@ public class ProjectService {
         return projectDao.getProjectCount();
     }
 
-    private int getUserProjectCount() {
-        return projectDao.getUserProjectCount();
+    private int getUserProjectCount(ProjectSearch projectSearch) {
+        return projectDao.getUserProjectCount(projectSearch.getUserId());
     }
 
     /**

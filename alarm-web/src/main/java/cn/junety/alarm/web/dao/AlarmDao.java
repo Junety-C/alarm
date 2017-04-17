@@ -77,78 +77,60 @@ public interface AlarmDao {
             "where ta.project_id=tp.id and tp.name like '${projectName}%'")
     int getAlarmCountByProjectName(AlarmSearch alarmSearch);
 
-    @Select("select distinct code from tb_alarm")
-    List<Integer> getAlarmCodeList();
-
 
     /* ===============用户查询================== */
 
     @Select("select id, code, name, project_id, module_id, group_id, route_key, config from tb_alarm " +
-            "where group_id in (select group_id from tb_group_member " +
-            "where receiver_id=(select receiver_id from tb_user_to_receiver where user_id=#{userId})) " +
+            "where project_id in (select project_id from tb_project_member where user_id=#{userId}) " +
             "order by id desc " +
             "limit #{page.start}, #{page.pageSize}")
     List<Alarm> getUserAlarm(AlarmSearch alarmSearch);
 
     @Select("select count(id) from tb_alarm " +
-            "where group_id in (select group_id from tb_group_member " +
-            "where receiver_id=(select receiver_id from tb_user_to_receiver where user_id=#{userId}))")
+            "where project_id in (select project_id from tb_project_member where user_id=#{userId})")
     int getUserAlarmCount(AlarmSearch alarmSearch);
 
     @Select("select id, code, name, project_id, module_id, group_id, route_key, config from tb_alarm " +
-            "where code=#{code} and group_id in (select group_id from tb_group_member " +
-            "where receiver_id=(select receiver_id from tb_user_to_receiver where user_id=#{userId})) " +
+            "where code=#{code} and project_id in (select project_id from tb_project_member where user_id=#{userId}) " +
             "order by id desc " +
             "limit #{page.start}, #{page.pageSize}")
     List<Alarm> getUserAlarmByCode(AlarmSearch alarmSearch);
 
     @Select("select count(id) from tb_alarm " +
-            "where code=#{code} and group_id in (select group_id from tb_group_member " +
-            "where receiver_id=(select receiver_id from tb_user_to_receiver where user_id=#{userId}))")
+            "where code=#{code} and project_id in (select project_id from tb_project_member where user_id=#{userId})")
     int getUserAlarmCountByCode(AlarmSearch alarmSearch);
 
     @Select("select id, code, name, project_id, module_id, group_id, route_key, config from tb_alarm " +
-            "where name like '${name}%' and group_id in (select group_id from tb_group_member " +
-            "where receiver_id=(select receiver_id from tb_user_to_receiver where user_id=#{userId})) " +
+            "where name like '${name}%' and project_id in (select project_id from tb_project_member where user_id=#{userId}) " +
             "order by id desc " +
             "limit #{page.start}, #{page.pageSize}")
     List<Alarm> getUserAlarmByName(AlarmSearch alarmSearch);
 
     @Select("select count(id) from tb_alarm " +
-            "where name like '${name}%' and group_id in (select group_id from tb_group_member " +
-            "where receiver_id=(select receiver_id from tb_user_to_receiver where user_id=#{userId}))")
+            "where name like '${name}%' and project_id in (select project_id from tb_project_member where user_id=#{userId})")
     int getUserAlarmCountByName(AlarmSearch alarmSearch);
 
     @Select("select ta.id, code, ta.name, project_id, module_id, group_id, route_key, config " +
-            "from tb_alarm ta, tb_group tb " +
-            "where tb.name like '${groupName}%' and group_id in (select group_id from tb_group_member " +
-            "where receiver_id=(select receiver_id from tb_user_to_receiver where user_id=#{userId})) " +
+            "from tb_alarm ta, tb_group tb where ta.group_id=tb.id and tb.name like '${groupName}%' " +
+            "and project_id in (select project_id from tb_project_member where user_id=#{userId}) " +
             "order by id desc " +
             "limit #{page.start}, #{page.pageSize}")
     List<Alarm> getUserAlarmByGroupName(AlarmSearch alarmSearch);
 
-    @Select("select count(ta.id) from tb_alarm ta, tb_group tb " +
-            "where tb.name like '${groupName}%' and group_id in (select group_id from tb_group_member " +
-            "where receiver_id=(select receiver_id from tb_user_to_receiver where user_id=#{userId}))")
+    @Select("select count(ta.id) from tb_alarm ta, tb_group tb where ta.group_id=tb.id and tb.name like '${groupName}%' " +
+            "and project_id in (select project_id from tb_project_member where user_id=#{userId})")
     int getUserAlarmCountByGroupName(AlarmSearch alarmSearch);
 
     @Select("select ta.id, code, ta.name, ta.project_id, module_id, group_id, route_key, config " +
             "from tb_alarm ta, tb_project tp " +
             "where ta.project_id=tp.id and tp.name like '${projectName}%' " +
-            "and group_id in (select group_id from tb_group_member " +
-            "where receiver_id=(select receiver_id from tb_user_to_receiver where user_id=#{userId})) " +
+            "and project_id in (select project_id from tb_project_member where user_id=#{userId}) " +
             "order by id desc " +
             "limit #{page.start}, #{page.pageSize}")
     List<Alarm> getUserAlarmByProjectName(AlarmSearch alarmSearch);
 
     @Select("select count(ta.id) from tb_alarm ta, tb_project tp " +
             "where ta.project_id=tp.id and tp.name like '${projectName}%' " +
-            "and group_id in (select group_id from tb_group_member " +
-            "where receiver_id=(select receiver_id from tb_user_to_receiver where user_id=#{userId}))")
+            "and project_id in (select project_id from tb_project_member where user_id=#{userId})")
     int getUserAlarmCountByProjectName(AlarmSearch alarmSearch);
-
-    @Select("select distinct code from tb_alarm " +
-            "where group_id in (select group_id from tb_group_member " +
-            "where receiver_id=(select receiver_id from tb_user_to_receiver where user_id=#{userId}))")
-    List<Integer> getUserAlarmCodeList(@Param("userId") int userId);
 }

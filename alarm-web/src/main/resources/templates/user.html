@@ -118,7 +118,7 @@
         <div class="panel-content">
             <div class="option">
                     <span class="fleft">
-                        <a class="btn cr-yellow" data-toggle="modal" data-target="#modal-user-create">
+                        <a class="btn cr-yellow" data-toggle="modal" data-target="#modal-user-create" th:if="${current_user.type} == 0">
                             <i class="fa fa-plus"></i> 新建
                         </a>
                     </span>

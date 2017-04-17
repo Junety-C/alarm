@@ -71,7 +71,6 @@ function getUserList(search) {
         type: "GET",
         success: function(data){
             if(data["code"] == 2000) {
-                console.log(data);
                 var i, html = "";
                 var user_list = data["user_list"];
                 if (data["current_user"]["type"] == 0) {
