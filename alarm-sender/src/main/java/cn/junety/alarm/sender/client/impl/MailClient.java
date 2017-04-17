@@ -47,7 +47,6 @@ public class MailClient extends Client {
     private boolean send(String title, String content, List<String> receivers) {
         try {
             HtmlEmail email = new HtmlEmail();
-            System.out.println(Configuration.MAIL_SENDER_USERNAME);
             email.setAuthentication(Configuration.MAIL_SENDER_USERNAME, Configuration.MAIL_SENDER_PASSWORD);
             email.setHostName(Configuration.MAIL_SENDER_SMTP_HOST);
             email.setSmtpPort(Configuration.MAIL_SENDER_SMTP_PORT);

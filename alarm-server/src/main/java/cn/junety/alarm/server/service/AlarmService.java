@@ -80,8 +80,10 @@ public class AlarmService {
                     Group group = groupDao.getGroupById(alarm.getGroupId());
                     AlarmMessage alarmMessage = buildAlarmMessage(alarm, alarmForm, receiverList, reportId, group);
                     if (alarmForm.isTest()) {
+                        logger.debug("ignore test alarm, message:{}", alarmMessage);
                         saveAlarmLog(alarmMessage, AlarmStatusEnum.TEST);
                     } else if(isFrequencyLimited(alarmMessage)) {
+                        logger.debug("alarm frequency limit, message:{}", alarmMessage);
                         saveAlarmLog(alarmMessage, AlarmStatusEnum.LIMIT);
                     } else {
                         saveAlarmLog(alarmMessage, AlarmStatusEnum.CREATE);

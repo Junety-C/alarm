@@ -82,7 +82,7 @@ CREATE TABLE `tb_alarm_log` (
 -- TODO 更改成管理员的信息
 insert into tb_user(id, account, name, identification, type, mail, phone, wechat, qq)
 values(1, '--your account--', '--your name--', '9ad46aaf-d7d2-4095-a2a0-c27ee796d8e1', 0,
-          '--your mail--', '--your phone--', '--your wechat--', '--your qq--');
+          '--your phone--', '--your mail--', '--your wechat--', '--your qq--');
 
 -- TODO 更改成管理员的信息
 insert into tb_project(id, name, creater, create_time, comment) values(1, '告警系统', '--your account--', unix_timestamp(now())*1000, '告警系统');
