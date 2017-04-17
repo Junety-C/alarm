@@ -13,22 +13,18 @@ import org.springframework.context.ApplicationContext;
 public class ClientFactory {
 
     public static MailClient buildMailClient(String name) {
-        System.setProperty("log.home", name);
         return new MailClient(name, ConfigKey.MAIL_QUEUE.value());
     }
 
     public static QQClient buildQQClient(String name) {
-        System.setProperty("log.home", name);
         return new QQClient(name, ConfigKey.QQ_QUEUE.value());
     }
 
     public static WechatClient buildWechatClient(String name) {
-        System.setProperty("log.home", name);
         return new WechatClient(name, ConfigKey.WECHAT_QUEUE.value());
     }
 
     public static DeliveryStatusClient buildDeliveryStatusClient(String name, ApplicationContext context) {
-        System.setProperty("log.home", name);
         return new DeliveryStatusClient(name, ConfigKey.DELIVERY_QUEUE.value(), context);
     }
 }

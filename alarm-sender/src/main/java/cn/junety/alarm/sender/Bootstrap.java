@@ -19,6 +19,8 @@ public class Bootstrap {
         String channel = args[0];
         String name = args[1];
 
+        System.setProperty("log.home", name);
+
         switch (channel) {
             case "mail":
                 ClientFactory.buildMailClient(name).start();
