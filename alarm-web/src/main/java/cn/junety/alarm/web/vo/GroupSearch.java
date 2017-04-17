@@ -48,4 +48,13 @@ public class GroupSearch {
     public void setGroupName(String groupName) {
         this.groupName = groupName;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "page=" + page +
+                ", userId=" + userId +
+                ", groupName='" + groupName + '\'' +
+                '}';
+    }
 }

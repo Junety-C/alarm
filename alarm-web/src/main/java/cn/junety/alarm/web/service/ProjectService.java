@@ -17,7 +17,7 @@ import java.util.List;
 
 /**
  * Created by caijt on 2017/3/26.
- * 项目
+ * 处理项目
  */
 @Service
 public class ProjectService {
@@ -44,15 +44,6 @@ public class ProjectService {
             logger.debug("get user project info, user:{}", user);
             return projectDao.getAllUserProject(user.getId());
         }
-    }
-
-    /**
-     * 根据项目id获取对应模块信息
-     * @param pid 项目id
-     * @return 模块列表
-     */
-    public List<Module> getModuleByProjectId(int pid) {
-        return moduleDao.getModuleByPprojectId(pid);
     }
 
     /**

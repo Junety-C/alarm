@@ -8,6 +8,7 @@ import java.util.List;
 
 /**
  * Created by caijt on 2017/1/28.
+ * 告警日志dao
  */
 public interface AlarmLogDao {
 

@@ -18,7 +18,7 @@ import java.util.List;
 
 /**
  * Created by caijt on 2017/3/26.
- * 告警信息相关
+ * 处理告警
  */
 @Service
 public class AlarmService {
@@ -100,7 +100,7 @@ public class AlarmService {
      */
     public int getAlarmInfoCount(User user, AlarmSearch alarmSearch) {
         // 管理员获取所有告警, 普通用户获取自己能接收到的告警
-        if (user.getType() == UserTypeEnum.ADMIN_USER.value()) {
+        if (UserTypeEnum.ADMIN_USER.value().equals(user.getType())) {
             logger.debug("get all alarm info count, user:{}", JSON.toJSONString(user));
             return getAllAlarmCount(alarmSearch);
         } else {
@@ -167,24 +167,6 @@ public class AlarmService {
      * @param alarm 告警信息
      */
     public void updateAlarm(Alarm alarm) {
-        if (alarm.getCode() <= 0) {
-            alarm.setCode(alarmDao.getMaxCode() + 1);
-        }
         alarmDao.updateById(alarm);
-    }
-
-    /**
-     * 获取告警代号列表
-     * @param user 用户信息
-     * @return 告警代号列表
-     */
-    public List<Integer> getAlarmCodeList(User user) {
-        if (user.getType() == UserTypeEnum.ADMIN_USER.value()) {
-            logger.debug("get all alarm code list, user:{}", JSON.toJSONString(user));
-            return alarmDao.getAlarmCodeList();
-        } else {
-            logger.debug("get user alarm code list, user:{}", JSON.toJSONString(user));
-            return alarmDao.getUserAlarmCodeList(user.getId());
-        }
     }
 }

@@ -1,10 +1,8 @@
 package cn.junety.alarm.web.interceptor;
 
 import cn.junety.alarm.base.entity.User;
-import cn.junety.alarm.base.entity.UserTypeEnum;
 import cn.junety.alarm.web.service.UserLoginStatusService;
 import cn.junety.alarm.web.service.UserService;
-import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

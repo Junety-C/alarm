@@ -8,14 +8,12 @@ import java.util.List;
 
 /**
  * Created by caijt on 2017/1/28.
+ * 告警dao
  */
 public interface AlarmDao {
 
     @Select("select id, code, name, project_id, module_id, group_id, route_key, config from tb_alarm where id=#{id}")
     Alarm getAlarmById(@Param("id") int id);
-
-    @Select("select max(code) from tb_alarm")
-    int getMaxCode();
 
     @Insert("insert into tb_alarm(code, name, project_id, module_id, group_id, route_key, config) " +
             "values(#{code}, #{name}, #{projectId}, #{moduleId}, #{groupId}, #{routeKey}, #{config})")

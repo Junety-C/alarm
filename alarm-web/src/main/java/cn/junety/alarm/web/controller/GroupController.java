@@ -19,6 +19,7 @@ import java.util.List;
 
 /**
  * Created by caijt on 2017/3/27.
+ * 接收组API
  */
 @RestController
 public class GroupController extends BaseController {

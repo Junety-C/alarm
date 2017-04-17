@@ -2,7 +2,6 @@ package cn.junety.alarm.web.vo;
 
 import cn.junety.alarm.base.entity.User;
 import com.google.common.base.Strings;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import javax.servlet.http.HttpServletRequest;

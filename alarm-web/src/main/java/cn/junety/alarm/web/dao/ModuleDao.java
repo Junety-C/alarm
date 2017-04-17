@@ -10,6 +10,7 @@ import java.util.List;
 
 /**
  * Created by caijt on 2017/1/28.
+ * 模块dao
  */
 public interface ModuleDao {
     @Select("select * from tb_module where id=#{id}")

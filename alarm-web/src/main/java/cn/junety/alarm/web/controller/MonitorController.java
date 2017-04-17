@@ -15,6 +15,7 @@ import java.util.Map;
 
 /**
  * Created by caijt on 2017/4/5.
+ * 系统监控API
  */
 @RestController
 @RequestMapping("monitor")

@@ -14,6 +14,7 @@ import java.util.List;
 
 /**
  * Created by caijt on 2017/4/16.
+ * 用户API
  */
 @RestController
 public class UserController extends BaseController {

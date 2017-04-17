@@ -2,24 +2,18 @@ package cn.junety.alarm.web.dao;
 
 import cn.junety.alarm.base.entity.Group;
 import cn.junety.alarm.base.entity.User;
-import cn.junety.alarm.web.vo.GroupSearch;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
 /**
  * Created by caijt on 2017/3/26.
+ * 接收组dao
  */
 public interface GroupDao {
 
     @Select("select id, name from tb_group where id=#{id}")
     Group getGroupById(@Param("id") int id);
-
-    @Select("select id, name from tb_group order by id desc")
-    List<Group> getAllGroup();
-
-
-
 
     @Insert("insert into tb_group(project_id, name) values(#{projectId}, #{name})")
     @Options(useGeneratedKeys = true, keyProperty = "id")

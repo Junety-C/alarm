@@ -17,6 +17,7 @@ import java.util.List;
 
 /**
  * Created by caijt on 2017/3/24.
+ * 告警日志API
  */
 @RestController
 public class AlarmLogController extends BaseController {

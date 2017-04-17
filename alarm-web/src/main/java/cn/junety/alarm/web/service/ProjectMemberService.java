@@ -11,7 +11,7 @@ import java.util.List;
 
 /**
  * Created by caijt on 2017/4/16.
- * 项目成员
+ * 处理项目成员
  */
 @Service
 public class ProjectMemberService {

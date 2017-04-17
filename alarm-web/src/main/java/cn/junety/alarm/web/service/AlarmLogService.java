@@ -12,6 +12,7 @@ import java.util.List;
 
 /**
  * Created by caijt on 2017/3/27.
+ * 处理告警日志
  */
 @Service
 public class AlarmLogService {

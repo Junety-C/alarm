@@ -4,7 +4,6 @@ import cn.junety.alarm.base.entity.User;
 import cn.junety.alarm.base.entity.UserTypeEnum;
 import cn.junety.alarm.web.dao.UserDao;
 import cn.junety.alarm.web.vo.UserSearch;
-import cn.junety.alarm.web.vo.UserVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,7 @@ import java.util.UUID;
 
 /**
  * Created by caijt on 2017/4/2.
- * 用户
+ * 处理用户
  */
 @Service
 public class UserService {

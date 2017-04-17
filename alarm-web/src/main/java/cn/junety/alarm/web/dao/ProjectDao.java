@@ -2,13 +2,13 @@ package cn.junety.alarm.web.dao;
 
 import cn.junety.alarm.base.entity.Project;
 import cn.junety.alarm.web.vo.ProjectSearch;
-import cn.junety.alarm.web.vo.UserVO;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
 /**
  * Created by caijt on 2017/1/28.
+ * 项目dao
  */
 public interface ProjectDao {
 

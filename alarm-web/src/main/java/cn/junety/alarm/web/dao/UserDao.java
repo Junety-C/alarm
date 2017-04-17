@@ -2,13 +2,13 @@ package cn.junety.alarm.web.dao;
 
 import cn.junety.alarm.base.entity.User;
 import cn.junety.alarm.web.vo.UserSearch;
-import cn.junety.alarm.web.vo.UserVO;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
 /**
  * Created by caijt on 2017/4/2.
+ * 用户dao
  */
 public interface UserDao {
 
@@ -17,9 +17,6 @@ public interface UserDao {
 
     @Select("select * from tb_user where identification=#{identification}")
     User getUserByIdentification(@Param("identification") String identification);
-
-    @Select("select * from tb_user")
-    List<UserVO> getAllUser();
 
     @Select("select * from tb_user where id=#{id}")
     User getUserById(@Param("id") int id);

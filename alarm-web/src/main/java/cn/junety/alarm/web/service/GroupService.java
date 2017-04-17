@@ -3,7 +3,6 @@ package cn.junety.alarm.web.service;
 import cn.junety.alarm.base.entity.Group;
 import cn.junety.alarm.base.entity.User;
 import cn.junety.alarm.web.dao.GroupDao;
-import cn.junety.alarm.web.dao.UserDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +12,7 @@ import java.util.List;
 
 /**
  * Created by caijt on 2017/3/27.
- *
- * 接收组相关
+ * 处理接收组
  */
 @Service
 public class GroupService {
@@ -23,10 +21,6 @@ public class GroupService {
 
     @Autowired
     private GroupDao groupDao;
-
-    public List<Group> getAllGroup() {
-        return groupDao.getAllGroup();
-    }
 
     /**
      * 根据项目id获取接收组列表

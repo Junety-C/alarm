@@ -67,4 +67,15 @@ public class AlarmVO {
     public void setConfig(String config) {
         this.config = config;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "alarm=" + alarm +
+                ", project=" + project +
+                ", module=" + module +
+                ", group=" + group +
+                ", config='" + config + '\'' +
+                '}';
+    }
 }

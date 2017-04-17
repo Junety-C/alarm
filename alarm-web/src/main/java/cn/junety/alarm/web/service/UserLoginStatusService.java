@@ -12,7 +12,7 @@ import javax.servlet.http.HttpSession;
 @Service
 public class UserLoginStatusService {
 
-    public final static String LOGIN_USER_STATUS_NAME = "ALARM_CENTER_USER_STATUS";
+    private final static String LOGIN_USER_STATUS_NAME = "ALARM_CENTER_USER_STATUS";
 
     public String getIdentificationFromLoginStatus(HttpServletRequest request) {
         HttpSession session = request.getSession(true);

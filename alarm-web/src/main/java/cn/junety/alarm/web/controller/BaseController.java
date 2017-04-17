@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * Created by caijt on 2017/4/2.
+ * 用户信息处理
  */
 public class BaseController {
 

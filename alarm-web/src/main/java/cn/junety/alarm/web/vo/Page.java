@@ -34,4 +34,12 @@ public class Page {
     public void setPageSize(int pageSize) {
         this.pageSize = pageSize;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "pageNo=" + pageNo +
+                ", pageSize=" + pageSize +
+                '}';
+    }
 }

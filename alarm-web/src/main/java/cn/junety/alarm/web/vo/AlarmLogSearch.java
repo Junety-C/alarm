@@ -23,11 +23,11 @@ public class AlarmLogSearch {
         this.userId = user.getId();
 
         if(!Strings.isNullOrEmpty(request.getParameter("code"))) {
-            this.code = Integer.valueOf(request.getParameter("code").trim());
+            this.code = Integer.valueOf(request.getParameter("code"));
         } else if(!Strings.isNullOrEmpty(request.getParameter("alarm_name"))) {
-            this.alarmName = request.getParameter("alarm_name").trim();
+            this.alarmName = request.getParameter("alarm_name");
         } else if(!Strings.isNullOrEmpty(request.getParameter("project"))) {
-            this.projectName = request.getParameter("project").trim();
+            this.projectName = request.getParameter("project");
         }
     }
 

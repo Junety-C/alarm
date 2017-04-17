@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * Created by caijt on 2017/3/24.
+ * 异常处理
  */
 @ControllerAdvice
 public class ExceptionController {

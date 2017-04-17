@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * Created by caijt on 2017/4/2.
+ * 登录/注销API
  */
 @RestController
 public class LoginController extends BaseController {
