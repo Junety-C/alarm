@@ -2,10 +2,7 @@ package cn.junety.alarm.web.dao;
 
 import cn.junety.alarm.base.entity.User;
 import cn.junety.alarm.web.vo.UserVO;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -38,4 +35,7 @@ public interface ProjectMemberDao {
 
     @Select("select type from tb_project_member where user_id=#{userId} and project_id=#{projectId}")
     Integer getProjectMemberTypeByProjectId(@Param("userId") int userId, @Param("projectId") int projectId);
+
+    @Update("update tb_project_member set type=#{type} where project_id=#{projectId} and user_id=#{userId}")
+    void updateType(@Param("projectId") int projectId, @Param("userId") int userId, @Param("type") int type);
 }

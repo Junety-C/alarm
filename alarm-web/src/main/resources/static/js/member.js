@@ -64,24 +64,7 @@ function initMemberTable() {
                 setPageBtnClick();
                 setTableTotalSize(data["project_count"]);
 
-                // default member list
-                html = "";
-                var member_list = data["member_list"];
-                for(i = 0; i < member_list.length; i++) {
-                    var member  = member_list[i];
-                    html += "<tr><td><div>"+member["name"];
-                    if (member["type"] == 0) html += "（管理员）";
-                    else html += "（成员）";
-                    if (data["permission_type"] == 0 || data["user"]["type"] == 0) {
-                        html += "<button class='btn btn-danger member-del' data-toggle='modal' data-target='#modal-member-del' "
-                            + "_uid='"+member["id"]+"' style='float:right;margin:0;padding:0;width:26px;'>X</button>";
-                    }
-                    html += "</div></td></tr>";
-                }
-                $(".member-list").html(html);
-                $(".member-del").click(function() {
-                    $("#current-id").attr("_uid", $(this).attr("_uid"));
-                });
+                setMemberList(data);
             }
         }
     });
@@ -105,23 +88,7 @@ function getMemberByProjectId(pid) {
         type: "GET",
         success: function(data){
             if(data["code"] == 2000) {
-                var i, html = "";
-                var member_list = data["member_list"];
-                for(i = 0; i < member_list.length; i++) {
-                    var member  = member_list[i];
-                    html += "<tr><td><div>"+member["name"];
-                    if (member["type"] == 0) html += "（管理员）";
-                    else html += "（成员）";
-                    if (data["permission_type"] == 0 || data["user"]["type"] == 0) {
-                        html += "<button class='btn btn-danger member-del' data-toggle='modal' data-target='#modal-member-del' "
-                            + "_uid='"+member["id"]+"' style='float:right;margin:0;padding:0;width:26px;'>X</button>";
-                    }
-                    html += "</div></td></tr>";
-                }
-                $(".member-list").html(html);
-                $(".member-del").click(function() {
-                    $("#current-id").attr("_uid", $(this).attr("_uid"));
-                });
+                setMemberList(data);
             }
         }
     });
@@ -158,6 +125,57 @@ function removeProjectMember(project_id, user_id) {
                 return;
             }
             initMemberTable();
+        }
+    });
+}
+
+function setMemberList(data) {
+    var html = "";
+    var member_list = data["member_list"];
+    for(var i = 0; i < member_list.length; i++) {
+        var member  = member_list[i];
+        html += "<tr><td><div>"+member["name"];
+        if (member["type"] == 0) html += "（管理员）";
+        else html += "（成员）";
+        if (data["permission_type"] == 0 || data["user"]["type"] == 0) {
+            html += "<button class='btn btn-danger member-del' data-toggle='modal' data-target='#modal-member-del' "
+                + "_uid='"+member["id"]+"' style='float:right;margin:0;margin-left:5px;padding:0;width:26px;'>X</button>";
+        }
+        if (data["user"]["type"] == 0) {
+            html += "<a class='btn cr-yellow be-member' _uid='"+member["id"]+"' "
+                + "style='float:right;margin:0;margin-left:5px;padding:0;width:26px;'>"
+                + "<i class='fa fa-chevron-down'></i></a>";
+            html += "<a class='btn cr-yellow be-admin' _uid='"+member["id"]+"' "
+                + "style='float:right;margin:0;margin-left:5px;padding:0;width:26px;'>"
+                + "<i class='fa fa-chevron-up'></i></a>";
+        }
+        html += "</div></td></tr>";
+    }
+    $(".member-list").html(html);
+    $(".member-del").click(function() {
+        $("#current-id").attr("_uid", $(this).attr("_uid"));
+    });
+    $(".be-admin").click(function () {
+        changeProjectMemberPower($("#current-id").attr("_pid"), $(this).attr("_uid"), 0);
+    });
+    $(".be-member").click(function () {
+        changeProjectMemberPower($("#current-id").attr("_pid"), $(this).attr("_uid"), 1);
+    });
+}
+
+function changeProjectMemberPower(pid, uid, power) {
+    $.ajax({
+        url: "/projects/"+pid+"/members/"+uid+"/power/"+power,
+        type: "POST",
+        data: JSON.stringify({}),
+        dataType: "json",
+        contentType: "application/json;charset=utf-8",
+        success: function(data){
+            if (data["code"] != 2000) {
+                alert("更新成员权限失败");
+            }
+            getMemberByProjectId(pid);
+            // initMemberTable();
         }
     });
 }

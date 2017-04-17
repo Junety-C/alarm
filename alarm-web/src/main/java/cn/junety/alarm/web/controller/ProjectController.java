@@ -263,4 +263,14 @@ public class ProjectController extends BaseController {
                     "group_list", Collections.emptyList());
         }
     }
+
+    @RequestMapping(value = "/projects/{pid}/members/{uid}/power/{power}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String addProjectMember(HttpServletRequest request, @PathVariable Integer pid, @PathVariable Integer uid, @PathVariable Integer power) {
+        User currentUser = getUser(request);
+        logger.info("POST /projects/{}/members/{}/power/{}, current_user:{}", pid, uid, power, currentUser);
+
+        projectMemberService.changeMemberType(pid, uid, power);
+
+        return ResponseHelper.buildResponse(2000);
+    }
 }

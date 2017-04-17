@@ -59,4 +59,14 @@ public class ProjectMemberService {
     public User getProjectMemberByAccount(int projectId, String account) {
         return projectMemberDao.getProjectMemberByAccount(projectId, account);
     }
+
+    /**
+     * 修改项目成员权限
+     * @param projectId 项目id
+     * @param userId 用户id
+     * @param type 权限类型
+     */
+    public void changeMemberType(int projectId, int userId, int type) {
+        projectMemberDao.updateType(projectId, userId, type);
+    }
 }
