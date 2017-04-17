@@ -71,4 +71,16 @@ public class AlarmForm {
         }
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "code=" + code +
+                ", content='" + content + '\'' +
+                ", routeKey='" + routeKey + '\'' +
+                ", ip='" + ip + '\'' +
+                ", isTest=" + isTest +
+                ", level=" + level +
+                '}';
+    }
 }

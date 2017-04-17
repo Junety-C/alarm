@@ -7,7 +7,7 @@ import cn.junety.alarm.base.entity.*;
 import cn.junety.alarm.base.exception.AlarmNotFoundException;
 import cn.junety.alarm.base.redis.JedisFactory;
 import cn.junety.alarm.server.channel.Channel;
-import cn.junety.alarm.server.common.HttpHelper;
+import cn.junety.alarm.server.common.ResponseHelper;
 import cn.junety.alarm.server.common.IdGenerator;
 import cn.junety.alarm.server.vo.AlarmForm;
 import cn.junety.alarm.server.vo.AlarmMessage;
@@ -58,23 +58,27 @@ public class AlarmService {
     @Autowired
     private Channel qqChannel;
 
+    /**
+     * 处理告警上报信息
+     * @param alarmForm 告警表单
+     * @return 处理结果
+     */
     public String handle(AlarmForm alarmForm) {
         try {
             // 已发送的接收人id
             Set<Integer> sent = new HashSet<>();
             // 根据表单配置获取告警列表
-            List<Alarm> alarms = getAlarms(alarmForm);
+            List<Alarm> alarmList = getAlarmList(alarmForm);
             // 一个告警信息共用一个上报id
             long reportId = IdGenerator.generate(ConfigKey.ALARM_REPORT_ID_POOL.value());
-            // 遍历告警列表
-            for (Alarm alarm : alarms) {
+            for (Alarm alarm : alarmList) {
                 // 获取该告警接收人
-                List<Receiver> receivers = receiverDao.getReceiverByGroupId(alarm.getGroupId());
+                List<Receiver> receiverList = receiverDao.getReceiverByGroupId(alarm.getGroupId());
                 // 接收人去重,防止一条告警信息多次发送给同一个接收人
-                receivers = removeDuplicatedReceiver(receivers, sent);
-                if(receivers.size() != 0) {
+                receiverList = removeDuplicatedReceiver(receiverList, sent);
+                if(receiverList.size() != 0) {
                     Group group = groupDao.getGroupById(alarm.getGroupId());
-                    AlarmMessage alarmMessage = buildAlarmMessage(alarm, alarmForm, receivers, reportId, group);
+                    AlarmMessage alarmMessage = buildAlarmMessage(alarm, alarmForm, receiverList, reportId, group);
                     if (alarmForm.isTest()) {
                         saveAlarmLog(alarmMessage, AlarmStatusEnum.TEST);
                     } else if(isFrequencyLimited(alarmMessage)) {
@@ -87,17 +91,22 @@ public class AlarmService {
             }
             // 告警信息无接收人, 发送告警信息给管理员
             if(sent.size() == 0) {
-                AlarmClient.info(1, "alarm.server.noreceiver", String.format("接收到无接收者的告警,reportId:%s", reportId));
-                return HttpHelper.buildResponse(4004, "receivers is empty");
+                AlarmClient.info(1, "alarm.server.receiver", String.format("接收到无接收人的告警,reportId:%s", reportId));
+                return ResponseHelper.buildResponse(4004, "reason", "receiver is empty");
             }
-            return HttpHelper.buildResponse(2000, "success");
+            return ResponseHelper.buildResponse(2000);
         } catch (AlarmNotFoundException e) {
             logger.error("alarm not found by code:{}", alarmForm.getCode());
-            return HttpHelper.buildResponse(4004, "alarm not found.");
+            return ResponseHelper.buildResponse(4004, "reason", "alarm not found.");
         }
     }
 
-    private List<Alarm> getAlarms(AlarmForm alarmForm) {
+    /**
+     * 获取告警列表，根据code和routeKey过滤告警
+     * @param alarmForm 告警表单
+     * @return 告警列表
+     */
+    private List<Alarm> getAlarmList(AlarmForm alarmForm) {
         Integer code = alarmForm.getCode();
         List<Alarm> alarms = alarmDao.getAllByCode(code);
 
@@ -122,6 +131,12 @@ public class AlarmService {
         return legalAlarm;
     }
 
+    /**
+     * route key匹配
+     * @param userRouteKey 用户发送的route key
+     * @param alarmRouteKey 告警配置的route key
+     * @return 匹配结果
+     */
     private boolean isMatch(String userRouteKey, String alarmRouteKey) {
         if(Strings.isNullOrEmpty(alarmRouteKey)) {
             return false;
@@ -139,16 +154,26 @@ public class AlarmService {
         return true;
     }
 
-    private List<Receiver> removeDuplicatedReceiver(List<Receiver> receivers, Set<Integer> sent) {
-        List<Receiver> uniqueReceivers = new ArrayList<>();
-        for(Receiver receiver : receivers) {
+    /**
+     * 接收人去重
+     * @param receiverList 接收人列表
+     * @param sent 已发送的接收人
+     * @return 去重后的接收人列表
+     */
+    private List<Receiver> removeDuplicatedReceiver(List<Receiver> receiverList, Set<Integer> sent) {
+        List<Receiver> uniqueReceiverList = new ArrayList<>();
+        for(Receiver receiver : receiverList) {
             if(sent.add(receiver.getId())) {
-                uniqueReceivers.add(receiver);
+                uniqueReceiverList.add(receiver);
             }
         }
-        return uniqueReceivers;
+        return uniqueReceiverList;
     }
 
+    /**
+     * 根据用户配置，转发告警信息到各个渠道
+     * @param alarmMessage 告警相关信息
+     */
     private void triggerAlarm(AlarmMessage alarmMessage) {
         JsonConfig config = new JsonConfig(alarmMessage.getConfig());
 
@@ -166,6 +191,11 @@ public class AlarmService {
         }
     }
 
+    /**
+     * 告警限频处理
+     * @param alarmMessage 告警相关信息
+     * @return 是否限频
+     */
     private boolean isFrequencyLimited(AlarmMessage alarmMessage) {
         JsonConfig config = new JsonConfig(alarmMessage.getConfig());
         if (!config.getConfig("freq_limit", true)) {
@@ -190,6 +220,13 @@ public class AlarmService {
         }
     }
 
+    /**
+     * 判断是否限频
+     * @param alarmMessage 告警相关信息
+     * @param times 限频次数
+     * @param interval 限频间隔
+     * @return
+     */
     private boolean checkFrequencyLimited(AlarmMessage alarmMessage, int times, int interval) {
         String key = alarmMessage.getCode() + "." + alarmMessage.getRouteKey();
         try (Jedis jedis = JedisFactory.getJedisInstance()) {
@@ -204,6 +241,11 @@ public class AlarmService {
         }
     }
 
+    /**
+     * 告警日志落地
+     * @param alarmMessage 告警相关信息
+     * @param alarmStatusEnum 告警处理状态
+     */
     private void saveAlarmLog(AlarmMessage alarmMessage, AlarmStatusEnum alarmStatusEnum) {
         AlarmLog alarmLog = new AlarmLog();
         alarmLog.setReportId(alarmMessage.getReportId());
@@ -225,7 +267,7 @@ public class AlarmService {
         alarmMessage.addLogId(alarmLog.getId());
     }
 
-    private AlarmMessage buildAlarmMessage(Alarm alarm, AlarmForm alarmForm, List<Receiver> receivers, long reportId, Group group) {
+    private AlarmMessage buildAlarmMessage(Alarm alarm, AlarmForm alarmForm, List<Receiver> receiverList, long reportId, Group group) {
         Module module = moduleDao.getModuleById(alarm.getModuleId());
         Project project = projectDao.getProjectById(module.getProjectId());
 
@@ -234,7 +276,7 @@ public class AlarmService {
                 .addAlarmForm(alarmForm)
                 .addProject(project)
                 .addModule(module)
-                .addReceivers(receivers)
+                .addReceivers(receiverList)
                 .addReportId(reportId)
                 .addGroup(group);
 

@@ -189,4 +189,25 @@ public class AlarmMessage {
     public String getGroup() {
         return group;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "code=" + code +
+                ", alarmName='" + alarmName + '\'' +
+                ", routeKey='" + routeKey + '\'' +
+                ", projectName='" + projectName + '\'' +
+                ", moduleName='" + moduleName + '\'' +
+                ", level=" + level +
+                ", receivers=" + receivers +
+                ", content='" + content + '\'' +
+                ", ip='" + ip + '\'' +
+                ", status=" + status +
+                ", group='" + group + '\'' +
+                ", createTime=" + createTime +
+                ", config='" + config + '\'' +
+                ", reportId=" + reportId +
+                ", logId=" + logId +
+                '}';
+    }
 }

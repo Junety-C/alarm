@@ -11,19 +11,21 @@ import java.util.Map;
 /**
  * Created by caijt on 2017/1/28.
  */
-public class HttpHelper {
+public class ResponseHelper {
 
-    private static Logger logger = LoggerFactory.getLogger(HttpHelper.class);
+    private static Logger logger = LoggerFactory.getLogger(ResponseHelper.class);
 
     private static final String[] PROXY_REMOTE_IP_ADDRESS = { "X-Forwarded-For", "X-Real-IP" };
 
-    public static String buildResponse(int code, String content) {
+    public static String buildResponse(int code, Object... vars) {
         Map<String, Object> params = new HashMap<>();
         params.put("code", code);
-        params.put("content", content);
-        String response = JSON.toJSONString(params);
-        logger.info("response body:{}", response);
-        return response;
+        for(int i = 0; i < vars.length; i+=2) {
+            params.put(vars[i].toString(), vars[i+1]);
+        }
+        String body = JSON.toJSONString(params);
+        logger.info("response body:{}", body);
+        return body;
     }
 
     public static String getRemoteIp(HttpServletRequest request ) {

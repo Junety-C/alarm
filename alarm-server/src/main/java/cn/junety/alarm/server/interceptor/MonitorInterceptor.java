@@ -12,8 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * Created by caijt on 2017/4/2.
- *
- * 对未登陆的使用者进行拦截
+ * 服务端监控
  */
 public class MonitorInterceptor extends HandlerInterceptorAdapter {
 

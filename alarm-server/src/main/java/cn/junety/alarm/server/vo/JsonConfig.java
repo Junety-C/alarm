@@ -34,4 +34,12 @@ public class JsonConfig {
         }
 
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "jsonString='" + jsonString + '\'' +
+                ", config=" + config +
+                '}';
+    }
 }

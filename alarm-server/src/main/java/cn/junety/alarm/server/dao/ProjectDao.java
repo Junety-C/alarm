@@ -12,6 +12,6 @@ import java.util.List;
  * Created by caijt on 2017/1/28.
  */
 public interface ProjectDao {
-    @Select("select id, name from tb_project where id=#{id}")
+    @Select("select * from tb_project where id=#{id}")
     Project getProjectById(@Param("id") int id);
 }
