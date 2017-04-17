@@ -95,7 +95,6 @@ public class ProjectController extends BaseController {
         logger.info("DELETE /projects/{}, current_user:{}", pid, currentUser);
 
         projectService.deleteProject(pid);
-        moduleService.deleteModuleByProjectId(pid);
 
         return ResponseHelper.buildResponse(2000);
     }

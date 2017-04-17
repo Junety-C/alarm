@@ -45,12 +45,4 @@ public class ModuleService {
     public void deleteModule(int moduleId) {
         moduleDao.deleteById(moduleId);
     }
-
-    /**
-     * 根据项目id删除其所有模块
-     * @param projectId 项目id
-     */
-    public void deleteModuleByProjectId(int projectId) {
-        moduleDao.deleteByProjectId(projectId);
-    }
 }

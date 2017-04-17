@@ -69,13 +69,6 @@ public class GroupService {
      */
     public void deleteGroup(int groupId) {
         groupDao.deleteGroupById(groupId);
-    }
-
-    /**
-     * 移除指定接收组的所有成员
-     * @param groupId 接收组id
-     */
-    public void removeGroupMember(int groupId) {
         groupDao.removeGroupMemberByGroupId(groupId);
     }
 

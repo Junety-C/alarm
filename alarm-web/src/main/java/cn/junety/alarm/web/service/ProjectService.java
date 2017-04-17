@@ -1,9 +1,7 @@
 package cn.junety.alarm.web.service;
 
-import cn.junety.alarm.base.entity.Module;
-import cn.junety.alarm.base.entity.Project;
-import cn.junety.alarm.base.entity.User;
-import cn.junety.alarm.base.entity.UserTypeEnum;
+import cn.junety.alarm.base.entity.*;
+import cn.junety.alarm.web.dao.GroupDao;
 import cn.junety.alarm.web.dao.ModuleDao;
 import cn.junety.alarm.web.dao.ProjectDao;
 import cn.junety.alarm.web.dao.ProjectMemberDao;
@@ -30,6 +28,8 @@ public class ProjectService {
     private ProjectMemberDao projectMemberDao;
     @Autowired
     private ModuleDao moduleDao;
+    @Autowired
+    private GroupDao groupDao;
 
     /**
      * 获取所有项目信息
@@ -141,5 +141,10 @@ public class ProjectService {
     public void deleteProject(int projectId) {
         projectDao.delete(projectId);
         projectMemberDao.deleteProjectMemberByProjectId(projectId);
+        moduleDao.deleteByProjectId(projectId);
+        List<Group> groupList = groupDao.getGroupByProjectId(projectId);
+        for(Group group : groupList) {
+            groupDao.deleteGroupById(group.getId());
+        }
     }
 }

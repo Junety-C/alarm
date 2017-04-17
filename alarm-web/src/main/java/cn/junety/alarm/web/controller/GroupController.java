@@ -103,7 +103,6 @@ public class GroupController extends BaseController {
         logger.info("DELETE /projects/{}/groups/{}, current_user:{}", pid, gid, currentUser);
 
         groupService.deleteGroup(gid);
-        groupService.removeGroupMember(gid);
 
         return ResponseHelper.buildResponse(2000);
     }
