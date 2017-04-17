@@ -58,4 +58,16 @@ public class Receiver {
     public void setQq(String qq) {
         this.qq = qq;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", phone='" + phone + '\'' +
+                ", mail='" + mail + '\'' +
+                ", wechat='" + wechat + '\'' +
+                ", qq='" + qq + '\'' +
+                '}';
+    }
 }

@@ -62,4 +62,15 @@ public class QueueMessage {
     public void setReceivers(List<String> receivers) {
         this.receivers = receivers;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "logId=" + logId +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", level=" + level +
+                ", receivers=" + receivers +
+                '}';
+    }
 }

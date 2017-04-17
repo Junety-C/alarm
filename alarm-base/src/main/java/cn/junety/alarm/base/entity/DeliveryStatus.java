@@ -29,4 +29,12 @@ public class DeliveryStatus {
     public void setChannel(String channel) {
         this.channel = channel;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "logId=" + logId +
+                ", channel='" + channel + '\'' +
+                '}';
+    }
 }

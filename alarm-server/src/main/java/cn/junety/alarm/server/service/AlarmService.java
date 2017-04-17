@@ -76,11 +76,11 @@ public class AlarmService {
                     Group group = groupDao.getGroupById(alarm.getGroupId());
                     AlarmMessage alarmMessage = buildAlarmMessage(alarm, alarmForm, receivers, reportId, group);
                     if (alarmForm.isTest()) {
-                        saveAlarmLog(alarmMessage, AlarmStatus.TEST);
+                        saveAlarmLog(alarmMessage, AlarmStatusEnum.TEST);
                     } else if(isFrequencyLimited(alarmMessage)) {
-                        saveAlarmLog(alarmMessage, AlarmStatus.LIMIT);
+                        saveAlarmLog(alarmMessage, AlarmStatusEnum.LIMIT);
                     } else {
-                        saveAlarmLog(alarmMessage, AlarmStatus.CREATE);
+                        saveAlarmLog(alarmMessage, AlarmStatusEnum.CREATE);
                         triggerAlarm(alarmMessage);
                     }
                 }
@@ -204,7 +204,7 @@ public class AlarmService {
         }
     }
 
-    private void saveAlarmLog(AlarmMessage alarmMessage, AlarmStatus alarmStatus) {
+    private void saveAlarmLog(AlarmMessage alarmMessage, AlarmStatusEnum alarmStatusEnum) {
         AlarmLog alarmLog = new AlarmLog();
         alarmLog.setReportId(alarmMessage.getReportId());
         alarmLog.setCode(alarmMessage.getCode());
@@ -216,7 +216,7 @@ public class AlarmService {
         alarmLog.setReceivers(getReceiversName(alarmMessage.getReceivers()));
         alarmLog.setContent(alarmMessage.getContent(512));
         alarmLog.setIp(alarmMessage.getIp());
-        alarmLog.setStatus(alarmStatus.getNumber());
+        alarmLog.setStatus(alarmStatusEnum.value());
         alarmLog.setDeliveryStatus("");
         alarmLog.setCreateTime(alarmMessage.getCreateTime());
 

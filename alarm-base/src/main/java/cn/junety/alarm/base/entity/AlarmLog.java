@@ -130,4 +130,24 @@ public class AlarmLog {
     public void setGroupName(String groupName) {
         this.groupName = groupName;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "id=" + id +
+                ", reportId=" + reportId +
+                ", code=" + code +
+                ", alarmName='" + alarmName + '\'' +
+                ", projectName='" + projectName + '\'' +
+                ", ModuleName='" + ModuleName + '\'' +
+                ", groupName='" + groupName + '\'' +
+                ", level=" + level +
+                ", receivers='" + receivers + '\'' +
+                ", content='" + content + '\'' +
+                ", ip='" + ip + '\'' +
+                ", status=" + status +
+                ", deliveryStatus='" + deliveryStatus + '\'' +
+                ", createTime=" + createTime +
+                '}';
+    }
 }

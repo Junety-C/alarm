@@ -21,7 +21,7 @@ public class AlarmMessage {
     private List<Receiver> receivers;
     private String content;
     private String ip;
-    private AlarmStatus status;
+    private AlarmStatusEnum status;
     private String group;
     private long createTime;
     private String config;
@@ -117,7 +117,7 @@ public class AlarmMessage {
         return ip;
     }
 
-    public AlarmStatus getStatus() {
+    public AlarmStatusEnum getStatus() {
         return status;
     }
 

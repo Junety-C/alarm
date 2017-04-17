@@ -3,23 +3,23 @@ package cn.junety.alarm.base.entity;
 /**
  * Created by caijt on 2017/1/28.
  */
-public enum Level {
-    DEBUG("debug"), INFO("info"), ERROR("error");
+public enum AlarmStatusEnum {
+    CREATE(0), SEND(1), LIMIT(2), TEST(3);
 
-    private String value;
+    private int value;
 
-    Level(String value) {
+    AlarmStatusEnum(int value) {
         this.value = value;
     }
 
-    public String value() {
+    public int value() {
         return value;
     }
 
     @Override
     public String toString() {
         return "{" +
-                "value='" + value + '\'' +
+                "value=" + value +
                 '}';
     }
 }
