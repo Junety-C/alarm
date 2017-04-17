@@ -2,6 +2,7 @@ package cn.junety.alarm.web.service;
 
 import cn.junety.alarm.base.entity.User;
 import cn.junety.alarm.web.dao.ProjectMemberDao;
+import cn.junety.alarm.web.vo.UserVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ public class ProjectMemberService {
      * @param projectId 项目id
      * @return 项目成员列表
      */
-    public List<User> getMemberList(int projectId) {
+    public List<UserVO> getMemberList(int projectId) {
         return projectMemberDao.getMemberByProjectId(projectId);
     }
 

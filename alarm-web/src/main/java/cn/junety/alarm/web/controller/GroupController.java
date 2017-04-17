@@ -116,11 +116,12 @@ public class GroupController extends BaseController {
             List<User> memberList = groupService.getMemberList(gid);
             int permissionType = projectService.getProjectMemberType(currentUser.getId(), pid);
 
-            return ResponseHelper.buildResponse(2000, "member_list", memberList, "permission_type", permissionType);
+            return ResponseHelper.buildResponse(2000, "member_list", memberList,
+                    "permission_type", permissionType, "user", currentUser);
         } catch (Exception e) {
             logger.error("init module error, caused by", e);
             return ResponseHelper.buildResponse(5000, "member_list", Collections.emptyList(),
-                    "permission_type", ProjectMemberTypeEnum.NORMAL_MEMBER.value());
+                    "permission_type", ProjectMemberTypeEnum.NORMAL_MEMBER.value(), "user", currentUser);
         }
     }
 

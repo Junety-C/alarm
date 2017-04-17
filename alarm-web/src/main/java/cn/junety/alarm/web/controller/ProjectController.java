@@ -7,6 +7,7 @@ import cn.junety.alarm.web.service.ModuleService;
 import cn.junety.alarm.web.service.ProjectMemberService;
 import cn.junety.alarm.web.service.ProjectService;
 import cn.junety.alarm.web.vo.ProjectSearch;
+import cn.junety.alarm.web.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -50,11 +51,11 @@ public class ProjectController extends BaseController {
             int projectCount = projectService.getProjectCount(projectSearch);
 
             return ResponseHelper.buildResponse(2000, "project_list", projectList,
-                    "project_count", projectCount, "permission_mapper", permissionMapper);
+                    "project_count", projectCount, "permission_mapper", permissionMapper, "user", currentUser);
         } catch (Exception e) {
             logger.error("get project list error, caused by", e);
             return ResponseHelper.buildResponse(5000, "project_list", Collections.emptyList(),
-                    "project_count", 0, "permission_mapper", Collections.emptyMap());
+                    "project_count", 0, "permission_mapper", Collections.emptyMap(), "user", currentUser);
         }
     }
 
@@ -116,13 +117,13 @@ public class ProjectController extends BaseController {
                 permissionType = projectService.getProjectMemberType(currentUser.getId(), projectId);
             }
 
-            return ResponseHelper.buildResponse(2000, "project_list", projectList,
-                    "project_count", projectCount, "module_list", moduleList, "permission_type", permissionType);
+            return ResponseHelper.buildResponse(2000, "project_list", projectList, "project_count", projectCount,
+                    "module_list", moduleList, "permission_type", permissionType, "user", currentUser);
         } catch (Exception e) {
             logger.error("init module error, caused by", e);
             return ResponseHelper.buildResponse(5000, "project_list", Collections.emptyList(),
                     "project_count", 0, "module_list", Collections.emptyList(),
-                    "permission_type", ProjectMemberTypeEnum.NORMAL_MEMBER.value());
+                    "permission_type", ProjectMemberTypeEnum.NORMAL_MEMBER.value(), "user", currentUser);
         }
     }
 
@@ -135,11 +136,12 @@ public class ProjectController extends BaseController {
             List<Module> moduleList = moduleService.getModuleList(pid);
             int permissionType = projectService.getProjectMemberType(currentUser.getId(), pid);
 
-            return ResponseHelper.buildResponse(2000, "module_list", moduleList, "permission_type", permissionType);
+            return ResponseHelper.buildResponse(2000, "module_list", moduleList,
+                    "permission_type", permissionType, "user", currentUser);
         } catch (Exception e) {
             logger.error("init module error, caused by", e);
             return ResponseHelper.buildResponse(5000, "module_list", Collections.emptyList(),
-                    "permission_type", ProjectMemberTypeEnum.NORMAL_MEMBER.value());
+                    "permission_type", ProjectMemberTypeEnum.NORMAL_MEMBER.value(), "user", currentUser);
         }
     }
 
@@ -172,7 +174,7 @@ public class ProjectController extends BaseController {
 
             List<Project> projectList = projectService.getProjectList(projectSearch);
             int projectCount = projectService.getProjectCount(projectSearch);
-            List<User> memberList = Collections.emptyList();
+            List<UserVO> memberList = Collections.emptyList();
             int permissionType = ProjectMemberTypeEnum.NORMAL_MEMBER.value();
             if (projectList.size() > 0) {
                 int projectId = projectList.get(0).getId();
@@ -181,12 +183,13 @@ public class ProjectController extends BaseController {
             }
 
             return ResponseHelper.buildResponse(2000, "project_list", projectList,
-                    "project_count", projectCount, "member_list", memberList, "permission_type", permissionType);
+                    "project_count", projectCount, "member_list", memberList, "permission_type", permissionType,
+                    "user", currentUser);
         } catch (Exception e) {
             logger.error("init module error, caused by", e);
             return ResponseHelper.buildResponse(5000, "project_list", Collections.emptyList(),
                     "project_count", 0, "member_list", Collections.emptyList(),
-                    "permission_type", ProjectMemberTypeEnum.NORMAL_MEMBER.value());
+                    "permission_type", ProjectMemberTypeEnum.NORMAL_MEMBER.value(), "user", currentUser);
         }
     }
 
@@ -196,14 +199,15 @@ public class ProjectController extends BaseController {
         try {
             logger.info("GET /projects/{}/members, current_user:{}", pid, currentUser);
 
-            List<User> memberList = projectMemberService.getMemberList(pid);
+            List<UserVO> memberList = projectMemberService.getMemberList(pid);
             int permissionType = projectService.getProjectMemberType(currentUser.getId(), pid);
 
-            return ResponseHelper.buildResponse(2000, "member_list", memberList, "permission_type", permissionType);
+            return ResponseHelper.buildResponse(2000, "member_list", memberList,
+                    "permission_type", permissionType, "user", currentUser);
         } catch (Exception e) {
             logger.error("init module error, caused by", e);
             return ResponseHelper.buildResponse(5000, "member_list", Collections.emptyList(),
-                    "permission_type", ProjectMemberTypeEnum.NORMAL_MEMBER.value());
+                    "permission_type", ProjectMemberTypeEnum.NORMAL_MEMBER.value(), "user", currentUser);
         }
     }
 

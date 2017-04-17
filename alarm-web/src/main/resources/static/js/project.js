@@ -69,7 +69,7 @@ function getProjectList(search) {
                         + "<td>" + formatDate(new Date(project["createTime"])) + "</td>"
                         + "<td>" + project["comment"] + "</td>";
 
-                    if (permission_mapper[project["id"]] == 0) {
+                    if (permission_mapper[project["id"]] == 0 || data["user"]["type"] == 0) {
                         html += "<td><button class='btn btn-info project-update' _pid='" + project["id"] + "' "
                             + "data-toggle='modal' data-target='#modal-project-update' "
                             + "style='padding:0;margin:0;width:40px;height:26px;'>编辑</button>"

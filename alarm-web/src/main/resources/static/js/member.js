@@ -70,7 +70,9 @@ function initMemberTable() {
                 for(i = 0; i < member_list.length; i++) {
                     var member  = member_list[i];
                     html += "<tr><td><div>"+member["name"];
-                    if (data["permission_type"] == 0) {
+                    if (member["type"] == 0) html += "（管理员）";
+                    else html += "（成员）";
+                    if (data["permission_type"] == 0 || data["user"]["type"] == 0) {
                         html += "<button class='btn btn-danger member-del' data-toggle='modal' data-target='#modal-member-del' "
                             + "_uid='"+member["id"]+"' style='float:right;margin:0;padding:0;width:26px;'>X</button>";
                     }
@@ -108,7 +110,9 @@ function getMemberByProjectId(pid) {
                 for(i = 0; i < member_list.length; i++) {
                     var member  = member_list[i];
                     html += "<tr><td><div>"+member["name"];
-                    if (data["permission_type"] == 0) {
+                    if (member["type"] == 0) html += "（管理员）";
+                    else html += "（成员）";
+                    if (data["permission_type"] == 0 || data["user"]["type"] == 0) {
                         html += "<button class='btn btn-danger member-del' data-toggle='modal' data-target='#modal-member-del' "
                             + "_uid='"+member["id"]+"' style='float:right;margin:0;padding:0;width:26px;'>X</button>";
                     }

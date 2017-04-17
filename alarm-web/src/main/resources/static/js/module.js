@@ -69,10 +69,10 @@ function initModuleTable() {
                 for(i = 0; i < module_list.length; i++) {
                     var module  = module_list[i];
                     html += "<tr><td><div>"+module["name"];
-                    if (data["permission_type"] == 0) {
+                    // if (data["permission_type"] == 0 || data["user"]["type"] == 0) {
                         html += "<button class='btn btn-danger module-del' data-toggle='modal' data-target='#modal-module-del' "
                             + "_mid='"+module["id"]+"' style='float:right;margin:0;padding:0;width:26px;'>X</button>";
-                    }
+                    // }
                     html += "</div></td></tr>";
                 }
                 $(".module-list").html(html);
@@ -107,10 +107,10 @@ function getModuleByProjectId(pid) {
                 for(i = 0; i < module_list.length; i++) {
                     var module  = module_list[i];
                     html += "<tr><td><div>"+module["name"];
-                    if (data["permission_type"] == 0) {
+                    // if (data["permission_type"] == 0 || data["user"]["type"] == 0) {
                         html += "<button class='btn btn-danger module-del' data-toggle='modal' data-target='#modal-module-del' "
                             + "_mid='"+module["id"]+"' style='float:right;margin:0;padding:0;width:26px;'>X</button>";
-                    }
+                    // }
                     html += "</div></td></tr>";
                 }
                 $(".module-list").html(html);

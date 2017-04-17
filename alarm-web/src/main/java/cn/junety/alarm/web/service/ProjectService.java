@@ -101,7 +101,8 @@ public class ProjectService {
      * @return 0管理员, 1成员
      */
     public int getProjectMemberType(int userId, int projectId) {
-        return projectMemberDao.getProjectMemberTypeByProjectId(userId, projectId);
+        Integer type = projectMemberDao.getProjectMemberTypeByProjectId(userId, projectId);
+        return type == null ? ProjectMemberTypeEnum.NORMAL_MEMBER.value() : type;
     }
 
     /**

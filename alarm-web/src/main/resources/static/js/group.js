@@ -1,5 +1,5 @@
 
-var group_mapper = {};
+var group_mapper = {"0":""};
 
 $(function() {
 
@@ -38,7 +38,7 @@ $(function() {
         }
         var project_id = $("#current-id").attr("_pid");
         var group_id = $("#current-id").attr("_gid");
-        if(project_id == undefined || group_id == undefined) {
+        if(project_id == undefined || group_id == undefined || group_id == 0) {
             console.log("add group member fail, project_id=" + project_id + ", group_id=" + group_id);
             return;
         }
@@ -55,19 +55,6 @@ $(function() {
             return;
         }
         removeGroupMember(project_id, group_id, user_id);
-    });
-
-    // get group member
-    $("#group-member").click(function () {
-        var project_id = $("#current-id").attr("_pid");
-        var group_id = $("#group-list").val();
-        $("#current-id").attr("_gid", group_id);
-        $("#member-list-title").text("接收人列表（"+group_mapper[group_id]+"）");
-        if (project_id == undefined || group_id == undefined) {
-            console.log("get group member fail, project_id=" + project_id + ", group_id=" + group_id);
-            return;
-        }
-        getGroupMemberByGroupId(project_id, group_id);
     });
 
     // init data table
@@ -104,37 +91,20 @@ function initGroupTable() {
 
                 // group list
                 $("#member-list-title").text("接收人列表（）");
+                $("#current-id").attr("_gid", 0);
                 var group_list = data["group_list"];
                 var groupList = [];
+                groupList.push({id:0, text:'请选择'});
                 for (i = 0; i < group_list.length; i++) {
                     var group = group_list[i];
                     group_mapper[group["id"]] = group["name"];
-                    if (i == 0) {
-                        $("#member-list-title").text("接收人列表（"+group["name"]+"）");
-                        $("#current-id").attr("_gid", group["id"]);
-                    }
                     groupList.push({id: group["id"], text: group["name"]});
                 }
                 $("#group-list").html("").select2({
                     data: groupList
-                }).val($("#current-id").attr("_gid")).trigger("change");
-
-                // default member list
-                html = "";
-                var member_list = data["member_list"];
-                for(i = 0; i < member_list.length; i++) {
-                    var member  = member_list[i];
-                    html += "<tr><td><div>"+member["name"];
-                    if (data["permission_type"] == 0) {
-                        html += "<button class='btn btn-danger member-del' data-toggle='modal' data-target='#modal-member-del' "
-                            + "_uid='"+member["id"]+"' style='float:right;margin:0;padding:0;width:26px;'>X</button>";
-                    }
-                    html += "</div></td></tr>";
-                }
-                $(".member-list").html(html);
-                $(".member-del").click(function() {
-                    $("#current-id").attr("_uid", $(this).attr("_uid"));
                 });
+                addGroupSelectEvent();
+                $(".member-list").html("");
             }
         }
     });
@@ -156,39 +126,22 @@ function getGroupByProjectId(project_id) {
         type: "GET",
         success: function(data){
             if(data["code"] == 2000) {
-                var i, html = "";
                 // group list
                 $("#member-list-title").text("接收人列表（）");
+                $("#current-id").attr("_gid", 0);
                 var group_list = data["group_list"];
                 var groupList = [];
-                for (i = 0; i < group_list.length; i++) {
+                groupList.push({id:0, text:'请选择'});
+                for (var i = 0; i < group_list.length; i++) {
                     var group = group_list[i];
                     group_mapper[group["id"]] = group["name"];
-                    if (i == 0) {
-                        $("#member-list-title").text("接收人列表（"+group["name"]+"）");
-                        $("#current-id").attr("_gid", group["id"]);
-                    }
                     groupList.push({id: group["id"], text: group["name"]});
                 }
                 $("#group-list").html("").select2({
                     data: groupList
-                }).val($("#current-id").attr("_gid")).trigger("change");
-
-                // default member list
-                var member_list = data["member_list"];
-                for(i = 0; i < member_list.length; i++) {
-                    var member  = member_list[i];
-                    html += "<tr><td><div>"+member["name"];
-                    if (data["permission_type"] == 0) {
-                        html += "<button class='btn btn-danger member-del' data-toggle='modal' data-target='#modal-member-del' "
-                            + "_uid='"+member["id"]+"' style='float:right;margin:0;padding:0;width:26px;'>X</button>";
-                    }
-                    html += "</div></td></tr>";
-                }
-                $(".member-list").html(html);
-                $(".member-del").click(function() {
-                    $("#current-id").attr("_uid", $(this).attr("_uid"));
                 });
+                addGroupSelectEvent();
+                $(".member-list").html("");
             }
         }
     });
@@ -276,7 +229,7 @@ function getGroupMemberByGroupId(project_id, group_id) {
                 for(i = 0; i < member_list.length; i++) {
                     var member  = member_list[i];
                     html += "<tr><td><div>"+member["name"];
-                    if (data["permission_type"] == 0) {
+                    if (data["permission_type"] == 0 || data["user"]["type"] == 0) {
                         html += "<button class='btn btn-danger member-del' data-toggle='modal' data-target='#modal-member-del' "
                             + "_uid='"+member["id"]+"' style='float:right;margin:0;padding:0;width:26px;'>X</button>";
                     }
@@ -288,6 +241,26 @@ function getGroupMemberByGroupId(project_id, group_id) {
                 });
             }
         }
+    });
+}
+
+function addGroupSelectEvent() {
+    // get group member group change
+    $("#group-list").change(function() {
+        var project_id = $("#current-id").attr("_pid");
+        var group_id = $("#group-list").val();
+        $("#current-id").attr("_gid", group_id);
+        $("#member-list-title").text("接收人列表（"+group_mapper[group_id]+"）");
+
+        if (project_id == undefined || group_id == undefined) {
+            console.log("get group member fail, project_id=" + project_id + ", group_id=" + group_id);
+            return;
+        }
+        if (group_id == 0) {
+            $(".member-list").html("");
+            return;
+        }
+        getGroupMemberByGroupId(project_id, group_id);
     });
 }
 
