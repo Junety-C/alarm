@@ -66,7 +66,7 @@ function getProjectList(search) {
                     html += "<tr><td>" + project["id"] + "</td>"
                         + "<td>" + project["name"] + "</td>"
                         + "<td>" + project["creater"] + "</td>"
-                        + "<td>" + project["createTime"] + "</td>"
+                        + "<td>" + formatDate(new Date(project["createTime"])) + "</td>"
                         + "<td>" + project["comment"] + "</td>";
 
                     if (permission_mapper[project["id"]] == 0) {

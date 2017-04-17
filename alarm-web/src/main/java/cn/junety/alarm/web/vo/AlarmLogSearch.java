@@ -70,4 +70,15 @@ public class AlarmLogSearch {
     public void setProjectName(String projectName) {
         this.projectName = projectName;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "page=" + page +
+                ", userId=" + userId +
+                ", code=" + code +
+                ", alarmName='" + alarmName + '\'' +
+                ", projectName='" + projectName + '\'' +
+                '}';
+    }
 }
