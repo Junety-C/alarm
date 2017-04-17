@@ -52,6 +52,7 @@ public class AlarmVO {
     public String getConfig() {
         AlarmConfig alarmConfig = JSON.parseObject(alarm.getConfig(), AlarmConfig.class);
         config = "";
+        if(alarmConfig.isFreq_limit()) config += "限频,";
         if(alarmConfig.isMail()) config += "邮件,";
         if(alarmConfig.isWechat()) config += "微信,";
         if(alarmConfig.isSms()) config += "短信,";

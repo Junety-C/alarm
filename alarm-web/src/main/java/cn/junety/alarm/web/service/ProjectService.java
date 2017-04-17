@@ -32,11 +32,18 @@ public class ProjectService {
     private ModuleDao moduleDao;
 
     /**
-     * 获取项目列表（全部）
+     * 获取所有项目信息
      * @return 项目列表
      */
-    public List<Project> getProjectList() {
-        return projectDao.getAllProject();
+    public List<Project> getProjectList(User user) {
+        // 管理员获取所有项目, 普通用户获取自己所属的项目
+        if (UserTypeEnum.ADMIN_USER.value().equals(user.getType())) {
+            logger.debug("get all project info, user:{}", user);
+            return projectDao.getAllProject();
+        } else {
+            logger.debug("get user project info, user:{}", user);
+            return projectDao.getAllUserProject(user.getId());
+        }
     }
 
     /**
@@ -103,7 +110,7 @@ public class ProjectService {
      * @return 0管理员, 1成员
      */
     public int getProjectMemberType(int userId, int projectId) {
-        return projectDao.getProjectMemberTypeByProjectId(userId, projectId);
+        return projectMemberDao.getProjectMemberTypeByProjectId(userId, projectId);
     }
 
     /**

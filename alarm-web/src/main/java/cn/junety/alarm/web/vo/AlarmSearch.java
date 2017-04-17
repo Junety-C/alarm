@@ -82,4 +82,16 @@ public class AlarmSearch {
     public void setGroupName(String groupName) {
         this.groupName = groupName;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "page=" + page +
+                ", userId=" + userId +
+                ", code=" + code +
+                ", alarmName='" + alarmName + '\'' +
+                ", projectName='" + projectName + '\'' +
+                ", groupName='" + groupName + '\'' +
+                '}';
+    }
 }

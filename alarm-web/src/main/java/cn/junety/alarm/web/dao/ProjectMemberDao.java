@@ -33,4 +33,7 @@ public interface ProjectMemberDao {
     @Select("select tu.id, account, name, tu.type, mail, phone, wechat, qq from tb_user tu, tb_project_member tpm " +
             "where tu.id=tpm.user_id and project_id=#{projectId} and account=#{account}")
     User getProjectMemberByAccount(@Param("projectId") int projectId, @Param("account") String account);
+
+    @Select("select type from tb_project_member where user_id=#{userId} and project_id=#{projectId}")
+    int getProjectMemberTypeByProjectId(@Param("userId") int userId, @Param("projectId") int projectId);
 }

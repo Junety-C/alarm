@@ -1,10 +1,8 @@
 package cn.junety.alarm.web.controller;
 
-import cn.junety.alarm.base.entity.Module;
-import cn.junety.alarm.base.entity.Project;
-import cn.junety.alarm.base.entity.ProjectMemberTypeEnum;
-import cn.junety.alarm.base.entity.User;
+import cn.junety.alarm.base.entity.*;
 import cn.junety.alarm.web.common.ResponseHelper;
+import cn.junety.alarm.web.service.GroupService;
 import cn.junety.alarm.web.service.ModuleService;
 import cn.junety.alarm.web.service.ProjectMemberService;
 import cn.junety.alarm.web.service.ProjectService;
@@ -31,6 +29,8 @@ public class ProjectController extends BaseController {
     private ModuleService moduleService;
     @Autowired
     private ProjectMemberService projectMemberService;
+    @Autowired
+    private GroupService groupService;
 
     @RequestMapping(value = "/projects", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public String getProjectList(HttpServletRequest request) {
@@ -230,5 +230,33 @@ public class ProjectController extends BaseController {
         projectMemberService.removeProjectMember(pid, uid);
 
         return ResponseHelper.buildResponse(2000);
+    }
+
+    @RequestMapping(value = "/projects/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String getAllProjectInfo(HttpServletRequest request) {
+        User currentUser = getUser(request);
+        logger.info("GET /projects/all, current_user:{}", currentUser);
+
+        List<Project> projectList = projectService.getProjectList(currentUser);
+
+        return ResponseHelper.buildResponse(2000, "project_list", projectList);
+    }
+
+    @RequestMapping(value = "/projects/{pid}/config", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String getProjectConfig(HttpServletRequest request, @PathVariable Integer pid) {
+        User currentUser = getUser(request);
+
+        try {
+            logger.info("GET /projects/{}/config, current_user:{}", pid, currentUser);
+
+            List<Module> moduleList = moduleService.getModuleList(pid);
+            List<Group> groupList = groupService.getGroupList(pid);
+
+            return ResponseHelper.buildResponse(2000, "module_list", moduleList, "group_list", groupList);
+        } catch (Exception e) {
+            logger.error("get project config error, caused by", e);
+            return ResponseHelper.buildResponse(5000, "module_list", Collections.emptyList(),
+                    "group_list", Collections.emptyList());
+        }
     }
 }

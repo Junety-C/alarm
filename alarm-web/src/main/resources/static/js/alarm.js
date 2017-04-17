@@ -1,35 +1,56 @@
-var search_select="";
-var search_input="";
+var search_select = "";
+var search_input = "";
+var regex = /^\+?[1-9][0-9]*$/;
 
 $(function() {
     // data search
     $("#search-submit").click(function() {
         search_select = $("#search-select option:selected").attr("_val");
         search_input = $("#search-input").val();
-        getAlarms(search_select + "=" + search_input);
+        getAlarmList(search_select + "=" + search_input);
     });
 
     // alarm-modal init
     $("#alarm-modal").click(function() {
-        getCreateInfo();
+        getProjectInfo();
     });
 
     // get module list when project change
     $("#alarm-project").change(function() {
-        getModuleByProjectId($(this).val(), "#alarm-module");
+        var project_id = $(this).val();
+        if (project_id == 0) {
+            return;
+        }
+        getModuleAndGroupByProjectId(project_id, "#alarm-module", "#alarm-group");
     });
 
-    // check and add alarm
-    $("#alarm-add").click(function() {
+    // create alarm
+    $("#alarm-create").click(function() {
         var code = $("#alarm-code").val();
+        if (code == null || !regex.test(code)) {
+            alert("告警代号不合法");
+            return;
+        }
         var name = $("#alarm-name").val();
         if (name == null || name.trim().length == 0) {
             alert("请输入告警名称");
             return;
         }
         var project_id = $("#alarm-project").val();
+        if (project_id == 0) {
+            alert("请选择项目");
+            return;
+        }
         var module_id = $("#alarm-module").val();
+        if (module_id == 0) {
+            alert("请选择项目模块");
+            return;
+        }
         var group_id = $("#alarm-group").val();
+        if (group_id == 0) {
+            alert("请选择接收组");
+            return;
+        }
         var route_key = $("#alarm-route-key").val();
         var config = {};
         $("input[name=config]").each(function() {
@@ -51,26 +72,46 @@ $(function() {
             routeKey: route_key,
             config: JSON.stringify(config)
         };
-        addAlarm(alarm_data);
+        createAlarm(alarm_data);
     });
 
     $("#alarm-del").click(function() {
-        var alarm_id = $(this).attr("_val");
+        var alarm_id = $("#current-id").attr("_aid");
         deleteAlarm(alarm_id);
     });
 
-    // receiver add modal
+    // alarm update
     $("#alarm-update").click(function () {
-        var alarm_id = $(this).attr("_val");
+        var alarm_id = $("#current-id").attr("_aid");
+        if (alarm_id == undefined) {
+            console.log("update alarm fail, alarm_id=" + alarm_id);
+            return;
+        }
         var code = $("#alarm-code-update").val();
+        if (code == null || !regex.test(code)) {
+            alert("告警代号不合法");
+            return;
+        }
         var name = $("#alarm-name-update").val();
         if (name == null || name.trim().length == 0) {
             alert("请输入告警名称");
             return;
         }
         var project_id = $("#alarm-project-update").val();
+        if (project_id == 0) {
+            alert("请选择项目");
+            return;
+        }
         var module_id = $("#alarm-module-update").val();
+        if (module_id == 0) {
+            alert("请选择项目模块");
+            return;
+        }
         var group_id = $("#alarm-group-update").val();
+        if (group_id == 0) {
+            alert("请选择接收组");
+            return;
+        }
         var route_key = $("#alarm-route-key-update").val();
         var config = {};
         $("input[name=config-update]").each(function() {
@@ -93,22 +134,25 @@ $(function() {
             routeKey: route_key,
             config: JSON.stringify(config)
         };
+
+        $("#modal-alarm-update").modal('hide');
+
         updateAlarm(alarm_data);
     });
 
     // init data table
-    getAlarms();
+    getAlarmList();
 });
 
-function getAlarms(search) {
+function getAlarmList(search) {
     $.ajax({
         url: "/alarms?page_no="+current_page+"&page_size="+page_length+"&"+search,
         type: "GET",
         success: function(data){
-            var html = "";
-            var alarms = data["alarms"];
-            for(var i = 0; i < alarms.length; i++) {
-                var alarm  = alarms[i];
+            var i, html = "";
+            var alarm_list = data["alarm_list"];
+            for(i = 0; i < alarm_list.length; i++) {
+                var alarm  = alarm_list[i];
                 html += "<tr>"
                     + "<td>"+alarm["alarm"]["code"]+"</td>"
                     + "<td>"+alarm["alarm"]["name"]+"</td>";
@@ -129,36 +173,36 @@ function getAlarms(search) {
                 }
                 html += "<td>"+alarm["alarm"]["routeKey"]+"</td>"
                     + "<td>"+alarm["config"]+"</td>"
-                    + "<td><button class='btn btn-info alarm-update' _val='"+alarm["alarm"]["id"]+"' "
+                    + "<td><button class='btn btn-info alarm-update' _aid='"+alarm["alarm"]["id"]+"' "
                     + "data-toggle='modal' data-target='#modal-alarm-update' "
                     + "style='padding:0;margin:0;width:40px;height:26px;'>编辑</button>"
-                    + "&nbsp;&nbsp; <button class='btn btn-danger alarm-del' _val='"+alarm["alarm"]["id"]+"' "
+                    + "&nbsp;&nbsp; <button class='btn btn-danger alarm-del' _aid='"+alarm["alarm"]["id"]+"' "
                     + "data-toggle='modal' data-target='#modal-alarm-del' "
                     + "style='padding:0;margin:0;width:40px;height:26px;'>删除</button></td></tr>"
             }
-            $(".alarms-body").html(html);
+            $(".alarm-list").html(html);
             setAlarmClickEvent();
-            var page_count = parseInt((data["count"] + page_length - 1)/page_length);
+            var page_count = parseInt((data["alarm_count"] + page_length - 1)/page_length);
             $(".page-footer").html(setPageButton(page_count, current_page));
             setPageBtnClick();
-            setTableTotalSize(data["count"]);
+            setTableTotalSize(data["alarm_count"]);
         }
     });
 }
 
 function setAlarmClickEvent() {
-    $(".alarm-del").click(function() {
-        $("#alarm-del").attr("_val", $(this).attr("_val"));
+    $(".alarm-update").click(function() {
+        var alarm_id = $(this).attr("_aid");
+        $("#current-id").attr("_aid", alarm_id);
+        getAlarmById(alarm_id);
     });
 
-    $(".alarm-update").click(function() {
-        var alarm_id = $(this).attr("_val");
-        $("#alarm-update").attr("_val", alarm_id);
-        getAlarmById(alarm_id);
+    $(".alarm-del").click(function() {
+        $("#current-id").attr("_aid", $(this).attr("_aid"));
     });
 }
 
-function addAlarm(alarm_data) {
+function createAlarm(alarm_data) {
     $.ajax({
         url: "/alarms",
         type: "POST",
@@ -167,7 +211,7 @@ function addAlarm(alarm_data) {
         contentType: "application/json;charset=utf-8",
         success: function(data){
             if (data["code"] != 2000) {
-                alert("创建失败");
+                alert("新建告警失败");
             }
             location.replace(location.href);
         }
@@ -183,11 +227,10 @@ function deleteAlarm(aid) {
         contentType: "application/json;charset=utf-8",
         success: function(data){
             if(data["code"] != 2000) {
-                alert("删除失败");
+                alert("删除告警失败");
                 return;
             }
-            getAlarms(search_select + "=" + search_input);
-            //location.replace(location.href);
+            getAlarmList(search_select + "=" + search_input);
         }
     });
 }
@@ -201,11 +244,10 @@ function updateAlarm(alarm_data) {
         contentType: "application/json;charset=utf-8",
         success: function(data){
             if (data["code"] != 2000) {
-                alert("更新失败");
+                alert("更新告警失败");
                 return;
             }
-            getAlarms(search_select + "=" + search_input);
-            //location.replace(location.href);
+            getAlarmList(search_select + "=" + search_input);
         }
     });
 }
@@ -217,43 +259,39 @@ function getAlarmById(aid) {
         success: function(data){
             if(data["code"] == 2000) {
                 $("#alarm-project-update").unbind("change");
-                var alarm = data["alarm"];
-
-                // // code list
-                // var codes = data["codes"];
-                // var codeList = [{id: 0, text: '自动生成'}];
-                // for (var i = 0; i < codes.length; i++) {
-                //     codeList.push({id: codes[i], text: codes[i]});
-                // }
-                // $("#alarm-code-update").html("").select2({
-                //     data: codeList
-                // }).val(alarm["code"]).trigger("change");
+                var i, alarm = data["alarm"];
 
                 // project list
-                var projects = data["projects"];
+                var project_list = data["project_list"];
                 var projectList = [];
-                for (var i = 0; i < projects.length; i++) {
-                    projectList.push({id: projects[i]["id"], text: projects[i]["name"]});
+                projectList.push({id:0, text:'请选择'});
+                for (i = 0; i < project_list.length; i++) {
+                    var project = project_list[i];
+                    projectList.push({id: project["id"], text: project["name"]});
                 }
                 $("#alarm-project-update").html("").select2({
                     data: projectList
                 }).val(alarm["projectId"]).trigger("change");
 
                 // module list
-                var modules = data["modules"];
+                var module_list = data["module_list"];
                 var moduleList = [];
-                for (var i = 0; i < modules.length; i++) {
-                    moduleList.push({id: modules[i]["id"], text: modules[i]["name"]});
+                moduleList.push({id:0, text:'请选择'});
+                for (i = 0; i < module_list.length; i++) {
+                    var module = module_list[i];
+                    moduleList.push({id: module["id"], text: module["name"]});
                 }
                 $("#alarm-module-update").html("").select2({
                     data: moduleList
                 }).val(alarm["moduleId"]).trigger("change");
 
                 // group list
-                var groups = data["groups"];
+                var group_list = data["group_list"];
                 var groupList = [];
-                for (var i = 0; i < groups.length; i++) {
-                    groupList.push({id: groups[i]["id"], text: groups[i]["name"]});
+                groupList.push({id:0, text:'请选择'});
+                for (i = 0; i < group_list.length; i++) {
+                    var group = group_list[i];
+                    groupList.push({id: group["id"], text: group["name"]});
                 }
                 $("#alarm-group-update").html("").select2({
                     data: groupList
@@ -276,9 +314,13 @@ function getAlarmById(aid) {
                 $("#error-update-interval").val(config["error_interval"]);
                 $("#error-update-times").val(config["error_times"]);
 
-                // get module list when project change
+                // get module list and group list when project change
                 $("#alarm-project-update").change(function() {
-                    getModuleByProjectId($(this).val(), "#alarm-module-update");
+                    var project_id = $(this).val();
+                    if (project_id == 0) {
+                        return;
+                    }
+                    getModuleAndGroupByProjectId(project_id, "#alarm-module-update", "#alarm-group-update");
                 });
             } else {
                 alert("获取告警信息失败...");
@@ -287,75 +329,67 @@ function getAlarmById(aid) {
     });
 }
 
-function getCreateInfo() {
+function getProjectInfo() {
     $.ajax({
-        url: "/alarms/info",
+        url: "/projects/all",
         type: "GET",
         success: function(data){
             if(data["code"] == 2000) {
-                // // code list
-                // var codes = data["codes"];
-                // var codeList = [{id: 0, text: '自动生成'}];
-                // for (var i = 0; i < codes.length; i++) {
-                //     codeList.push({id: codes[i], text: codes[i]});
-                // }
-                // $("#alarm-code").select2({
-                //     data: codeList
-                // });
-
                 // project list
-                var projects = data["projects"];
+                var project_list = data["project_list"];
                 var projectList = [];
-                for (var i = 0; i < projects.length; i++) {
-                    projectList.push({id: projects[i]["id"], text: projects[i]["name"]});
+                projectList.push({id:0, text:'请选择'});
+                for (var i = 0; i < project_list.length; i++) {
+                    var project = project_list[i];
+                    projectList.push({id: project["id"], text: project["name"]});
                 }
-                $("#alarm-project").select2({
+                $("#alarm-project").html("").select2({
                     data: projectList
                 });
-
-                // module list
-                var modules = data["modules"];
-                var moduleList = [];
-                for (var i = 0; i < modules.length; i++) {
-                    moduleList.push({id: modules[i]["id"], text: modules[i]["name"]});
-                }
-                $("#alarm-module").select2({
-                    data: moduleList
+                $("#alarm-module").html("").select2({
+                    data: [{id:0, text:'请选择'}]
                 });
-
-                // group list
-                var groups = data["groups"];
-                var groupList = [];
-                for (var i = 0; i < groups.length; i++) {
-                    groupList.push({id: groups[i]["id"], text: groups[i]["name"]});
-                }
-                $("#alarm-group").select2({
-                    data: groupList
+                $("#alarm-group").html("").select2({
+                    data: [{id:0, text:'请选择'}]
                 });
             } else {
-                alert("获取告警创建信息失败...");
+                alert("获取项目列表失败...");
             }
         }
     });
 }
 
-function getModuleByProjectId(pid, target) {
+function getModuleAndGroupByProjectId(pid, targetModule, targerGroup) {
     $.ajax({
-        url: "/projects/"+pid+"/modules",
+        url: "/projects/"+pid+"/config",
         type: "GET",
         success: function(data){
             if(data["code"] == 2000) {
                 // module list
-                var modules = data["modules"];
-                var moduleList = [];
-                for (var i = 0; i < modules.length; i++) {
-                    moduleList.push({id: modules[i]["id"], text: modules[i]["name"]});
+                var module_list = data["module_list"];
+                var i, moduleList = [];
+                moduleList.push({id:0, text:'请选择'});
+                for (i = 0; i < module_list.length; i++) {
+                    var module = module_list[i];
+                    moduleList.push({id: module["id"], text: module["name"]});
                 }
-                $(target).html("").select2({
+                $(targetModule).html("").select2({
                     data: moduleList
                 });
+
+                // group list
+                var group_list = data["group_list"];
+                var groupList = [];
+                groupList.push({id:0, text:'请选择'});
+                for (i = 0; i < group_list.length; i++) {
+                    var group = group_list[i];
+                    groupList.push({id: group["id"], text: group["name"]});
+                }
+                $(targerGroup).html("").select2({
+                    data: groupList
+                });
             } else {
-                alert("获取项目模块失败...");
+                alert("获取项目配置信息失败...");
             }
         }
     });
@@ -364,7 +398,7 @@ function getModuleByProjectId(pid, target) {
 function setPageBtnClick() {
     $(".page-btn").click(function () {
         current_page = $(this).attr("_val");
-        getAlarms(search_select + "=" + search_input);
+        getAlarmList(search_select + "=" + search_input);
     });
 }
 

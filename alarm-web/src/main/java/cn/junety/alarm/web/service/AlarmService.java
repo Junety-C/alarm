@@ -44,11 +44,11 @@ public class AlarmService {
         List<Alarm> alarms;
 
         // 管理员获取所有告警, 普通用户获取自己能接收到的告警
-        if (user.getType() == UserTypeEnum.ADMIN_USER.value()) {
-            logger.debug("get all alarm info, user:{}", JSON.toJSONString(user));
+        if (UserTypeEnum.ADMIN_USER.value().equals(user.getType())) {
+            logger.debug("get all alarm info, user:{}", user);
             alarms = getAllAlarm(alarmSearch);
         } else {
-            logger.debug("get user alarm info, user:{}", JSON.toJSONString(user));
+            logger.debug("get user alarm info, user:{}", user);
             alarms = getUserAlarm(alarmSearch);
         }
 
@@ -151,10 +151,6 @@ public class AlarmService {
      * @param alarm 告警信息
      */
     public void createAlarm(Alarm alarm) {
-        // 自动生成code
-        if(alarm.getCode() <= 0) {
-            alarm.setCode(alarmDao.getMaxCode() + 1);
-        }
         alarmDao.save(alarm);
     }
 

@@ -12,9 +12,6 @@ import java.util.List;
  */
 public interface ProjectDao {
 
-    @Select("select id, name from tb_project order by id desc")
-    List<Project> getAllProject();
-
     @Select("select * from tb_project where id=#{id}")
     Project getProjectById(@Param("id") int id);
 
@@ -29,9 +26,6 @@ public interface ProjectDao {
     @Delete("delete from tb_project where id=#{id}")
     int delete(@Param("id") int id);
 
-    @Select("select type from tb_project_member where user_id=#{userId} and project_id=#{projectId}")
-    int getProjectMemberTypeByProjectId(@Param("userId") int userId, @Param("projectId") int projectId);
-
     /* ===============管理员查询================== */
 
     @Select("select * from tb_project order by id desc limit #{page.start}, #{page.pageSize}")
@@ -39,6 +33,9 @@ public interface ProjectDao {
 
     @Select("select count(id) from tb_project")
     int getProjectCount();
+
+    @Select("select * from tb_project order by id desc")
+    List<Project> getAllProject();
 
     /* ===============用户查询================== */
 
@@ -50,4 +47,8 @@ public interface ProjectDao {
     @Select("select count(id) from tb_project " +
             "where id in (select project_id from tb_project_member where user_id=#{userId})")
     int getUserProjectCount();
+
+    @Select("select * from tb_project " +
+            "where id in (select project_id from tb_project_member where user_id=#{userId})")
+    List<Project> getAllUserProject(@Param("userId") int userId);
 }
