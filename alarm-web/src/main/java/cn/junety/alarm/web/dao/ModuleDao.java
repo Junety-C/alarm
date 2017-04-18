@@ -16,6 +16,9 @@ public interface ModuleDao {
     @Select("select * from tb_module where id=#{id}")
     Module getModuleById(@Param("id") int id);
 
+    @Select("select * from tb_module where name=#{name} and project_id=#{projectId}")
+    Module getModuleByName(Module module);
+
     @Select("select * from tb_module where project_id=#{pid} order by id desc")
     List<Module> getModuleByPprojectId(@Param("pid") int pid);
 

@@ -38,6 +38,10 @@ public class ModuleService {
         moduleDao.save(module);
     }
 
+    public Module getModuleByName(Module module) {
+        return moduleDao.getModuleByName(module);
+    }
+
     /**
      * 根据模块id删除模块
      * @param moduleId 模块id

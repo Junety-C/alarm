@@ -131,13 +131,11 @@ function createModule(module_data) {
         contentType: "application/json;charset=utf-8",
         success: function(data){
             if (data["code"] != 2000) {
-                alert("添加模块失败");
+                alert("添加模块失败，原因:"+data["reason"]);
                 return;
             }
             $("#module-name").val("");
             getModuleByProjectId($("#current-id").attr("_pid"));
-            //initModuleTable();
-            //location.replace(location.href);
         }
     });
 }
@@ -155,8 +153,6 @@ function deleteModule(mid) {
                 return;
             }
             getModuleByProjectId($("#current-id").attr("_pid"));
-            //getProjects(search_select + "=" + search_input);
-            //location.replace(location.href);
         }
     });
 }

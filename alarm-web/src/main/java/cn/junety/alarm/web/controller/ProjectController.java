@@ -150,9 +150,12 @@ public class ProjectController extends BaseController {
         User currentUser = getUser(request);
         logger.info("POST /modules, current_user:{}, module:{}", currentUser, module);
 
-        moduleService.createModule(module);
-
-        return ResponseHelper.buildResponse(2000);
+        if (moduleService.getModuleByName(module) == null) {
+            moduleService.createModule(module);
+            return ResponseHelper.buildResponse(2000);
+        } else {
+            return ResponseHelper.buildResponse(4000, "reason", "模块已存在");
+        }
     }
 
     @RequestMapping(value = "/modules/{mid}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
