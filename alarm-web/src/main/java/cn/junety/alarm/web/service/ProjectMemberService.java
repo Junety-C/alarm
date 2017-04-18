@@ -41,6 +41,10 @@ public class ProjectMemberService {
         projectMemberDao.addProjectMember(projectId, userId, type);
     }
 
+    public int getProjectMemberByUserId(int projectId, int userId) {
+        return projectMemberDao.getProjectMemberByUserId(projectId, userId);
+    }
+
     /**
      * 移除项目成员
      * @param projectId 项目id

@@ -221,8 +221,12 @@ public class ProjectController extends BaseController {
 
         User user = userService.getUserByAccount(account);
         if (user != null) {
-            projectMemberService.addProjectMember(pid, user.getId(), ProjectMemberTypeEnum.NORMAL_MEMBER.value());
-            return ResponseHelper.buildResponse(2000);
+            if (projectMemberService.getProjectMemberByUserId(pid, user.getId()) == 0) {
+                projectMemberService.addProjectMember(pid, user.getId(), ProjectMemberTypeEnum.NORMAL_MEMBER.value());
+                return ResponseHelper.buildResponse(2000);
+            } else {
+                return ResponseHelper.buildResponse(4000, "reason", "已存在该项目成员");
+            }
         } else {
             logger.info("add project member fail, pid:{}, account:{}", pid, account);
             return ResponseHelper.buildResponse(4000, "reason", "用户信息不存在");

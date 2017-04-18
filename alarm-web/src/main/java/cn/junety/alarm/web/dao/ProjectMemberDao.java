@@ -12,6 +12,9 @@ import java.util.List;
  */
 public interface ProjectMemberDao {
 
+    @Select("select count(*) from tb_project_member where user_id=#{userId} and project_id=#{projectId}")
+    int getProjectMemberByUserId(@Param("projectId") int projectId, @Param("userId") int userId);
+
     @Insert("insert into tb_project_member(user_id, project_id, type) " +
             "values(#{userId}, #{projectId}, #{type}) " +
             "on duplicate key update type=#{type}")
