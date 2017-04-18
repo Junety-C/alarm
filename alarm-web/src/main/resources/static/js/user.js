@@ -29,6 +29,7 @@ $(function() {
             wechat: $("#user-wechat").val(),
             qq: $("#user-qq").val()
         };
+        $("#modal-user-create").modal('hide');
         createUser(user_data);
     });
 
@@ -57,6 +58,7 @@ $(function() {
             wechat: $("#user-wechat-update").val(),
             qq: $("#user-qq-update").val()
         };
+        $("#modal-user-update").modal('hide');
         updateUser(user_data);
     });
 
