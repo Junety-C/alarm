@@ -57,11 +57,15 @@ public class UserController extends BaseController {
         logger.info("POST /users, current_user:{}, user:{}", currentUser, user);
 
         try {
-            userService.createUser(user);
-            return ResponseHelper.buildResponse(2000);
+            if (userService.getUserByAccount(user.getAccount()) == null) {
+                userService.createUser(user);
+                return ResponseHelper.buildResponse(2000);
+            } else {
+                return ResponseHelper.buildResponse(4000, "reason", "用户已存在");
+            }
         } catch (Exception e) {
             logger.error("create user error, user:{}, caused by", user, e);
-            return ResponseHelper.buildResponse(5000);
+            return ResponseHelper.buildResponse(5000, "reason", "系统出错");
         }
     }
 

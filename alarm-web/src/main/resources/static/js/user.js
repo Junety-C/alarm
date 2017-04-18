@@ -161,7 +161,7 @@ function createUser(user_data) {
         contentType: "application/json;charset=utf-8",
         success: function(data){
             if (data["code"] != 2000) {
-                alert("新建用户失败");
+                alert("新建用户账号失败，原因:"+data["reason"]);
             }
             location.replace(location.href);
         }
@@ -194,7 +194,7 @@ function deleteUser(uid) {
         contentType: "application/json;charset=utf-8",
         success: function(data){
             if(data["code"] != 2000) {
-                alert("删除用户失败");
+                alert("删除用户账号失败");
                 return;
             }
             getUserList(search_select + "=" + search_input);
