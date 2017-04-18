@@ -13,6 +13,7 @@ $(function() {
             name: project_name,
             comment: $("#project-comment").val()
         };
+        $("#modal-project-create").modal('hide');
         createProject(project_data);
     });
 
@@ -33,6 +34,7 @@ $(function() {
             name: project_name,
             comment: $("#project-comment-update").val()
         };
+        $("#modal-project-update").modal('hide');
         updateProject(project_data);
     });
 
