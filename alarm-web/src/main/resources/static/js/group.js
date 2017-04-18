@@ -10,6 +10,10 @@ $(function() {
             alert("请输入接收组名称");
             return;
         }
+        if(group_name.length > 64) {
+            alert("接收组名称过长");
+            return;
+        }
         var project_id = $("#current-id").attr("_pid");
         if(project_id == undefined) {
             console.log("create group fail, project_id=" + project_id + ", group_name=" + group_name);
