@@ -64,7 +64,7 @@ public class AlarmLog {
     }
 
     public void setModuleName(String moduleName) {
-        moduleName = moduleName;
+        this.moduleName = moduleName;
     }
 
     public Level getLevel() {
