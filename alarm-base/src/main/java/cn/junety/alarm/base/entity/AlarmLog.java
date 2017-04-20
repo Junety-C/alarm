@@ -9,7 +9,7 @@ public class AlarmLog {
     private int code;
     private String alarmName;
     private String projectName;
-    private String ModuleName;
+    private String moduleName;
     private String groupName;
     private Level level;
     private String receivers;
@@ -60,11 +60,11 @@ public class AlarmLog {
     }
 
     public String getModuleName() {
-        return ModuleName;
+        return moduleName;
     }
 
     public void setModuleName(String moduleName) {
-        ModuleName = moduleName;
+        moduleName = moduleName;
     }
 
     public Level getLevel() {
@@ -139,7 +139,7 @@ public class AlarmLog {
                 ", code=" + code +
                 ", alarmName='" + alarmName + '\'' +
                 ", projectName='" + projectName + '\'' +
-                ", ModuleName='" + ModuleName + '\'' +
+                ", ModuleName='" + moduleName + '\'' +
                 ", groupName='" + groupName + '\'' +
                 ", level=" + level +
                 ", receivers='" + receivers + '\'' +
