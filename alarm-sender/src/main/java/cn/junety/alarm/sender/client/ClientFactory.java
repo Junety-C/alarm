@@ -1,10 +1,7 @@
 package cn.junety.alarm.sender.client;
 
 import cn.junety.alarm.base.common.ConfigKey;
-import cn.junety.alarm.sender.client.impl.DeliveryStatusClient;
-import cn.junety.alarm.sender.client.impl.MailClient;
-import cn.junety.alarm.sender.client.impl.QQClient;
-import cn.junety.alarm.sender.client.impl.WechatClient;
+import cn.junety.alarm.sender.client.impl.*;
 import org.springframework.context.ApplicationContext;
 
 /**
@@ -22,6 +19,10 @@ public class ClientFactory {
 
     public static WechatClient buildWechatClient(String name) {
         return new WechatClient(name, ConfigKey.WECHAT_QUEUE.value());
+    }
+
+    public static SmsClient buildSmsClient(String name) {
+        return new SmsClient(name,ConfigKey.SMS_QUEUE.value());
     }
 
     public static DeliveryStatusClient buildDeliveryStatusClient(String name, ApplicationContext context) {

@@ -2,6 +2,7 @@ package cn.junety.alarm.server.service;
 
 import cn.junety.alarm.api.AlarmClient;
 import cn.junety.alarm.base.common.ConfigKey;
+import cn.junety.alarm.base.entity.Module;
 import cn.junety.alarm.server.dao.*;
 import cn.junety.alarm.base.entity.*;
 import cn.junety.alarm.base.exception.AlarmNotFoundException;

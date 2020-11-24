@@ -1,6 +1,7 @@
 package cn.junety.alarm.server.vo;
 
 import cn.junety.alarm.base.entity.*;
+import cn.junety.alarm.base.entity.Module;
 import cn.junety.alarm.base.util.DateUtil;
 import com.google.common.base.Strings;
 

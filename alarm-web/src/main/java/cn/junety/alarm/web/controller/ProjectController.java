@@ -109,7 +109,7 @@ public class ProjectController extends BaseController {
 
             List<Project> projectList = projectService.getProjectList(projectSearch);
             int projectCount = projectService.getProjectCount(projectSearch);
-            List<Module> moduleList = Collections.emptyList();
+            List<cn.junety.alarm.base.entity.Module> moduleList = Collections.emptyList();
             int permissionType = ProjectMemberTypeEnum.NORMAL_MEMBER.value();
             if (projectList.size() > 0) {
                 int projectId = projectList.get(0).getId();
@@ -133,7 +133,7 @@ public class ProjectController extends BaseController {
         try {
             logger.info("GET /projects/{}/modules, current_user:{}", pid, currentUser);
 
-            List<Module> moduleList = moduleService.getModuleList(pid);
+            List<cn.junety.alarm.base.entity.Module> moduleList = moduleService.getModuleList(pid);
             int permissionType = projectService.getProjectMemberType(currentUser.getId(), pid);
 
             return ResponseHelper.buildResponse(2000, "module_list", moduleList,
@@ -146,7 +146,7 @@ public class ProjectController extends BaseController {
     }
 
     @RequestMapping(value = "/modules", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String createModule(HttpServletRequest request, @RequestBody Module module) {
+    public String createModule(HttpServletRequest request, @RequestBody cn.junety.alarm.base.entity.Module module) {
         User currentUser = getUser(request);
         logger.info("POST /modules, current_user:{}, module:{}", currentUser, module);
 
@@ -260,7 +260,7 @@ public class ProjectController extends BaseController {
         try {
             logger.info("GET /projects/{}/config, current_user:{}", pid, currentUser);
 
-            List<Module> moduleList = moduleService.getModuleList(pid);
+            List<cn.junety.alarm.base.entity.Module> moduleList = moduleService.getModuleList(pid);
             List<Group> groupList = groupService.getGroupList(pid);
 
             return ResponseHelper.buildResponse(2000, "module_list", moduleList, "group_list", groupList);

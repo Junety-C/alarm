@@ -48,7 +48,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.5.1</version>
+                <version>${maven-compiler-plugin}</version>
                 <configuration>
                     <target>${java.version}</target>
                     <source>${java.version}</source>

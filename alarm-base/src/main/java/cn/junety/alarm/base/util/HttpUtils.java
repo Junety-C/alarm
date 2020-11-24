@@ -1,0 +1,267 @@
+package cn.junety.alarm.base.util;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import com.alibaba.fastjson.JSON;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.http.Consts;
+import org.apache.http.HttpEntity;
+import org.apache.http.NameValuePair;
+ 
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+ 
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class HttpUtils {
+ 
+    private static final Logger log = LoggerFactory.getLogger(HttpUtils.class);
+    private static final CloseableHttpClient httpclient = HttpClients.createDefault();
+    private static final String userAgent = "Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.87 Safari/537.36";
+ 
+    /**
+     * 发送HttpGet请求 * * @param url * 请求地址 * @return 返回字符串
+     */
+    public static String sendGet(String url, String token) {
+        String result = null;
+        CloseableHttpResponse response = null;
+        try {
+            HttpGet httpGet = new HttpGet(url);
+            //httpGet.setHeader("User-Agent", userAgent);
+            if (token != null) {
+                httpGet.setHeader("Authorization", token);
+            }
+            response = httpclient.execute(httpGet);
+            HttpEntity entity = response.getEntity();
+            if (entity != null) {
+                result = EntityUtils.toString(entity);
+            }
+        } catch (Exception e) {
+            log.error("处理失败 {}" + e);
+            e.printStackTrace();
+        } finally {
+            if (response != null) {
+                try {
+                    response.close();
+                } catch (IOException e) {
+                    log.error(e.getMessage());
+                }
+            }
+ 
+        }
+        return result;
+    }
+ 
+    /**
+     * 发送HttpPost请求，参数为map * * @param url * 请求地址 * @param map * 请求参数 * @return 返回字符串
+     */
+    public static String sendPost(String url, Map<String, String> map) {
+        // 设置参数
+        List<NameValuePair> formparams = new ArrayList<NameValuePair>();
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            formparams.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
+        }
+        // 编码
+        UrlEncodedFormEntity formEntity = new UrlEncodedFormEntity(formparams, Consts.UTF_8);
+        // 取得HttpPost对象
+        HttpPost httpPost = new HttpPost(url);
+        // 防止被当成攻击添加的
+        httpPost.setHeader("User-Agent", userAgent);
+        // 参数放入Entity
+        httpPost.setEntity(formEntity);
+        CloseableHttpResponse response = null;
+        String result = null;
+        try {
+            // 执行post请求
+            response = httpclient.execute(httpPost);
+            // 得到entity
+            HttpEntity entity = response.getEntity();
+            // 得到字符串
+            result = EntityUtils.toString(entity);
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        } finally {
+            if (response != null) {
+                try {
+                    response.close();
+                } catch (IOException e) {
+                    log.error(e.getMessage());
+                }
+            }
+        }
+        return result;
+    }
+ 
+ 
+    /**
+     * 发送HttpPost请求，参数为json字符串 * * @param url * @param jsonStr * @return
+     */
+    public static String sendPost(String url, String jsonStr) {
+        String result = null;
+        // 字符串编码
+        StringEntity entity = new StringEntity(jsonStr, Consts.UTF_8);
+        // 设置content-type
+        entity.setContentType("application/json");
+        HttpPost httpPost = new HttpPost(url);
+        // 接收参数设置
+        httpPost.setHeader("Accept", "application/json");
+        httpPost.setEntity(entity);
+        CloseableHttpResponse response = null;
+        try {
+            response = httpclient.execute(httpPost);
+            HttpEntity httpEntity = response.getEntity();
+            result = EntityUtils.toString(httpEntity,"utf-8");
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        } finally {
+            // 关闭CloseableHttpResponse
+            if (response != null) {
+                try {
+                    response.close();
+                } catch (IOException e) {
+                    log.error(e.getMessage());
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 发送HttpPost请求，参数为json字符串 * * @param url * @param jsonStr * @return
+     */
+    public static String sendPost(String url, String jsonStr,String token) {
+        String result = null;
+        // 字符串编码
+        StringEntity entity = new StringEntity(jsonStr, Consts.UTF_8);
+        // 设置content-type
+        entity.setContentType("application/json");
+        HttpPost httpPost = new HttpPost(url);
+
+        httpPost.setHeader("Authorization",token);
+        // 接收参数设置
+        httpPost.setHeader("Accept", "application/json");
+        httpPost.setEntity(entity);
+        CloseableHttpResponse response = null;
+        try {
+            response = httpclient.execute(httpPost);
+            HttpEntity httpEntity = response.getEntity();
+            result = EntityUtils.toString(httpEntity,"utf-8");
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        } finally {
+            // 关闭CloseableHttpResponse
+            if (response != null) {
+                try {
+                    response.close();
+                } catch (IOException e) {
+                    log.error(e.getMessage());
+                }
+            }
+        }
+        return result;
+    }
+    /**
+     * 发送不带参数的HttpPost请求 * * @param url * @return
+     */
+    public static String sendPost(String url) {
+        String result = null;
+        // 得到一个HttpPost对象
+        HttpPost httpPost = new HttpPost(url);
+        // 防止被当成攻击添加的
+        httpPost.setHeader("User-Agent", userAgent);
+        CloseableHttpResponse response = null;
+        try {
+            // 执行HttpPost请求，并得到一个CloseableHttpResponse
+            response = httpclient.execute(httpPost);
+            // 从CloseableHttpResponse中拿到HttpEntity
+            HttpEntity entity = response.getEntity();
+            // 将HttpEntity转换为字符串
+            result = EntityUtils.toString(entity);
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        } finally {
+            // 关闭CloseableHttpResponse
+            if (response != null) {
+                try {
+                    response.close();
+                } catch (IOException e) {
+                    log.error(e.getMessage());
+                }
+            }
+        }
+        return result;
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+
+        String SMS_LOGIN_URL_PARAM = "{\"request\":{\"@id\":\"10000\",\"@type\":\"UserLogin\",\"userName\":\"bjcs3\",\"userPwd\":\"Bjcsdn@123!\"}}";
+        System.out.println("end:"+SMS_LOGIN_URL_PARAM);
+        String res = HttpUtils.sendPost("http://10.32.40.21:9005/idispatch/login",SMS_LOGIN_URL_PARAM);
+        System.out.println(res);
+        Map mapType = JSON.parseObject(res,Map.class);
+        String SMS_TOKEN = (String)mapType.get("tokensign");
+        System.out.println("Token:"+SMS_TOKEN);
+        //Thread.sleep(8000);
+        String res2 = HttpUtils.sendGet("http://10.32.40.21:9005/idispatch/keepconnect",SMS_TOKEN);
+        System.out.println("keep:"+res2);
+        //Thread.sleep(8000);
+        String res3 = HttpUtils.sendGet("http://10.32.40.21:9005/idispatch/userlogout",SMS_TOKEN);
+        System.out.println("sms_logout:"+res3);
+
+//        String result = null;
+//        // 字符串编码
+//        StringEntity entity = new StringEntity(SMS_LOGIN_URL_PARAM, Consts.UTF_8);
+//        // 设置content-type
+//        entity.setContentType("application/json");
+//        HttpPost httpPost = new HttpPost("http://10.32.40.21:9005/idispatch/login");
+//        // 接收参数设置
+//        httpPost.setHeader("Accept", "application/json");
+//        httpPost.setEntity(entity);
+//        CloseableHttpResponse response = null;
+//        try {
+//            response = httpclient.execute(httpPost);
+//            HttpEntity httpEntity = response.getEntity();
+//            result = EntityUtils.toString(httpEntity,"utf-8");
+//            Map mapType = JSON.parseObject(result,Map.class);
+//            String token = StringUtils.chop((String)mapType.get("tokensign"));
+//
+//            ;
+//            HttpGet httpGet = new HttpGet("http://10.32.40.21:9005/idispatch/keepconnect");
+//            //httpGet.setHeader("User-Agent", userAgent);
+//            if (token != null) {
+//                httpGet.setHeader("Authorization", token);
+//            }
+//            response = httpclient.execute(httpGet);
+//            HttpEntity entity2 = response.getEntity();
+//            if (entity2 != null) {
+//                result = EntityUtils.toString(entity2);
+//            }
+//            System.out.println("keep:"+result);
+//
+//        } catch (IOException e) {
+//            log.error(e.getMessage());
+//        } finally {
+//            // 关闭CloseableHttpResponse
+//            if (response != null) {
+//                try {
+//                    response.close();
+//                } catch (IOException e) {
+//                    log.error(e.getMessage());
+//                }
+//            }
+//        }
+
+
+    }
+}

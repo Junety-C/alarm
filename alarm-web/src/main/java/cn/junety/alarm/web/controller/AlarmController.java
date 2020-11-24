@@ -56,7 +56,7 @@ public class AlarmController extends BaseController {
 
         Alarm alarm = alarmService.getAlarmById(aid);
         List<Project> projectList = projectService.getProjectList(currentUser);
-        List<Module> moduleList = moduleService.getModuleList(alarm.getProjectId());
+        List<cn.junety.alarm.base.entity.Module> moduleList = moduleService.getModuleList(alarm.getProjectId());
         List<Group> groupList = groupService.getGroupList(alarm.getProjectId());
 
         return ResponseHelper.buildResponse(2000, "project_list", projectList,
